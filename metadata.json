@@ -1,0 +1,6 @@
+{
+  "name": "CodeVortex Cloud Platform",
+  "description": "Cloud IDE & No-Code Hybrid Platform - Generate, Edit, and Deploy Apps & Websites instantly with Neural Engine and Arabic support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
