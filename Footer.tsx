@@ -47,7 +47,7 @@ export const Footer: React.FC<FooterProps> = ({ language, onSelectView }) => {
             <div className="flex flex-col text-left rtl:text-right">
               <div className="flex items-center gap-1.5">
                 <span className="font-black text-lg sm:text-xl tracking-tight bg-gradient-to-r from-white via-slate-100 to-[#00F2FE] bg-clip-text text-transparent">
-                  CodeVortex
+                  CloudForge
                 </span>
                 <span className="px-1.5 py-0.5 rounded-md bg-gradient-to-r from-cyan-950 to-slate-900 border border-cyan-500/40 text-[#00F2FE] text-[9px] font-extrabold font-mono tracking-wider shadow-inner">
                   v2.4 Pro
@@ -232,7 +232,7 @@ export const Footer: React.FC<FooterProps> = ({ language, onSelectView }) => {
       <div className="max-w-7xl mx-auto pt-8 border-t border-slate-800/80 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
         {/* Copyright */}
         <div>
-          © 2026 CodeVortex, Inc. {isAr ? 'جميع الحقوق محفوظة.' : 'All rights reserved.'}
+          © 2026 CloudForge, Inc. {isAr ? 'جميع الحقوق محفوظة.' : 'All rights reserved.'}
         </div>
 
         {/* Interactive Legal Links */}
@@ -302,8 +302,8 @@ export const Footer: React.FC<FooterProps> = ({ language, onSelectView }) => {
         <div className="max-w-7xl mx-auto mt-4 p-3 bg-slate-900/90 border border-slate-800 rounded-xl flex items-center justify-between text-[10px] text-slate-400">
           <span>
             {isAr
-              ? 'تستخدم منصة CodeVortex ملفات تعريف الارتباط الأساسية لتقديم تجربة تشغيل سحابية آمنة.'
-              : 'CodeVortex uses essential cookies for secure cloud execution and session continuity.'}
+              ? 'تستخدم منصة CloudForge ملفات تعريف الارتباط الأساسية لتقديم تجربة تشغيل سحابية آمنة.'
+              : 'CloudForge uses essential cookies for secure cloud execution and session continuity.'}
           </span>
           <button
             onClick={() => setShowCookieNotice(false)}

@@ -1,6 +1,6 @@
 {
-  "name": "CodeVortex Cloud Platform",
-  "description": "Cloud IDE & No-Code Hybrid Platform - Generate, Edit, and Deploy Apps & Websites instantly with Neural Engine and Arabic support.",
+  "name": "CloudForge AI Platform",
+  "description": "CloudForge - AI-Native Cloud Building & Automation Engine with Schema Builder, Live Deployment Logs, Supabase RLS, and REPL Workspace.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

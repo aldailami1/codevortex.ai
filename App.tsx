@@ -25,12 +25,13 @@ import { ProjectDrawer } from './components/ProjectDrawer';
 import { CommandPalette } from './components/CommandPalette';
 import { ProjectUploadModal } from './components/ProjectUploadModal';
 import { SEOHelperModal } from './components/SEOHelperModal';
+import { CloudForgeEngine } from './components/CloudForgeEngine';
 import { Footer } from './components/Footer';
 import { FloatingSupportWidget } from './components/FloatingSupportWidget';
 
 const INITIAL_PROJECT: Project = {
   id: 'proj-default',
-  name: 'CodeVortex Cloud Workstation',
+  name: 'CloudForge Workstation',
   description: 'AI Generated Cloud Application & Repl Workspace',
   language: 'ar',
   createdAt: new Date().toISOString(),
@@ -44,7 +45,7 @@ const INITIAL_PROJECT: Project = {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CodeVortex REPL - منصة التطوير السحابية الذكية</title>
+  <title>CloudForge Engine - منصة التطوير السحابية الذكية</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -68,7 +69,7 @@ const INITIAL_PROJECT: Project = {
           ⚡
         </div>
         <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white to-[#00F2FE] bg-clip-text text-transparent">
-          CodeVortex REPL
+          CloudForge Engine
         </span>
       </div>
 
@@ -602,6 +603,24 @@ export default function App() {
           <Marketplace
             language={language}
             onImportTemplate={handleImportTemplate}
+          />
+        )}
+
+        {activeView === 'cloudforge' && (
+          <CloudForgeEngine
+            language={language}
+            currentProject={currentProject}
+            onOpenWorkspace={() => setActiveView('workspace')}
+            onDeployProject={(schema) => {
+              // Update project description with schema JSON
+              setProjects((prev) =>
+                prev.map((p) =>
+                  p.id === activeProjectId
+                    ? { ...p, description: JSON.stringify(schema) }
+                    : p
+                )
+              );
+            }}
           />
         )}
       </main>

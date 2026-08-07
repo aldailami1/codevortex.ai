@@ -23,6 +23,7 @@ import {
   Shield,
   Rocket,
   Download,
+  Cpu,
   Check,
   Command,
   ChevronDown,
@@ -166,7 +167,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex flex-col text-left">
               <div className="flex items-center gap-1.5">
                 <span className="font-black text-lg sm:text-xl tracking-tight bg-gradient-to-r from-white via-slate-100 to-[#00F2FE] bg-clip-text text-transparent">
-                  CodeVortex
+                  CloudForge
                 </span>
                 <span className="px-1.5 py-0.5 rounded-md bg-gradient-to-r from-cyan-950 to-slate-900 border border-cyan-500/40 text-[#00F2FE] text-[9px] font-extrabold font-mono tracking-wider shadow-inner">
                   v2.4 Pro
@@ -401,6 +402,18 @@ export const Header: React.FC<HeaderProps> = ({
                   >
                     <FolderKanban className="w-4 h-4 text-purple-400" />
                     <span>{t('dashboardAndProjects')}</span>
+                  </button>
+
+                  <button
+                    onClick={() => navigateTo('cloudforge')}
+                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold transition-all ${
+                      activeView === 'cloudforge'
+                        ? 'bg-cyan-950/80 text-[#00F2FE] border border-cyan-800/80'
+                        : 'text-slate-200 hover:bg-slate-900 hover:text-white'
+                    }`}
+                  >
+                    <Cpu className="w-4 h-4 text-cyan-400" />
+                    <span>CloudForge Engine</span>
                   </button>
 
                   <button
