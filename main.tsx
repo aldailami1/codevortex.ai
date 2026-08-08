@@ -3,6 +3,14 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
+// تحميل Tailwind CDN تلقائياً لضمان تطابق التنسيقات مع Google AI Studio
+if (typeof window !== 'undefined' && !document.getElementById('tailwind-cdn-script')) {
+  const script = document.createElement('script');
+  script.id = 'tailwind-cdn-script';
+  script.src = 'https://cdn.tailwindcss.com';
+  document.head.appendChild(script);
+}
+
 interface Props {
   children: ReactNode;
 }
