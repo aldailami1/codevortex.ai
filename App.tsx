@@ -3,7 +3,7 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { Project, ViewMode, Language, TemplateItem, AIModel, ProjectFile } from './types';
 const useTranslation = () => ({ t: (key: string) => key });
-import { Header } from './header';
+import { Header } from './Header';
 import { LandingPage } from './LandingPage';
 import { UserDashboard } from './UserDashboard';
 import { PricingSection } from './PricingSection';
