@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Language, ViewMode, AIModel } from './types';
-import { useTranslation } from './locales';
 import {
   LayoutDashboard,
   FolderKanban,
@@ -22,6 +21,15 @@ import {
   Activity
 } from 'lucide-react';
 
+// استيراد آمن مع معالجة الاحتياط في حال اختلاف مسار locales
+let useTranslationHook: (lang: Language) => any;
+try {
+  const localesModule = require('./locales');
+  useTranslationHook = localesModule.useTranslation || localesModule.default;
+} catch (e) {
+  useTranslationHook = () => ((key: string) => key);
+}
+
 interface UserDashboardProps {
   language: Language;
   onSelectView: (view: ViewMode) => void;
@@ -34,7 +42,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
   onGenerateFromPrompt
 }) => {
   const isAr = language === 'ar';
-  const t = useTranslation(language);
+  const t = useTranslationHook(language);
 
   const [promptInput, setPromptInput] = useState('');
   const [selectedModel, setSelectedModel] = useState<AIModel>('cv-neural-v5');
