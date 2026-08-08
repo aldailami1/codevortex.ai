@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Language } from '../types';
-import { getTranslation } from '../lib/translations';
+import { Language } from './types';
+import { getTranslation } from './lib/translations';
 import {
   Users,
   MessageSquare,
