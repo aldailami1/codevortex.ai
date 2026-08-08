@@ -1,6 +1,4 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@import "tailwindcss";
 
 @layer base {
   :root {
@@ -19,7 +17,7 @@
     overflow-x: hidden;
   }
 
-  /* تحديد أحجام الأيقونات والصور لمنع تضخمها */
+  /* ضبط تحجم الأيقونات والصور لضمان ترتيب العناصر */
   svg {
     display: inline-block;
     vertical-align: middle;
