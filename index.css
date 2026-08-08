@@ -1,16 +1,34 @@
-@import "tailwindcss";
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 @layer base {
   :root {
     --bg-navy: #0B0F19;
     --cyan-electric: #00F2FE;
     --violet-neon: #7928CA;
+    color-scheme: dark;
   }
 
-  body {
+  html, body {
     background-color: #0B0F19;
     color: #F8FAFC;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* تحديد أحجام الأيقونات والصور لمنع تضخمها */
+  svg {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 100%;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
   }
 }
 
