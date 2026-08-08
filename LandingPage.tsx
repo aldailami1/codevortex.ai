@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Language, ViewMode, AIModel } from '../types';
-import { useTranslation } from '../locales';
+import { Language, ViewMode, AIModel } from './types';
+import { useTranslation } from './locales';
 import {
   Sparkles,
   Zap,
@@ -69,8 +69,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   // Animated Code Snippets simulation
   const codeLines = [
-    `// CodeVortex Neural Engine v5.0 initialized`,
-    `import { createAgent, deployContainer } from '@codevortex/neural';`,
+    `// CloudForge Neural Engine v5.0 initialized`,
+    `import { createAgent, deployContainer } from '@cloudforge/neural';`,
     `const app = createAgent({ model: 'cv-neural-v5', rtl: ${isAr ? 'true' : 'false'} });`,
     `await app.generateFullStackApp('Live REPL Container Application');`,
     `console.log('✅ Live REPL Container compiled on port :3000 in 1.1s');`,
@@ -127,14 +127,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     },
   ];
 
-  const trustedCompanies = [
-    { name: 'Aramco Cloud Labs', icon: '⚡' },
-    { name: 'Neom Digital', icon: '🌐' },
-    { name: 'STC TechVentures', icon: '🚀' },
-    { name: 'TechFlow KSA', icon: '🛡️' },
-    { name: 'Dubai Cloud Studio', icon: '✨' },
-  ];
-
   // Testimonials
   const testimonials = [
     {
@@ -143,8 +135,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       role: isAr ? 'مؤسس ورئيس تنفيذي' : 'Founder & CEO',
       company: 'TechFlow',
       comment: isAr
-        ? 'CodeVortex حولت فكرتنا إلى منتج في دقائق! سرعة التطوير والنشر السحابي لا تقدر بثمن لشركتنا الناشئة.'
-        : 'CodeVortex converted our idea into a live product in minutes! Cloud deployment speed is priceless.',
+        ? 'CloudForge حولت فكرتنا إلى منتج في دقائق! سرعة التطوير والنشر السحابي لا تقدر بثمن لشركتنا الناشئة.'
+        : 'CloudForge converted our idea into a live product in minutes! Cloud deployment speed is priceless.',
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
       rating: 5,
     },
@@ -154,8 +146,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       role: isAr ? 'قائدة فريق البرمجيات' : 'Lead Software Architect',
       company: 'Cloud Studio',
       comment: isAr
-        ? 'تكامل CodeVortex السلس مع جميع اللغات والذكاء الاصطناعي فاق توقعاتنا.'
-        : 'Seamless CodeVortex integration with multilingual support & AI exceeded our expectations.',
+        ? 'تكامل CloudForge السلس مع جميع اللغات والذكاء الاصطناعي فاق توقعاتنا.'
+        : 'Seamless CloudForge integration with multilingual support & AI exceeded our expectations.',
       avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150',
       rating: 5,
     },
@@ -165,8 +157,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       role: isAr ? 'استشاري التحول الرقمي' : 'Digital Transformation Consultant',
       company: 'Global AI Ventures',
       comment: isAr
-        ? 'نستخدم بيئة العمل CodeVortex السحابية المعززة بالذكاء الاصطناعي لبناء برمجيات معقدة ونشرها بكفاءة غير مسبوقة.'
-        : 'We rely on CodeVortex Cloud Platform to construct high-performance full-stack web applications with unprecedented efficiency.',
+        ? 'نستخدم بيئة العمل CloudForge السحابية المعززة بالذكاء الاصطناعي لبناء برمجيات معقدة ونشرها بكفاءة غير مسبوقة.'
+        : 'We rely on CloudForge Cloud Platform to construct high-performance full-stack web applications with unprecedented efficiency.',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150',
       rating: 5,
     },
@@ -175,19 +167,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   // FAQs
   const faqs = [
     {
-      q: isAr ? 'هل CodeVortex مجانية؟ وما هي خطط التسعير؟' : 'Is CodeVortex free? What are the pricing plans?',
+      q: isAr ? 'هل CloudForge مجانية؟ وما هي خطط التسعير؟' : 'Is CloudForge free? What are the pricing plans?',
       a: isAr
-        ? 'نعم! تقدم منصة CodeVortex خطة Hobby مجانية بالكامل تتضمن مشاريع عامة غير محدودة وموارد حوسبة أساسية للتعلم وتجربة الأفكار. وتوجد باقات مدفوعة للمشاريع الخاصة وموارد الحوسبة المعززة.'
-        : 'Yes! CodeVortex provides a completely free Hobby plan including unlimited public projects and basic compute resources. Paid plans offer private projects and enhanced compute power.'
+        ? 'نعم! تقدم منصة CloudForge خطة Hobby مجانية بالكامل تتضمن مشاريع عامة غير محدودة وموارد حوسبة أساسية للتعلم وتجربة الأفكار. وتوجد باقات مدفوعة للمشاريع الخاصة وموارد الحوسبة المعززة.'
+        : 'Yes! CloudForge provides a completely free Hobby plan including unlimited public projects and basic compute resources. Paid plans offer private projects and enhanced compute power.'
     },
     {
-      q: isAr ? 'ما أنواع التطبيقات التي يمكنني بناؤها باستخدام CodeVortex؟' : 'What types of applications can I build using CodeVortex?',
+      q: isAr ? 'ما أنواع التطبيقات التي يمكنني بناؤها باستخدام CloudForge؟' : 'What types of applications can I build using CloudForge?',
       a: isAr
         ? 'يمكنك بناء كافة أنواع تطبيقات الويب المتكاملة (Full-Stack)، المتاجر الإلكترونية، لوحات تحكم البيانات، تطبيقات الذكاء الاصطناعي، وأدوات الخدمة الذاتية مع معاينة حية سريعة على المنفذ :3000.'
         : 'You can build all types of full-stack web applications, e-commerce stores, analytics dashboards, AI tools, and SaaS products with real-time port 3000 live preview.'
     },
     {
-      q: isAr ? 'هل يمكنك إنشاء تطبيقات سطح المكتب باستخدام CodeVortex؟' : 'Can you build desktop apps using CodeVortex?',
+      q: isAr ? 'هل يمكنك إنشاء تطبيقات سطح المكتب باستخدام CloudForge؟' : 'Can you build desktop apps using CloudForge?',
       a: isAr
         ? 'بالتأكيد! يمكنك تطوير تطبيقات سطح المكتب والهواتف الذكية عبر إطارات عمل الويب المتوافقة وتصدير الكود المصدر بالكامل لتشغيله عبر Electron أو Tauri أو PWA.'
         : 'Absolutely! You can develop desktop and mobile applications using modern web frameworks and export full source code to run via Electron, Tauri, or PWA.'
@@ -203,7 +195,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       <section className="pt-12 pb-20 px-4 max-w-6xl mx-auto text-center space-y-8 relative">
         {/* Central Official Platform Brand Banner */}
         <div className="flex flex-col items-center justify-center space-y-3 pt-2">
-          {/* Glowing Neon Vortex Emblem */}
+          {/* Glowing Neon Emblem */}
           <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center shrink-0">
             <div className="absolute inset-0 bg-gradient-to-tr from-[#00F2FE] via-[#3B82F6] to-[#7928CA] rounded-full blur-2xl opacity-70 animate-pulse" />
             <div className="relative w-full h-full rounded-3xl bg-[#090e1a] border border-cyan-400/40 shadow-[0_0_40px_rgba(0,242,254,0.3)] flex items-center justify-center p-3">
@@ -226,11 +218,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
           </div>
 
-          {/* CodeVortex Title & Dual Slogan */}
+          {/* CloudForge Title & Dual Slogan */}
           <div className="space-y-1">
             <div className="flex items-center justify-center gap-2">
               <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white">
-                Code<span className="text-[#00F2FE]">Vortex</span>
+                Cloud<span className="text-[#00F2FE]">Forge</span>
               </h2>
               <span className="px-2.5 py-1 rounded-lg bg-gradient-to-r from-cyan-950 to-purple-950 border border-cyan-500/40 text-[#00F2FE] text-xs font-mono font-bold">
                 v2.4 Pro
