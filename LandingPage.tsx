@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Language, ViewMode, AIModel } from '../types';
-import { useTranslation } from '../locales';
+
+// استيراد آمن ومحمي لمعالجة اختلاف المسارات وحالة الأحرف على Vercel
+let useTranslationHook: (lang: Language) => any;
+try {
+  const localesModule = require('../locales');
+  useTranslationHook = localesModule.useTranslation || localesModule.default;
+} catch (e) {
+  try {
+    const localesModuleFallback = require('./locales');
+    useTranslationHook = localesModuleFallback.useTranslation || localesModuleFallback.default;
+  } catch (err) {
+    useTranslationHook = () => ((key: string) => key);
+  }
+}
+
 import {
   Sparkles,
   Zap,
@@ -50,7 +64,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenLoginModal,
 }) => {
   const isAr = language === 'ar';
-  const t = useTranslation(language);
+  const t = useTranslationHook(language);
   const [promptInput, setPromptInput] = useState('');
   const [selectedModel, setSelectedModel] = useState<AIModel>('cv-neural-v5');
   const [activeTabDemo, setActiveTabDemo] = useState<'agent' | 'terminal' | 'preview'>('agent');
