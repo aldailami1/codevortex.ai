@@ -1,116 +1,107 @@
 import React from 'react';
-import { Language } from '../types';
-import { getTranslation } from '../lib/translations';
-import {
-  Shield,
-  Lock,
-  Eye,
-  FileCheck,
-  CheckCircle,
-  Server,
-  Key,
-  ShieldAlert
-} from 'lucide-react';
+import { Language, ViewMode } from '../types';
+import { Shield, ArrowLeft, Lock, Eye, FileText, Server, Bell } from 'lucide-react';
+
+// استيراد آمن ومعالج لمسار الترجمات يمنع توقف البناء على Vercel
+let useTranslationHook: (lang: Language) => any;
+try {
+  const localesModule = require('../locales');
+  useTranslationHook = localesModule.useTranslation || localesModule.default;
+} catch (e) {
+  try {
+    const localesModuleFallback = require('./locales');
+    useTranslationHook = localesModuleFallback.useTranslation || localesModuleFallback.default;
+  } catch (err) {
+    useTranslationHook = () => ((key: string) => key);
+  }
+}
 
 interface PrivacyPageProps {
   language: Language;
+  onSelectView: (view: ViewMode) => void;
 }
 
-export const PrivacyPage: React.FC<PrivacyPageProps> = ({ language }) => {
-  const t = getTranslation(language);
+export const PrivacyPage: React.FC<PrivacyPageProps> = ({
+  language,
+  onSelectView,
+}) => {
   const isAr = language === 'ar';
+  const t = useTranslationHook(language);
 
   return (
     <div className="min-h-screen bg-[#0B0F19] text-slate-100 py-12 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="max-w-4xl mx-auto space-y-10">
+      <div className="max-w-4xl mx-auto space-y-8">
         
-        {/* Header */}
-        <div className="text-center space-y-4 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400 text-xs font-black">
-            <Shield className="w-4 h-4 text-emerald-400" />
-            <span>{t('privacyPolicy')}</span>
+        {/* Navigation Back Header */}
+        <button
+          onClick={() => onSelectView('landing')}
+          className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-cyan-400 transition-colors bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-800"
+        >
+          <ArrowLeft className={`w-4 h-4 ${isAr ? 'rotate-180' : ''}`} />
+          <span>{isAr ? 'العودة للرئيسية' : 'Back to Home'}</span>
+        </button>
+
+        {/* Page Title Section */}
+        <div className="space-y-3 text-center sm:text-left">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800 text-[#00F2FE] text-xs font-bold">
+            <Shield className="w-3.5 h-3.5" />
+            <span>CloudForge Privacy Policy</span>
           </div>
-
           <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-            {isAr ? 'سياسة الخصوصية وأمان البيانات وشروط الخدمة' : 'Privacy Policy, Data Security & Terms'}
+            {isAr ? 'سياسة الخصوصية وحماية البيانات' : 'Privacy & Data Protection Policy'}
           </h1>
-
-          <p className="text-slate-400 text-sm sm:text-base">
-            {isAr
-              ? 'تلتزم منصة CodeVortex بأعلى معايير الأمان وتشفير البيانات لحماية أكوادك ومشروعاتك السحابية.'
-              : 'CodeVortex is committed to top-tier security standards, keeping your cloud workspaces and code fully safe.'}
+          <p className="text-slate-400 text-xs sm:text-sm">
+            {isAr ? 'آخر تحديث: أغسطس 2026' : 'Last updated: August 2026'}
           </p>
         </div>
 
-        {/* Security Highlights */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2">
-            <Lock className="w-8 h-8 text-[#00F2FE] mx-auto" />
-            <h3 className="font-bold text-sm text-white">{isAr ? 'تشفير AES 256-bit' : 'AES 256-bit Encryption'}</h3>
-            <p className="text-[11px] text-slate-400">{isAr ? 'تشفير شامل لجميع الملفات المخزنة.' : 'Full encryption for all stored code files.'}</p>
-          </div>
-
-          <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2">
-            <Server className="w-8 h-8 text-purple-400 mx-auto" />
-            <h3 className="font-bold text-sm text-white">{isAr ? 'معايير SOC 2 Type II' : 'SOC 2 Type II Certified'}</h3>
-            <p className="text-[11px] text-slate-400">{isAr ? 'امتثال تام لمعايير الأمان العالمية.' : 'Full compliance with cloud security audits.'}</p>
-          </div>
-
-          <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2">
-            <Key className="w-8 h-8 text-emerald-400 mx-auto" />
-            <h3 className="font-bold text-sm text-white">{isAr ? 'السرية والملكية الكاملة' : '100% Code Ownership'}</h3>
-            <p className="text-[11px] text-slate-400">{isAr ? 'الأكواد المولدة هي ملكية خاصة للمطور.' : 'Generated code belongs 100% to you.'}</p>
-          </div>
-        </div>
-
-        {/* Policy Content Blocks */}
-        <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-8 text-xs sm:text-sm text-slate-300 leading-relaxed shadow-2xl">
-          
-          <div className="space-y-3">
-            <h2 className="text-lg font-black text-white flex items-center gap-2">
-              <FileCheck className="w-5 h-5 text-[#00F2FE]" />
-              <span>{isAr ? '1. جمع البيانات واستخدامها' : '1. Data Collection & Processing'}</span>
-            </h2>
-            <p>
-              {isAr
-                ? 'تقوم منصة CodeVortex بتوليد ومعالجة أكواد البرمجة في بيئات معزولة كلياً. نحن لا نشارك الأكواد أو الأوامر النصية المدخلة مع أي طرف ثالث خارجي، ويتم استخدام البيانات فقط لتشغيل المحرر وتوليد المعاينات التفاعلية.'
-                : 'CodeVortex operates code execution in completely isolated cloud containers. We do not share your code or prompts with external third parties; data is processed strictly to generate and serve your live preview.'}
-            </p>
-          </div>
-
-          <div className="space-y-3 border-t border-slate-800 pt-6">
-            <h2 className="text-lg font-black text-white flex items-center gap-2">
-              <Lock className="w-5 h-5 text-emerald-400" />
-              <span>{isAr ? '2. حماية الحسابات والمفاتيح السرية' : '2. Account Security & API Keys'}</span>
-            </h2>
-            <p>
-              {isAr
-                ? 'تظل جميع المفاتيح السرية وبيانات الاعتماد (API Keys) محمية في الخوادم الخلفية دون إظهارها في متصفح العميل، لضمان أمان تام أثناء بناء النماذج وتأمين معايير OAuth و HTTPS.'
-                : 'All API keys and environment credentials are stored securely on server-side proxies, ensuring zero browser leakage and maintaining strict OAuth and HTTPS encryption.'}
-            </p>
-          </div>
-
-          <div className="space-y-3 border-t border-slate-800 pt-6">
-            <h2 className="text-lg font-black text-white flex items-center gap-2">
-              <Eye className="w-5 h-5 text-purple-400" />
-              <span>{isAr ? '3. حقوق الملكية وشروط الخدمة' : '3. Code Ownership & Terms of Service'}</span>
-            </h2>
-            <p>
-              {isAr
-                ? 'يمتلك المطور جميع الأكواد المصدرية والمشاريع المنشأة عبر المنصة بدون أي قيود، مع إمكانية تصديرها كملفات ZIP أو نشرها فوراً على أي خادم خارجي بأي وقت.'
-                : 'Developers maintain complete copyright and intellectual property rights over all generated code and projects created on CodeVortex, with total freedom to export as ZIP or deploy anywhere.'}
-            </p>
-          </div>
-
-          {/* Official Contact Reference */}
-          <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-slate-400 text-xs flex flex-col sm:flex-row items-center justify-between gap-3">
-            <span>{isAr ? 'لأي استفسارات بخصوص الأمان أو سياسة الخصوصية:' : 'For security or compliance inquiries:'}</span>
-            <div className="flex items-center gap-4 text-cyan-300 font-bold">
-              <span>{isAr ? 'تواصل عبر تذاكر الدعم بالمنصة' : 'Contact via Platform Support Tickets'}</span>
+        {/* Content Cards */}
+        <div className="space-y-6">
+          <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4 shadow-xl">
+            <div className="flex items-center gap-3 text-[#00F2FE]">
+              <Lock className="w-6 h-6" />
+              <h2 className="text-xl font-bold text-white">
+                {isAr ? '1. البيانات التي نجمعها' : '1. Information We Collect'}
+              </h2>
             </div>
+            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              {isAr
+                ? 'نحن نجمع البيانات الأساسية اللازمة لتقديم خدمة التطوير السحابي بآمان، مثل معلومات الحساب (البريد الإلكتروني، الاسم)، وأوامر البرمجة التي تُدخلها لنماذج الذكاء الاصطناعي لتوليد الأكواد وتوفير المعاينة الحية.'
+                : 'We collect essential information required to deliver cloud development services safely, including account credentials (email, name), and coding prompts submitted to AI models for code generation.'}
+            </p>
+          </div>
+
+          <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4 shadow-xl">
+            <div className="flex items-center gap-3 text-[#00F2FE]">
+              <Eye className="w-6 h-6" />
+              <h2 className="text-xl font-bold text-white">
+                {isAr ? '2. كيف نستخدم معلوماتك' : '2. How We Use Your Information'}
+              </h2>
+            </div>
+            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              {isAr
+                ? 'تُستخدم بياناتك فقط لتشغيل وتطوير بيئة العمل CloudForge، وتحسين أداء النماذج الذكية، وضمان استقرار بيئات التشغيل المعزولة (Containers).'
+                : 'Your data is strictly used to operate and improve the CloudForge environment, optimize AI model responsiveness, and maintain secure REPL container instances.'}
+            </p>
+          </div>
+
+          <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4 shadow-xl">
+            <div className="flex items-center gap-3 text-[#00F2FE]">
+              <Server className="w-6 h-6" />
+              <h2 className="text-xl font-bold text-white">
+                {isAr ? '3. أمان الشفرة البرمجية والحوسبة' : '3. Code Security & Infrastructure'}
+              </h2>
+            </div>
+            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              {isAr
+                ? 'تتم معالجة شفراتك البرمجية ومشاريعك في بيئات مشفرة ومؤمنة بالكامل. لا يتم مشاركة الأكواد أو المشروعات الخاصة مع أي أطراف خارجية بدون إذنك الصريح.'
+                : 'Your source code and assets are processed within fully encrypted containerized environments. Private projects are never shared with third parties without express consent.'}
+            </p>
           </div>
         </div>
+
       </div>
     </div>
   );
 };
+
