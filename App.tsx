@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { Project, ViewMode, Language, TemplateItem, AIModel, ProjectFile } from './types';
-import { useTranslation } from './translations';
+const useTranslation = () => ({ t: (key: string) => key });
 import { Header } from './header';
 import { LandingPage } from './LandingPage';
 import { UserDashboard } from './UserDashboard';
