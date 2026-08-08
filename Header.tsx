@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ViewMode, Language, Project } from '../types';
-import { useTranslation } from '../locales';
+import { useTranslation } from './locales';
 import { AuthModal } from './AuthModal';
 import {
   Sparkles,
@@ -752,7 +752,7 @@ export const Header: React.FC<HeaderProps> = ({
                       className="w-full py-2.5 px-4 bg-[#0a0d17] hover:bg-slate-900 border border-slate-800 hover:border-cyan-500/40 rounded-xl font-extrabold text-slate-200 hover:text-white flex items-center justify-between transition-all group shadow-sm"
                     >
                       <div className="flex items-center gap-3">
-                        <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
+                        <svg className="w-[#18px] h-[#18px] shrink-0" viewBox="0 0 24 24">
                           <path fill="#F25022" d="M1 1h10v10H1z"/>
                           <path fill="#7FBA00" d="M13 1h10v10H1z"/>
                           <path fill="#00A4EF" d="M1 13h10v10H1z"/>
