@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ViewMode, Language, Project } from '../types';
-import { useTranslation } from './locales';
+import { useTranslation } from '../locales';
 import { AuthModal } from './AuthModal';
 import {
   Sparkles,
