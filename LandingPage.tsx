@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Language, ViewMode, AIModel } from '../types';
-import { useTranslation } from '../locales/translations';
+import { useTranslation } from '../locales';
 import {
   Sparkles,
   Zap,
@@ -346,140 +346,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
           ))}
         </div>
-      </section>
-
-      {/* Live Code Simulation Section */}
-      <section className="py-16 px-4 bg-slate-950/80 border-y border-slate-800/80 relative">
-        <div className="max-w-6xl mx-auto space-y-8">
-          <div className="text-center space-y-3">
-            <h2 className="text-2xl sm:text-4xl font-black text-white">
-              {t('watchFuture')}
-            </h2>
-            <p className="text-slate-300 text-sm sm:text-base max-w-3xl mx-auto leading-relaxed">
-              {t('watchSub')}
-            </p>
-          </div>
-
-          {/* Simulated IDE Container */}
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl font-mono text-xs">
-            {/* Window Topbar */}
-            <div className="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-rose-500"></span>
-                <span className="w-3 h-3 rounded-full bg-amber-500"></span>
-                <span className="w-3 h-3 rounded-full bg-emerald-500"></span>
-                <span className="ml-2 text-slate-400 text-[11px] font-sans font-bold">codevortex-interactive-repl-sandbox</span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setActiveTabDemo('agent')}
-                  className={`px-3 py-1 rounded-lg transition-all ${
-                    activeTabDemo === 'agent' ? 'bg-cyan-500/20 text-cyan-400 font-bold border border-cyan-500/30' : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  AI Agent
-                </button>
-                <button
-                  onClick={() => setActiveTabDemo('terminal')}
-                  className={`px-3 py-1 rounded-lg transition-all ${
-                    activeTabDemo === 'terminal' ? 'bg-cyan-500/20 text-cyan-400 font-bold border border-cyan-500/30' : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  Terminal Shell
-                </button>
-                <button
-                  onClick={() => setActiveTabDemo('preview')}
-                  className={`px-3 py-1 rounded-lg transition-all ${
-                    activeTabDemo === 'preview' ? 'bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/30' : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  Live Preview (:3000)
-                </button>
-              </div>
-            </div>
-
-            {/* Simulated Body */}
-            <div className="p-6 bg-slate-950/90 min-h-[260px] flex flex-col justify-between">
-              {activeTabDemo === 'agent' && (
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 text-cyan-400 font-bold">
-                    <Bot className="w-5 h-5 animate-pulse" />
-                    <span>[CodeVortex Neural v5.0] - Stream Output Active:</span>
-                  </div>
-                  <div className="bg-slate-900/80 p-4 rounded-xl border border-slate-800 space-y-2">
-                    {codeLines.map((line, idx) => (
-                      <div
-                        key={idx}
-                        className={`transition-all duration-300 ${
-                          idx === simulatedCodeIndex ? 'text-cyan-300 font-bold bg-cyan-950/40 p-1 rounded' : 'text-slate-400 opacity-60'
-                        }`}
-                      >
-                        <span className="text-slate-600 select-none mr-3">{idx + 1}</span>
-                        <span>{line}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {activeTabDemo === 'terminal' && (
-                <div className="space-y-3 font-mono text-emerald-400">
-                  <div className="flex items-center gap-2">
-                    <Terminal className="w-4 h-4 text-slate-400" />
-                    <span className="text-slate-400">$ npm run dev</span>
-                  </div>
-                  <p className="text-slate-300">&gt; vite dev --host 0.0.0.0 --port 3000</p>
-                  <p className="text-emerald-400 font-bold">VITE v5.4.2 ready in 180 ms</p>
-                  <p className="text-slate-400">➜ Local: http://localhost:3000/</p>
-                  <p className="text-slate-400">➜ Network: http://172.17.0.2:3000/</p>
-                </div>
-              )}
-
-              {activeTabDemo === 'preview' && (
-                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center space-y-4 font-sans">
-                  <div className="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center mx-auto text-xl font-bold">
-                    ⚡
-                  </div>
-                  <h3 className="text-lg font-bold text-white">{t('liveRunningMsg')}</h3>
-                  <p className="text-slate-400 text-xs max-w-md mx-auto">
-                    {t('liveRunningSub')}
-                  </p>
-                </div>
-              )}
-
-              {/* Status Bar */}
-              <div className="pt-4 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-500 font-sans">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                  <span>Container: Online (Node.js 20.x ESM)</span>
-                </div>
-                <span>Port 3000 Ingress Active</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Social Proof & Metrics */}
-      <section className="py-16 px-4 max-w-6xl mx-auto space-y-12">
-        {/* Trusted Companies Bar */}
-        <div className="text-center space-y-4">
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-widest block">
-            {t('trustedBy')}
-          </span>
-          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 opacity-80 hover:opacity-100 transition-all">
-            {trustedCompanies.map((c, idx) => (
-              <div key={idx} className="flex items-center gap-2 text-slate-300 font-bold text-sm sm:text-base">
-                <span className="text-xl">{c.icon}</span>
-                <span>{c.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
 
         {/* Live Metrics Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-8">
           <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 text-center space-y-1">
             <span className="text-2xl sm:text-3xl font-black text-[#00F2FE]">{t('stat1Val')}</span>
             <p className="text-xs text-slate-300 font-medium">{t('stat1Label')}</p>
@@ -499,7 +368,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
 
         {/* Testimonials */}
-        <div className="space-y-6">
+        <div className="space-y-6 pt-8">
           <div className="text-center">
             <h3 className="text-2xl font-black text-white">{t('testimonialsTitle')}</h3>
           </div>
