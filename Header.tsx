@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ViewMode, Language, Project } from '../types';
-import { useTranslation } from '../locales/translations';
+import { useTranslation } from '../locales';
 import { AuthModal } from './AuthModal';
 import {
   Sparkles,
@@ -198,7 +198,7 @@ export const Header: React.FC<HeaderProps> = ({
             </kbd>
           </button>
 
-          {/* Item 2: Prominent Glowing Dual-Language Login Button (Custom Pill Style matching user prompt) */}
+          {/* Item 2: Prominent Glowing Dual-Language Login Button */}
           {isLoggedIn ? (
             <div className="flex items-center gap-2">
               <button
@@ -217,12 +217,10 @@ export const Header: React.FC<HeaderProps> = ({
               className="group relative p-[1.5px] rounded-full bg-gradient-to-r from-cyan-400 via-blue-600 to-purple-600 hover:from-cyan-300 hover:to-purple-500 shadow-[0_0_20px_rgba(0,242,254,0.3)] hover:shadow-[0_0_30px_rgba(121,40,202,0.5)] transition-all hover:scale-102 active:scale-98 shrink-0"
             >
               <div className="px-3.5 py-1.5 rounded-full bg-[#0B0F19]/90 hover:bg-[#0B0F19]/60 backdrop-blur-md flex items-center gap-2.5 transition-all">
-                {/* User avatar circle */}
                 <div className="w-6 h-6 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 shrink-0">
                   <User className="w-3.5 h-3.5" />
                 </div>
 
-                {/* Stacked Bilingual Text */}
                 <div className="flex flex-col text-left leading-tight">
                   <span className="font-extrabold text-xs text-white group-hover:text-cyan-200 transition-colors">
                     {t('login')}
@@ -232,7 +230,6 @@ export const Header: React.FC<HeaderProps> = ({
                   </span>
                 </div>
 
-                {/* Arrow Icon */}
                 <div className="w-5 h-5 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-300 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform shrink-0">
                   {isAr ? <ArrowLeft className="w-3 h-3" /> : <ArrowRight className="w-3 h-3" />}
                 </div>
@@ -278,7 +275,7 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </div>
 
-          {/* Item 4: Hamburger Menu Button (☰) */}
+          {/* Item 4: Hamburger Menu Button */}
           <button
             onClick={() => setIsDrawerOpen(true)}
             className="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 hover:text-[#00F2FE] transition-all focus:outline-none shadow-md"
@@ -290,18 +287,15 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </header>
 
-      {/* 2. Full-Pages Mobile & Desktop Drawer Menu (Slide-Out Side Panel) */}
+      {/* 2. Full-Pages Mobile & Desktop Drawer Menu */}
       {isDrawerOpen && (
         <div className="fixed inset-0 z-50 flex justify-end font-sans">
-          {/* Backdrop Overlay */}
           <div
             onClick={() => setIsDrawerOpen(false)}
             className="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity animate-in fade-in"
           />
 
-          {/* Drawer Content */}
           <aside className="relative w-full max-w-md bg-slate-950 border-l border-slate-800 shadow-2xl flex flex-col h-full overflow-hidden z-10 animate-in slide-in-from-right duration-300">
-            {/* Drawer Header */}
             <div className="p-5 border-b border-slate-800 bg-slate-900/50 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#00F2FE] via-blue-600 to-[#7928CA] flex items-center justify-center text-slate-950 font-black">
@@ -323,10 +317,7 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
             </div>
 
-            {/* Drawer Body - Scrollable Links */}
             <div className="flex-1 overflow-y-auto p-5 space-y-6 text-xs">
-              
-              {/* Global Multi-Language Selector Section */}
               <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-3.5 space-y-2.5">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-slate-200 flex items-center gap-2 text-xs">
@@ -336,7 +327,6 @@ export const Header: React.FC<HeaderProps> = ({
                   <span className="text-[10px] text-cyan-400 font-mono font-bold">10 Languages</span>
                 </div>
 
-                {/* Custom Language Selector Dropdown / Grid */}
                 <div className="relative">
                   <button
                     onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
@@ -374,7 +364,7 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
               </div>
 
-              {/* Section 1: الروابط الرئيسية (Main Pages) */}
+              {/* Section 1: الروابط الرئيسية */}
               <div className="space-y-2">
                 <h3 className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider px-1">
                   {t('mainNav')}
@@ -466,7 +456,7 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
               </div>
 
-              {/* Section 2: روابط الدعم والمجتمع (Support & Community) */}
+              {/* Section 2: روابط الدعم والمجتمع */}
               <div className="space-y-2">
                 <h3 className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider px-1">
                   {t('supportPortal')}
@@ -513,7 +503,7 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
               </div>
 
-              {/* Section 3: معلومات الشركة (Company Info) */}
+              {/* Section 3: معلومات الشركة */}
               <div className="space-y-2">
                 <h3 className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider px-1">
                   {t('about')}
@@ -558,7 +548,6 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
             </div>
 
-            {/* Drawer Footer Actions */}
             <div className="p-4 bg-slate-900/90 border-t border-slate-800 space-y-3">
               <button
                 onClick={() => {
@@ -586,19 +575,15 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       )}
 
-      {/* 3. Interactive Modern Dual-Panel Login Modal (Exact design match for Image 1) */}
+      {/* 3. Interactive Modern Dual-Panel Login Modal */}
       {isLoginModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 font-sans">
-          {/* Backdrop */}
           <div
             onClick={() => setIsLoginModalOpen(false)}
             className="fixed inset-0 bg-slate-950/85 backdrop-blur-xl animate-in fade-in"
           />
 
-          {/* Modal Card */}
           <div className="relative w-full max-w-4xl bg-[#0d1222] border border-cyan-500/30 rounded-3xl shadow-[0_0_50px_rgba(0,242,254,0.15)] overflow-hidden z-10 grid grid-cols-1 md:grid-cols-12 animate-in zoom-in-95 my-auto max-h-[90vh]">
-            
-            {/* Close Button */}
             <button
               onClick={() => setIsLoginModalOpen(false)}
               className="absolute top-4 right-4 z-20 p-2 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-700/60 transition-all"
@@ -606,21 +591,18 @@ export const Header: React.FC<HeaderProps> = ({
               <X className="w-4 h-4" />
             </button>
 
-            {/* Left Side Panel - Brand & Features Showcase */}
             <div className="md:col-span-5 bg-gradient-to-br from-[#12182d] via-[#0d1020] to-[#180a2c] p-6 sm:p-8 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-800/80 relative overflow-hidden">
-              {/* Glowing Background Vortex Orb */}
               <div className="absolute -top-12 -left-12 w-64 h-64 bg-purple-600/20 rounded-full blur-3xl pointer-events-none" />
               <div className="absolute -bottom-12 -right-12 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none" />
 
               <div className="relative z-10 space-y-6">
-                {/* Vortex Logo Showcase */}
                 <div className="space-y-3">
                   <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-[#00F2FE] via-blue-600 to-[#7928CA] flex items-center justify-center text-slate-950 font-black shadow-2xl shadow-cyan-500/30">
                     <Sparkles className="w-9 h-9 text-slate-950 animate-spin-slow" />
                   </div>
                   <div>
                     <h2 className="text-2xl font-black tracking-tight text-white">
-                      Code<span className="text-[#00F2FE]">Vortex</span>
+                      Cloud<span className="text-[#00F2FE]">Forge</span>
                     </h2>
                     <p className="text-xs text-slate-300 font-medium mt-1">
                       {isAr ? 'من الفكرة إلى الكود، بسرعة وإبداع.' : 'From idea to code, fast & creative.'}
@@ -628,7 +610,6 @@ export const Header: React.FC<HeaderProps> = ({
                   </div>
                 </div>
 
-                {/* 3 Feature Pills */}
                 <div className="space-y-3.5 pt-2">
                   <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-900/60 border border-slate-800/80">
                     <div className="w-8 h-8 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400 shrink-0 mt-0.5">
@@ -674,22 +655,18 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
               </div>
 
-              {/* Bottom Footer Note */}
               <div className="relative z-10 pt-4 border-t border-slate-800/60 text-[10px] text-slate-500 font-mono">
                 v2.4 Pro Cloud Ingress • All Systems Operational
               </div>
             </div>
 
-            {/* Right Side Panel - Login Form & Social Logins */}
             <div className="md:col-span-7 p-6 sm:p-8 space-y-5 flex flex-col justify-center overflow-y-auto max-h-[85vh]">
-              
-              {/* Header Text */}
               <div className="text-center space-y-1">
                 <span className="text-xs font-bold text-slate-400">
                   {isAr ? 'مرحباً بك في' : 'Welcome to'}
                 </span>
                 <h3 className="text-2xl font-black text-white">
-                  Code<span className="text-[#00F2FE]">Vortex</span>
+                  Cloud<span className="text-[#00F2FE]">Forge</span>
                 </h3>
                 <p className="text-xs text-slate-400">
                   {isAr ? 'سجّل الدخول للمتابعة إلى حسابك' : 'Sign in to continue to your account'}
@@ -697,7 +674,6 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
 
               {isLoggedIn ? (
-                /* Logged In Account State */
                 <div className="space-y-4 text-xs">
                   <div className="p-4 bg-slate-950 border border-slate-800 rounded-2xl space-y-2">
                     <div className="flex items-center justify-between">
@@ -723,9 +699,7 @@ export const Header: React.FC<HeaderProps> = ({
                   </button>
                 </div>
               ) : (
-                /* Form State */
                 <div className="space-y-4 text-xs">
-                  {/* Social Login Options with Official Company SVG Logos */}
                   <div className="space-y-2">
                     <button
                       type="button"
@@ -780,7 +754,7 @@ export const Header: React.FC<HeaderProps> = ({
                       <div className="flex items-center gap-3">
                         <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
                           <path fill="#F25022" d="M1 1h10v10H1z"/>
-                          <path fill="#7FBA00" d="M13 1h10v10H13z"/>
+                          <path fill="#7FBA00" d="M13 1h10v10H1z"/>
                           <path fill="#00A4EF" d="M1 13h10v10H1z"/>
                           <path fill="#FFB900" d="M13 13h10v10H13z"/>
                         </svg>
@@ -790,7 +764,6 @@ export const Header: React.FC<HeaderProps> = ({
                     </button>
                   </div>
 
-                  {/* Divider */}
                   <div className="relative flex items-center justify-center my-2">
                     <div className="border-t border-slate-800/80 w-full"></div>
                     <span className="bg-[#0d1222] px-3 text-[10px] text-slate-500 font-mono uppercase">
@@ -798,9 +771,7 @@ export const Header: React.FC<HeaderProps> = ({
                     </span>
                   </div>
 
-                  {/* Email & Password Form */}
                   <form onSubmit={handleLoginSubmit} className="space-y-3">
-                    {/* Email Input */}
                     <div className="relative">
                       <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3.5 rtl:left-auto rtl:right-3 pointer-events-none" />
                       <input
@@ -813,7 +784,6 @@ export const Header: React.FC<HeaderProps> = ({
                       />
                     </div>
 
-                    {/* Password Input */}
                     <div className="relative">
                       <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-3.5 rtl:left-auto rtl:right-3 pointer-events-none" />
                       <input
@@ -833,7 +803,6 @@ export const Header: React.FC<HeaderProps> = ({
                       </button>
                     </div>
 
-                    {/* Remember me & Forgot Password */}
                     <div className="flex items-center justify-between text-[11px] pt-1">
                       <label className="flex items-center gap-2 cursor-pointer text-slate-400 hover:text-slate-200">
                         <input
@@ -854,7 +823,6 @@ export const Header: React.FC<HeaderProps> = ({
                       </button>
                     </div>
 
-                    {/* Submit Button */}
                     <button
                       type="submit"
                       className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-extrabold text-xs shadow-lg shadow-purple-500/25 hover:scale-101 active:scale-99 transition-all flex items-center justify-center gap-2 mt-2"
@@ -864,7 +832,6 @@ export const Header: React.FC<HeaderProps> = ({
                     </button>
                   </form>
 
-                  {/* Register New Account Link */}
                   <div className="text-center pt-2 text-[11px] text-slate-400">
                     <span>{isAr ? 'ليس لديك حساب؟ ' : "Don't have an account? "}</span>
                     <button
