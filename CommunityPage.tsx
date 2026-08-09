@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Language } from '../types';
-import { getTranslation } from '../lib/translations';
+import { Language } from './types';
+import { useTranslation } from './lib/translations';
 import {
   Users,
   MessageSquare,
@@ -20,7 +20,7 @@ interface CommunityPageProps {
 }
 
 export const CommunityPage: React.FC<CommunityPageProps> = ({ language }) => {
-  const t = getTranslation(language);
+  const t = useTranslation(language);
   const isAr = language === 'ar';
 
   const [posts, setPosts] = useState([
@@ -48,7 +48,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ language }) => {
     },
     {
       id: 3,
-      author: 'Marcus_Vortex',
+      author: 'Marcus_CloudForge',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80',
       titleAr: 'إطلاق قالب متجر إلكتروني مع الربط المباشر ببوابة دفق المبيعات',
       titleEn: 'Released Next.js E-Commerce template with real payment gateway hooks',
