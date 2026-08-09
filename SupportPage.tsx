@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { Language, ViewMode } from './types';
-import { useTranslation } from './lib/translations'; // تم ضبط المسار الصحيح مباشرة هنا
+// إذا كانت الترجمات في مجلد lib داخل src:
+import { useTranslation } from '/src/lib/translations';
+// أو إذا كان الملف في جذر src مباشرة بدون مجلد lib، استبدل السطر أعلاه بـ:
+// import { useTranslation } from './translations';
+
 import { 
   HelpCircle, 
   MessageSquare, 
   Mail, 
   BookOpen, 
   ShieldCheck, 
-  Zap, 
   Search, 
   ChevronDown, 
   Send, 
   CheckCircle2, 
-  ArrowLeft, 
-  ArrowRight,
   LifeBuoy
 } from 'lucide-react';
 
