@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Language } from './types';
-import { useTranslation } from './lib/translations';
+import { useTranslation } from '../lib/translations';
 import { DepartmentalSupportPortal } from './DepartmentalSupportPortal';
 import {
   HelpCircle,
