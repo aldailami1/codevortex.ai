@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ViewMode, Language, Project } from '../types';
-import { useTranslation } from '../locales/translations';
+import { useTranslation } from '../lib/translations';
 import { AuthModal } from './AuthModal';
 import {
   Sparkles,
@@ -155,7 +155,7 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => onSelectView('landing')}
             className="flex items-center gap-2.5 group text-left focus:outline-none"
           >
-            {/* Neon Vortex Logo Icon */}
+            {/* Neon Logo Icon */}
             <div className="relative w-9 h-9 rounded-xl bg-gradient-to-tr from-[#00F2FE] via-blue-600 to-[#7928CA] p-0.5 shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-all">
               <div className="w-full h-full bg-[#0B0F19] rounded-[10px] flex items-center justify-center overflow-hidden">
                 <svg className="w-5 h-5 text-[#00F2FE] animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -198,7 +198,7 @@ export const Header: React.FC<HeaderProps> = ({
             </kbd>
           </button>
 
-          {/* Item 2: Prominent Glowing Dual-Language Login Button (Custom Pill Style matching user prompt) */}
+          {/* Item 2: Prominent Glowing Dual-Language Login Button */}
           {isLoggedIn ? (
             <div className="flex items-center gap-2">
               <button
@@ -278,7 +278,7 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </div>
 
-          {/* Item 4: Hamburger Menu Button (☰) */}
+          {/* Item 4: Hamburger Menu Button */}
           <button
             onClick={() => setIsDrawerOpen(true)}
             className="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 hover:text-[#00F2FE] transition-all focus:outline-none shadow-md"
@@ -311,7 +311,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <h2 className="font-extrabold text-slate-100 text-sm">
                     {t('navigation')}
                   </h2>
-                  <span className="text-[10px] text-slate-400 font-mono">Cloud v2.4 Pro</span>
+                  <span className="text-[10px] text-slate-400 font-mono">CloudForge v2.4 Pro</span>
                 </div>
               </div>
 
@@ -333,7 +333,7 @@ export const Header: React.FC<HeaderProps> = ({
                     <Globe className="w-4 h-4 text-[#00F2FE]" />
                     <span>{t('globalLanguages')}</span>
                   </span>
-                  <span className="text-[10px] text-cyan-400 font-mono font-bold">10 Languages</span>
+                  <span className="text-[10px] text-cyan-400 font-mono font-bold">14 Languages</span>
                 </div>
 
                 {/* Custom Language Selector Dropdown / Grid */}
@@ -586,7 +586,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       )}
 
-      {/* 3. Interactive Modern Dual-Panel Login Modal (Exact design match for Image 1) */}
+      {/* 3. Interactive Modern Dual-Panel Login Modal */}
       {isLoginModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 font-sans">
           {/* Backdrop */}
@@ -608,19 +608,19 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Left Side Panel - Brand & Features Showcase */}
             <div className="md:col-span-5 bg-gradient-to-br from-[#12182d] via-[#0d1020] to-[#180a2c] p-6 sm:p-8 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-800/80 relative overflow-hidden">
-              {/* Glowing Background Vortex Orb */}
+              {/* Glowing Background Orb */}
               <div className="absolute -top-12 -left-12 w-64 h-64 bg-purple-600/20 rounded-full blur-3xl pointer-events-none" />
               <div className="absolute -bottom-12 -right-12 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none" />
 
               <div className="relative z-10 space-y-6">
-                {/* Vortex Logo Showcase */}
+                {/* Logo Showcase */}
                 <div className="space-y-3">
                   <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-[#00F2FE] via-blue-600 to-[#7928CA] flex items-center justify-center text-slate-950 font-black shadow-2xl shadow-cyan-500/30">
                     <Sparkles className="w-9 h-9 text-slate-950 animate-spin-slow" />
                   </div>
                   <div>
                     <h2 className="text-2xl font-black tracking-tight text-white">
-                      Code<span className="text-[#00F2FE]">Vortex</span>
+                      Cloud<span className="text-[#00F2FE]">Forge</span>
                     </h2>
                     <p className="text-xs text-slate-300 font-medium mt-1">
                       {isAr ? 'من الفكرة إلى الكود، بسرعة وإبداع.' : 'From idea to code, fast & creative.'}
@@ -689,7 +689,7 @@ export const Header: React.FC<HeaderProps> = ({
                   {isAr ? 'مرحباً بك في' : 'Welcome to'}
                 </span>
                 <h3 className="text-2xl font-black text-white">
-                  Code<span className="text-[#00F2FE]">Vortex</span>
+                  Cloud<span className="text-[#00F2FE]">Forge</span>
                 </h3>
                 <p className="text-xs text-slate-400">
                   {isAr ? 'سجّل الدخول للمتابعة إلى حسابك' : 'Sign in to continue to your account'}
@@ -725,7 +725,7 @@ export const Header: React.FC<HeaderProps> = ({
               ) : (
                 /* Form State */
                 <div className="space-y-4 text-xs">
-                  {/* Social Login Options with Official Company SVG Logos */}
+                  {/* Social Login Options */}
                   <div className="space-y-2">
                     <button
                       type="button"
