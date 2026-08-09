@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Language, ViewMode, AIModel } from '../types';
-import { useTranslation } from '../lib/translations';
+import { Language, ViewMode, AIModel } from './types';
+import { useTranslation } from './lib/translations';
 import {
   Sparkles,
   Zap,
