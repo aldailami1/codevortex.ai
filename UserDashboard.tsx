@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Project, Language, ViewMode } from '../types';
-import { useTranslation } from '../locales/translations';
+import { getTranslation } from '../lib/translations';
 import {
   Plus,
   Search,
@@ -55,7 +55,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
   onSelectView,
 }) => {
   const isAr = language === 'ar';
-  const t = useTranslation(language);
+  const t = getTranslation(language);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'projects' | 'notifications' | 'settings' | 'account'>('projects');
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -87,9 +87,9 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
             <div className="overflow-hidden">
               <h4 className="text-xs font-bold text-white truncate">{t('myAccount')}</h4>
               <p className="text-[10px] text-cyan-400 font-mono truncate">
-                {(localStorage.getItem('codevortex_user_plan') || 'pro') === 'enterprise'
+                {(localStorage.getItem('cloudforge_user_plan') || 'pro') === 'enterprise'
                   ? 'Enterprise Plan Active 🏢'
-                  : (localStorage.getItem('codevortex_user_plan') || 'pro') === 'pro'
+                  : (localStorage.getItem('cloudforge_user_plan') || 'pro') === 'pro'
                   ? 'Pro Plan Active ⚡'
                   : 'Hobby Plan Active 🚀'}
               </p>
@@ -310,7 +310,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
 
                     {/* Description */}
                     <p className="text-slate-400 text-xs line-clamp-2 leading-relaxed">
-                      {proj.description || (isAr ? 'تطبيق سحابي متكامل متولد بواسطة الذكاء الاصطناعي' : 'Cloud application generated via CodeVortex AI')}
+                      {proj.description || (isAr ? 'تطبيق سحابي متكامل متولد بواسطة الذكاء الاصطناعي' : 'Cloud application generated via CloudForge AI')}
                     </p>
 
                     {/* Stats & Metadata Footer */}
@@ -382,7 +382,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
               <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl flex items-start gap-3">
                 <Zap className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-xs font-bold text-white">{isAr ? 'تم تحديث وكيل CodeVortex v5.2' : 'CodeVortex Agent v5.2 Deployed'}</h4>
+                  <h4 className="text-xs font-bold text-white">{isAr ? 'تم تحديث وكيل CloudForge v5.2' : 'CloudForge Agent v5.2 Deployed'}</h4>
                   <p className="text-slate-400 text-xs mt-1">{isAr ? 'تم تحسين سرعة توليد الأكواد بنسبة 40% وإتاحة خادم منفذ 3000 بفرط استجابة.' : 'Code generation speed boosted by 40% with instant port 3000 container preview.'}</p>
                 </div>
               </div>
@@ -432,8 +432,8 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
                   ⚡
                 </div>
                 <div>
-                  <h3 className="text-base font-extrabold text-white">CodeVortex Developer</h3>
-                  <p className="text-slate-400 text-xs">developer@codevortex.io</p>
+                  <h3 className="text-base font-extrabold text-white">CloudForge Developer</h3>
+                  <p className="text-slate-400 text-xs">developer@cloudforge.io</p>
                   <span className="inline-block mt-2 px-2.5 py-0.5 rounded-full bg-cyan-950 border border-cyan-800 text-cyan-400 text-[10px] font-mono font-bold">
                     Pro Developer Account
                   </span>
