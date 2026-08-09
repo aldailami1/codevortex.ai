@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Project, Language, ViewMode } from '../types';
-import { getTranslation } from '../lib/translations';
+import { Project, Language, ViewMode } from './types';
+import { useTranslation } from './lib/translations';
 import {
   Plus,
   Search,
@@ -55,7 +55,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
   onSelectView,
 }) => {
   const isAr = language === 'ar';
-  const t = getTranslation(language);
+  const t = useTranslation(language);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'projects' | 'notifications' | 'settings' | 'account'>('projects');
   const [copiedId, setCopiedId] = useState<string | null>(null);
