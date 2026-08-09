@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Language } from '../types';
-import { getTranslation } from '../lib/translations';
+import { Language } from './types';
+import { useTranslation } from './lib/translations';
 import { DepartmentalSupportPortal } from './DepartmentalSupportPortal';
 import {
   HelpCircle,
@@ -34,7 +34,7 @@ export const SupportPage: React.FC<SupportPageProps> = ({
   initialDepartment = 'sales',
   initialMagicKey = '',
 }) => {
-  const t = getTranslation(language);
+  const t = useTranslation(language);
   const isAr = language === 'ar';
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -44,8 +44,8 @@ export const SupportPage: React.FC<SupportPageProps> = ({
     {
       qAr: 'كيف يعمل نظام مفاتيح التذاكر السحرية (Magic Ticket Keys)؟',
       qEn: 'How does the Magic Ticket Keys system work?',
-      aAr: 'عند تقديم أي طلب لأي من الأقسام المخصصة (المبيعات، المالية، الدعم التقني، أو الإدارة)، يولد النظام تلقائياً مفتاحاً سحرياً فريداً (مثال: CVKEY-FIN-4102) ورابط متابعة مشفر يتيح لك متابعة التذكرة والدردشة المباشرة ورفع المستندات دون الحاجة لكلمة سر.',
-      aEn: 'When you submit a request to any dedicated department (Sales, Billing, Tech, or Executive), the system generates a unique Magic Key (e.g., CVKEY-FIN-4102) and an encrypted tracking link to access ticket status, live chat, and file uploads password-free.',
+      aAr: 'عند تقديم أي طلب لأي من الأقسام المخصصة (المبيعات، المالية، الدعم التقني، أو الإدارة)، يولد النظام تلقائياً مفتاحاً سحرياً فريداً (مثال: CFKEY-FIN-4102) ورابط متابعة مشفر يتيح لك متابعة التذكرة والدردشة المباشرة ورفع المستندات دون الحاجة لكلمة سر.',
+      aEn: 'When you submit a request to any dedicated department (Sales, Billing, Tech, or Executive), the system generates a unique Magic Key (e.g., CFKEY-FIN-4102) and an encrypted tracking link to access ticket status, live chat, and file uploads password-free.',
     },
     {
       qAr: 'ما هي الأقسام المتخصصة الأربعة المتوفرة بالمنصة؟',
@@ -136,4 +136,3 @@ export const SupportPage: React.FC<SupportPageProps> = ({
     </div>
   );
 };
-
