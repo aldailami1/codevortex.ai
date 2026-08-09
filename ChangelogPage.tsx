@@ -1,112 +1,126 @@
 import React from 'react';
-import { Language, ViewMode } from '../types';
-import { GitCommit, ArrowLeft, Sparkles, Zap, Shield, Bug, Star } from 'lucide-react';
-
-// معالجة آمنة لمسارات استيراد ملفات الترجمة لتجنب توقف Vercel Build
-let useTranslationHook: (lang: Language) => any;
-try {
-  const localesModule = require('../locales');
-  useTranslationHook = localesModule.useTranslation || localesModule.default;
-} catch (e) {
-  try {
-    const localesModuleFallback = require('./locales');
-    useTranslationHook = localesModuleFallback.useTranslation || localesModuleFallback.default;
-  } catch (err) {
-    useTranslationHook = () => ((key: string) => key);
-  }
-}
+import { Language } from '../types';
+import { getTranslation } from '../lib/translations';
+import {
+  FileText,
+  Sparkles,
+  Zap,
+  Shield,
+  Layers,
+  Terminal,
+  Check,
+  Calendar,
+  Code
+} from 'lucide-react';
 
 interface ChangelogPageProps {
   language: Language;
-  onSelectView: (view: ViewMode) => void;
 }
 
-export const ChangelogPage: React.FC<ChangelogPageProps> = ({
-  language,
-  onSelectView,
-}) => {
+export const ChangelogPage: React.FC<ChangelogPageProps> = ({ language }) => {
+  const t = getTranslation(language);
   const isAr = language === 'ar';
-  const t = useTranslationHook(language);
 
-  const updates = [
+  const releases = [
     {
-      version: 'v2.4.0',
+      version: 'v2.4 Pro (Latest Release)',
       date: 'August 2026',
-      badge: isAr ? 'أحدث إصدار' : 'Latest',
-      badgeColor: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30',
-      items: [
-        { type: 'feature', text: isAr ? 'إعادة بناء منصة CloudForge بالكامل وتحسين بيئات التشغيل المعزولة.' : 'Complete CloudForge platform rebuild with container runtime optimizations.' },
-        { type: 'improvement', text: isAr ? 'تحسين سرعة الاستجابة لمعاينة الأكواد الحية بنسبة 40%.' : '40% performance boost in live code execution previews.' },
-        { type: 'fix', text: isAr ? 'حل مشكلات استيراد المسارات والتوافق مع نظام Vercel Linux Build.' : 'Resolved module import paths and Vercel build compatibility issues.' }
+      badge: 'Major Update',
+      titleAr: 'تحديث الهوية الشاملة، محرك اللغات الـ 10، وتكامل خوادم AI Cloud Sandbox',
+      titleEn: 'Global Branding Alignment, 10-Language Localization Engine & Live AI Cloud Sandbox',
+      itemsAr: [
+        'توحيد الهوية البصرية وشعار CodeVortex النيون المتوهج في الرأس والتذييل والقوائم.',
+        'دعم 10 لغات عالمية حقيقية (العربية، الإنجليزية، الإسبانية، الفرنسية، الألمانية، الصينية، اليابانية، الهندية، الروسية، التركية) مع ضبط الاتجاه التلقائي.',
+        'تفعيل زر الرجوع الذكي والتلقائي بالهيدر يخفي نفسه في الرئيسية ويظهر في القوائم الفرعية.',
+        'دمج مساعد خدمة العملاء الذكي التفاعلي العائم لتقديم استجابة فورية 24/7.',
+        'توفير محرر الأكواد الشامل والمربوط مباشرة بخوادم التشغيل التفاعلية.',
+      ],
+      itemsEn: [
+        'Unified visual identity & glowing neon CodeVortex logo across Header, Footer, and Drawer.',
+        'Native 10-language localization engine (AR, EN, ES, FR, DE, ZH, JA, HI, RU, TR) with auto-RTL/LTR switching.',
+        'Dynamic Back Button in Header that auto-hides on Home Page and appears on sub-pages.',
+        'Floating Live AI Support Customer Agent for instant 24/7 technical queries.',
+        'Direct live cloud workspace sandbox running on port 3000.',
       ]
     },
     {
-      version: 'v2.1.0',
-      date: 'July 2026',
-      badge: isAr ? 'إصدار رئيسي' : 'Major',
-      badgeColor: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
-      items: [
-        { type: 'feature', text: isAr ? 'دعم المحرر البرمجي الذكي المطور والتكامل مع نماذج الذكاء الاصطناعي.' : 'Integrated advanced AI code completion and generation engines.' },
-        { type: 'improvement', text: isAr ? 'تحديث الواجهة لدعم التحكم الكامل للواجهات البرمجية وتخصيص الألوان.' : 'Enhanced modern dark mode UI with custom CSS theme tokens.' }
+      version: 'v2.3.0',
+      date: 'June 2026',
+      badge: 'Feature Update',
+      titleAr: 'تطوير محرك AI Copilot وقوالب البرمجة السحابية الفائقة',
+      titleEn: 'AI Copilot Refinement Engine & Ultra Cloud Templates Marketplace',
+      itemsAr: [
+        'تحسين سرعة معالجة الأوامر البرمجية وتوليد الأكواد بنسبة 40%.',
+        'إطلاق سوق القوالب المتقدمة وتوفير قوالب جاهزة لـ SaaS والمتاجر والمواقع الطبية.',
+        'دعم التخصيص الكامل للخطوط وألوان الواجهة الداكنة (Dark Mode Glassmorphism).',
+      ],
+      itemsEn: [
+        '40% speed boost for multi-file code generation and AST refactoring.',
+        'Launched Advanced Templates Marketplace with production SaaS & E-Commerce starters.',
+        'Full Dark Mode Glassmorphism design polish with customizable accent colors.',
       ]
-    }
+    },
   ];
 
   return (
     <div className="min-h-screen bg-[#0B0F19] text-slate-100 py-12 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="max-w-4xl mx-auto space-y-8">
+      <div className="max-w-5xl mx-auto space-y-12">
         
-        {/* Header navigation */}
-        <button
-          onClick={() => onSelectView('landing')}
-          className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-cyan-400 transition-colors bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-800"
-        >
-          <ArrowLeft className={`w-4 h-4 ${isAr ? 'rotate-180' : ''}`} />
-          <span>{isAr ? 'العودة للرئيسية' : 'Back to Home'}</span>
-        </button>
-
-        {/* Section Title */}
-        <div className="space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800 text-[#00F2FE] text-xs font-bold">
-            <GitCommit className="w-3.5 h-3.5" />
-            <span>CloudForge Changelog</span>
+        {/* Page Title Header */}
+        <div className="text-center space-y-4 max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-950/80 border border-purple-500/30 text-purple-400 text-xs font-black">
+            <FileText className="w-4 h-4" />
+            <span>{t('changelog')}</span>
           </div>
+
           <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-            {isAr ? 'سجل التحديثات والتطويرات' : 'Updates & Release Notes'}
+            {isAr ? 'مدونة المنصة وسجل التحديثات البرمجية' : 'Platform Changelog & Engineering Blog'}
           </h1>
-          <p className="text-slate-400 text-xs sm:text-sm">
-            {isAr ? 'تابع أحدث التحسينات والإضافات اليومية والشهريّة للمنصة.' : 'Track the latest features, enhancements, and system upgrades.'}
+
+          <p className="text-slate-400 text-sm sm:text-base">
+            {isAr
+              ? 'تابع أحدث الإضافات والتحديثات البرمجية وميزات بيئة التطوير السحابية CodeVortex.'
+              : 'Stay up-to-date with all feature releases, security updates, and architecture improvements.'}
           </p>
         </div>
 
-        {/* Release Timeline */}
-        <div className="space-y-6">
-          {updates.map((rel, idx) => (
-            <div key={idx} className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl relative overflow-hidden">
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        {/* Timeline of Releases */}
+        <div className="space-y-8">
+          {releases.map((rel, idx) => (
+            <div key={idx} className="p-6 sm:p-8 rounded-3xl bg-slate-900/90 border border-slate-800 space-y-6 relative overflow-hidden shadow-2xl">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
                 <div className="flex items-center gap-3">
-                  <span className="text-xl font-bold text-white font-mono">{rel.version}</span>
-                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold border ${rel.badgeColor}`}>
+                  <span className="font-mono font-black text-lg text-[#00F2FE]">{rel.version}</span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-cyan-950 border border-cyan-800 text-cyan-400 text-[10px] font-bold">
                     {rel.badge}
                   </span>
                 </div>
-                <span className="text-xs font-mono text-slate-400">{rel.date}</span>
+
+                <div className="flex items-center gap-1.5 text-slate-400 text-xs font-mono">
+                  <Calendar className="w-3.5 h-3.5 text-slate-500" />
+                  <span>{rel.date}</span>
+                </div>
               </div>
 
-              <ul className="space-y-3">
-                {rel.items.map((item, itemIdx) => (
-                  <li key={itemIdx} className="flex items-start gap-3 text-xs sm:text-sm text-slate-300">
-                    {item.type === 'feature' && <Sparkles className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />}
-                    {item.type === 'improvement' && <Zap className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />}
-                    {item.type === 'fix' && <Bug className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />}
-                    <span>{item.text}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="space-y-3">
+                <h2 className="text-lg font-black text-white">
+                  {isAr ? rel.titleAr : rel.titleEn}
+                </h2>
+
+                <ul className="space-y-2.5 text-xs sm:text-sm text-slate-300">
+                  {(isAr ? rel.itemsAr : rel.itemsEn).map((item, itemIdx) => (
+                    <li key={itemIdx} className="flex items-start gap-2.5">
+                      <div className="w-5 h-5 rounded-full bg-cyan-950 border border-cyan-800 flex items-center justify-center text-[#00F2FE] shrink-0 mt-0.5">
+                        <Check className="w-3 h-3" />
+                      </div>
+                      <span className="leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           ))}
         </div>
-
       </div>
     </div>
   );

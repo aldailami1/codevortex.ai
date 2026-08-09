@@ -2,38 +2,32 @@ import React, { useState, useEffect, useMemo } from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { Project, ViewMode, Language, TemplateItem, AIModel, ProjectFile } from './types';
-import { Header } from './Header';
-import { LandingPage } from './LandingPage';
-import { UserDashboard } from './UserDashboard';
-import { PricingSection } from './PricingSection';
-import { AboutUsPage } from './AboutUsPage';
-import { ContactUsPage } from './ContactUsPage';
-import { SupportPage } from './SupportPage';
-import { CommunityPage } from './CommunityPage';
-import { ChangelogPage } from './ChangelogPage';
-import { PrivacyPage } from './PrivacyPage';
-import { AcademyPage } from './AcademyPage';
-import { PromptEngine } from './PromptEngine';
-import { ReplitWorkspace } from './ReplitWorkspace';
-import { LiveCanvas } from './LiveCanvas';
-import { CodeEditor } from './CodeEditor';
-import { AIChatAssistant } from './AIChatAssistant';
-import { Marketplace } from './Marketplace';
-import { DeploymentModal } from './DeploymentModal';
-import { ProjectDrawer } from './ProjectDrawer';
-import { CommandPalette } from './CommandPalette';
-import { ProjectUploadModal } from './ProjectUploadModal';
-import { SEOHelperModal } from './SEOHelperModal';
-import { CloudForgeEngine } from './CloudForgeEngine';
-import { Footer } from './Footer';
-import { FloatingSupportWidget } from './FloatingSupportWidget';
-
-// دالة الترجمة المحلية
-const getTranslation = (lang: Language) => (key: string) => {
-  if (key === 'appName') return 'CloudForge';
-  if (key === 'tagline') return lang === 'ar' ? 'منصة التطوير السحابية الذكية' : 'Smart Cloud Development Workstation';
-  return key;
-};
+import { useTranslation } from './locales/translations';
+import { Header } from './components/Header';
+import { LandingPage } from './components/LandingPage';
+import { UserDashboard } from './components/UserDashboard';
+import { PricingSection } from './components/PricingSection';
+import { AboutUsPage } from './components/AboutUsPage';
+import { ContactUsPage } from './components/ContactUsPage';
+import { SupportPage } from './components/SupportPage';
+import { CommunityPage } from './components/CommunityPage';
+import { ChangelogPage } from './components/ChangelogPage';
+import { PrivacyPage } from './components/PrivacyPage';
+import { AcademyPage } from './components/AcademyPage';
+import { PromptEngine } from './components/PromptEngine';
+import { ReplitWorkspace } from './components/ReplitWorkspace';
+import { LiveCanvas } from './components/LiveCanvas';
+import { CodeEditor } from './components/CodeEditor';
+import { AIChatAssistant } from './components/AIChatAssistant';
+import { Marketplace } from './components/Marketplace';
+import { DeploymentModal } from './components/DeploymentModal';
+import { ProjectDrawer } from './components/ProjectDrawer';
+import { CommandPalette } from './components/CommandPalette';
+import { ProjectUploadModal } from './components/ProjectUploadModal';
+import { SEOHelperModal } from './components/SEOHelperModal';
+import { CloudForgeEngine } from './components/CloudForgeEngine';
+import { Footer } from './components/Footer';
+import { FloatingSupportWidget } from './components/FloatingSupportWidget';
 
 const INITIAL_PROJECT: Project = {
   id: 'proj-default',
@@ -132,7 +126,7 @@ const INITIAL_PROJECT: Project = {
 
   <!-- Footer -->
   <footer class="border-t border-slate-800 py-6 text-center text-slate-500 text-xs">
-    © 2026 CloudForge Neural Engine. جميع الحقوق محفوظة.
+    © 2026 CodeVortex Neural Engine. جميع الحقوق محفوظة.
   </footer>
 
   <script src="app.js"></script>
@@ -181,9 +175,8 @@ export default function App() {
       setActiveView('landing');
     }
   };
-
   const [projects, setProjects] = useState<Project[]>(() => {
-    const saved = localStorage.getItem('cloudforge_projects_v4');
+    const saved = localStorage.getItem('codevortex_projects_v4');
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -202,6 +195,7 @@ export default function App() {
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
+  // Keyboard shortcut listener (Cmd+K / Ctrl+K)
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -213,16 +207,19 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, []);
 
+  // Scroll to top on every view switch to guarantee SPA view isolation
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [activeView]);
 
+  // Sync projects to LocalStorage
   useEffect(() => {
-    localStorage.setItem('cloudforge_projects_v4', JSON.stringify(projects));
+    localStorage.setItem('codevortex_projects_v4', JSON.stringify(projects));
   }, [projects]);
 
-  const t = useMemo(() => getTranslation(language), [language]);
+  const t = useMemo(() => useTranslation(language), [language]);
 
+  // Auto-switch document layout direction and update localized document title synchronously
   useEffect(() => {
     document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.lang = language;
@@ -231,6 +228,7 @@ export default function App() {
 
   const currentProject = projects.find((p) => p.id === activeProjectId) || projects[0] || INITIAL_PROJECT;
 
+  // 1. Generate Project via AI
   const handleGenerateProject = async (
     prompt: string,
     model: AIModel,
@@ -256,7 +254,7 @@ export default function App() {
       const newProj: Project = {
         id: `proj-${Date.now()}`,
         name: data.title || prompt.substring(0, 24) || 'New AI Project',
-        description: data.description || 'Generated by CloudForge AI Engine',
+        description: data.description || 'Generated by CodeVortex AI Engine',
         language,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -286,6 +284,7 @@ export default function App() {
     }
   };
 
+  // 2. Refine Code via AI Co-Pilot
   const handleApplyCodeEdit = async (prompt: string) => {
     setIsRefining(true);
 
@@ -332,6 +331,7 @@ export default function App() {
     }
   };
 
+  // Update file content manually in Code Editor
   const handleUpdateFile = (path: string, content: string) => {
     setProjects((prev) =>
       prev.map((p) => {
@@ -342,6 +342,7 @@ export default function App() {
     );
   };
 
+  // Add new file to current project
   const handleAddFile = (path: string, content?: string) => {
     setProjects((prev) =>
       prev.map((p) => {
@@ -353,6 +354,7 @@ export default function App() {
     );
   };
 
+  // Delete file
   const handleDeleteFile = (path: string) => {
     setProjects((prev) =>
       prev.map((p) => {
@@ -362,6 +364,7 @@ export default function App() {
     );
   };
 
+  // Import Template from Marketplace
   const handleImportTemplate = (template: TemplateItem) => {
     const importedProj: Project = {
       id: `proj-template-${Date.now()}`,
@@ -379,12 +382,14 @@ export default function App() {
     setActiveView('workspace');
   };
 
+  // Rename Project
   const handleUpdateProjectName = (newName: string) => {
     setProjects((prev) =>
       prev.map((p) => (p.id === activeProjectId ? { ...p, name: newName, updatedAt: new Date().toISOString() } : p))
     );
   };
 
+  // Create Blank Project
   const handleCreateNewProject = () => {
     const blank: Project = {
       id: `proj-${Date.now()}`,
@@ -401,6 +406,7 @@ export default function App() {
     setActiveView('workspace');
   };
 
+  // Clone Project
   const handleCloneProject = (id: string) => {
     const target = projects.find((p) => p.id === id);
     if (!target) return;
@@ -415,6 +421,7 @@ export default function App() {
     setActiveProjectId(cloned.id);
   };
 
+  // Delete Project
   const handleDeleteProject = (id: string) => {
     const remaining = projects.filter((p) => p.id !== id);
     if (remaining.length === 0) return;
@@ -424,6 +431,7 @@ export default function App() {
     }
   };
 
+  // Export Clean Code ZIP / Bundle File
   const handleExportZip = async () => {
     try {
       const zip = new JSZip();
@@ -432,7 +440,7 @@ export default function App() {
       });
       const blob = await zip.generateAsync({ type: 'blob' });
       const safeName = currentProject.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
-      saveAs(blob, `${safeName || 'project'}-cloudforge.zip`);
+      saveAs(blob, `${safeName || 'project'}-codevortex.zip`);
     } catch (err) {
       console.error('Failed to generate ZIP archive:', err);
     }
@@ -440,6 +448,7 @@ export default function App() {
 
   return (
     <div className={`min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans ${language === 'ar' ? 'dir-rtl' : 'dir-ltr'}`}>
+      {/* Top Main Navigation Header */}
       <Header
         currentProject={currentProject}
         onUpdateProjectName={handleUpdateProjectName}
@@ -457,6 +466,7 @@ export default function App() {
         onToggleLoginModal={setIsLoginModalOpen}
       />
 
+      {/* Main SPA Container with Complete View Isolation */}
       <main key={activeView} className="flex-1 flex flex-col relative w-full">
         {activeView === 'landing' && (
           <LandingPage
@@ -602,6 +612,7 @@ export default function App() {
             currentProject={currentProject}
             onOpenWorkspace={() => setActiveView('workspace')}
             onDeployProject={(schema) => {
+              // Update project description with schema JSON
               setProjects((prev) =>
                 prev.map((p) =>
                   p.id === activeProjectId
@@ -614,21 +625,24 @@ export default function App() {
         )}
       </main>
 
+      {/* Global Footer */}
       {activeView !== 'workspace' && activeView !== 'preview' && activeView !== 'code' && (
         <Footer language={language} onSelectView={handleSelectView} />
       )}
 
+      {/* Floating Customer Support Live Chat Widget */}
       <FloatingSupportWidget
         language={language}
         onNavigateToDepartment={(dept) => setActiveView(`support-${dept}` as any)}
       />
 
+      {/* Global Command Palette (Cmd + K) */}
       <CommandPalette
         isOpen={showCommandPalette}
         onClose={() => setShowCommandPalette(false)}
         language={language}
         files={currentProject.files}
-        onSelectFile={() => {
+        onSelectFile={(path) => {
           setActiveView('workspace');
         }}
         onSelectView={setActiveView}
@@ -637,6 +651,7 @@ export default function App() {
         onTriggerAI={handleApplyCodeEdit}
       />
 
+      {/* Deployment Modal */}
       {showDeployModal && (
         <DeploymentModal
           project={currentProject}
@@ -645,6 +660,7 @@ export default function App() {
         />
       )}
 
+      {/* Projects Manager Drawer */}
       {showProjectsDrawer && (
         <ProjectDrawer
           projects={projects}
@@ -658,6 +674,7 @@ export default function App() {
         />
       )}
 
+      {/* Upload ZIP Project Modal */}
       <ProjectUploadModal
         language={language}
         isOpen={showUploadModal}
@@ -669,6 +686,7 @@ export default function App() {
         }}
       />
 
+      {/* SEO & Indexing Helper Modal */}
       <SEOHelperModal
         project={currentProject}
         language={language}
