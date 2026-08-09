@@ -1,6 +1,6 @@
 import React from 'react';
-import { Language } from '../types';
-import { getTranslation } from '../lib/translations';
+import { Language } from './types';
+import { useTranslation } from './lib/translations';
 import {
   FileText,
   Sparkles,
@@ -18,7 +18,7 @@ interface ChangelogPageProps {
 }
 
 export const ChangelogPage: React.FC<ChangelogPageProps> = ({ language }) => {
-  const t = getTranslation(language);
+  const t = useTranslation(language);
   const isAr = language === 'ar';
 
   const releases = [
@@ -26,18 +26,18 @@ export const ChangelogPage: React.FC<ChangelogPageProps> = ({ language }) => {
       version: 'v2.4 Pro (Latest Release)',
       date: 'August 2026',
       badge: 'Major Update',
-      titleAr: 'تحديث الهوية الشاملة، محرك اللغات الـ 10، وتكامل خوادم AI Cloud Sandbox',
-      titleEn: 'Global Branding Alignment, 10-Language Localization Engine & Live AI Cloud Sandbox',
+      titleAr: 'تحديث الهوية الشاملة لـ CloudForge، محرك اللغات المتعددة، وتكامل خوادم AI Cloud Sandbox',
+      titleEn: 'Global CloudForge Branding Alignment, Multi-Language Localization Engine & Live AI Cloud Sandbox',
       itemsAr: [
-        'توحيد الهوية البصرية وشعار CodeVortex النيون المتوهج في الرأس والتذييل والقوائم.',
-        'دعم 10 لغات عالمية حقيقية (العربية، الإنجليزية، الإسبانية، الفرنسية، الألمانية، الصينية، اليابانية، الهندية، الروسية، التركية) مع ضبط الاتجاه التلقائي.',
+        'توحيد الهوية البصرية وشعار CloudForge النيون المتوهج في الرأس والتذييل والقوائم.',
+        'دعم محرك اللغات العالميات مع ضبط الاتجاه التلقائي (RTL/LTR).',
         'تفعيل زر الرجوع الذكي والتلقائي بالهيدر يخفي نفسه في الرئيسية ويظهر في القوائم الفرعية.',
         'دمج مساعد خدمة العملاء الذكي التفاعلي العائم لتقديم استجابة فورية 24/7.',
-        'توفير محرر الأكواد الشامل والمربوط مباشرة بخوادم التشغيل التفاعلية.',
+        'توفير محرر الأكواد الشامل والمربوط مباشرة بخوادم التشغيل السحابية.',
       ],
       itemsEn: [
-        'Unified visual identity & glowing neon CodeVortex logo across Header, Footer, and Drawer.',
-        'Native 10-language localization engine (AR, EN, ES, FR, DE, ZH, JA, HI, RU, TR) with auto-RTL/LTR switching.',
+        'Unified visual identity & glowing neon CloudForge logo across Header, Footer, and Drawer.',
+        'Native multi-language localization engine with auto-RTL/LTR switching.',
         'Dynamic Back Button in Header that auto-hides on Home Page and appears on sub-pages.',
         'Floating Live AI Support Customer Agent for instant 24/7 technical queries.',
         'Direct live cloud workspace sandbox running on port 3000.',
@@ -79,7 +79,7 @@ export const ChangelogPage: React.FC<ChangelogPageProps> = ({ language }) => {
 
           <p className="text-slate-400 text-sm sm:text-base">
             {isAr
-              ? 'تابع أحدث الإضافات والتحديثات البرمجية وميزات بيئة التطوير السحابية CodeVortex.'
+              ? 'تابع أحدث الإضافات والتحديثات البرمجية وميزات بيئة التطوير السحابية CloudForge.'
               : 'Stay up-to-date with all feature releases, security updates, and architecture improvements.'}
           </p>
         </div>
