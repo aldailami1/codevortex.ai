@@ -103,7 +103,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ language }) => {
 
           <p className="text-slate-400 text-sm sm:text-base">
             {isAr
-              ? 'تواصل مع أكثر من 50,000 مهندس ومطور، شارك مشاريعك، واستفد من تجارب مجتمع CodeVortex.'
+              ? 'تواصل مع أكثر من 50,000 مهندس ومطور، شارك مشاريعك، واستفد من تجارب مجتمع CloudForge.'
               : 'Connect with 50,000+ engineers, share your builds, and collaborate across Reddit & Discord.'}
           </p>
 
@@ -116,7 +116,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ language }) => {
               className="px-5 py-2.5 rounded-xl bg-[#FF4500]/20 border border-[#FF4500]/50 text-[#FF4500] hover:bg-[#FF4500] hover:text-white font-bold text-xs transition-all flex items-center gap-2 shadow-lg"
             >
               <Globe className="w-4 h-4" />
-              <span>Reddit r/codevortex</span>
+              <span>Reddit r/cloudforge</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
 
