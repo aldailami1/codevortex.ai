@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { Project, ViewMode, Language, TemplateItem, AIModel, ProjectFile } from './types';
-import { useTranslation } from './locales/translations';
 import { Header } from './components/Header';
 import { LandingPage } from './components/LandingPage';
 import { UserDashboard } from './components/UserDashboard';
@@ -46,22 +45,14 @@ const INITIAL_PROJECT: Project = {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CloudForge Engine - منصة التطوير السحابية الذكية</title>
-
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-[#0B0F19] text-slate-100 font-sans min-h-screen flex flex-col justify-between">
-
-  <!-- Navbar -->
   <header class="border-b border-slate-800/80 px-6 py-4 backdrop-blur-md bg-[#0B0F19]/80 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -72,63 +63,8 @@ const INITIAL_PROJECT: Project = {
           CloudForge Engine
         </span>
       </div>
-
-      <nav class="hidden md:flex gap-8 text-sm font-semibold text-slate-400">
-        <a href="#features" class="hover:text-cyan-400 transition-colors">المميزات</a>
-        <a href="#sandbox" class="hover:text-cyan-400 transition-colors">التجربة الحية</a>
-        <a href="#pricing" class="hover:text-cyan-400 transition-colors">الباقات</a>
-      </nav>
-
-      <a href="#sandbox" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#00F2FE] to-blue-600 text-slate-950 font-extrabold text-sm shadow-lg shadow-cyan-500/20 hover:scale-105 transition-all">
-        ابدأ البناء مجاناً
-      </a>
     </div>
   </header>
-
-  <!-- Hero Section -->
-  <section class="py-20 px-6 max-w-5xl mx-auto text-center space-y-6 relative">
-    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-800/60 text-cyan-400 text-xs font-extrabold">
-      <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-      بيئة التطوير والتوليد السحابي المباشر العالمية
-    </div>
-
-    <h1 class="text-4xl sm:text-6xl font-black text-white leading-tight">
-      ابتكر، ابنِ، وانشر تطبيقك القادم في بيئة ريبلت سحابية فائقة السرعة
-    </h1>
-
-    <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-      اكتب فكرتك بالأوامر النصية وسيقوم المحرك ببناء الأكواد والملفات وإتاحة المعاينة التفاعلية والشل السحابي فوراً.
-    </p>
-
-    <div class="pt-4 flex flex-col sm:flex-row justify-center gap-4">
-      <button onclick="scrollDemo()" class="px-8 py-4 rounded-xl bg-gradient-to-r from-[#00F2FE] to-blue-600 text-slate-950 font-bold text-sm shadow-xl shadow-cyan-500/20 hover:scale-105 transition-all">
-        تجربة المحاكي التفاعلي
-      </button>
-      <button onclick="alert('تم تفعيل محرر الأكواد المصدرية')" class="px-8 py-4 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 font-semibold text-slate-200 text-sm">
-        عرض الأكواد المصدرية
-      </button>
-    </div>
-  </section>
-
-  <!-- Interactive Sandbox -->
-  <section id="sandbox" class="py-16 px-6 bg-slate-900/60 border-y border-slate-800/80">
-    <div class="max-w-4xl mx-auto text-center space-y-6">
-      <h2 class="text-2xl font-bold text-white">تفاعل مع عناصر الصفحة الحية</h2>
-      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
-        <p class="text-slate-400 text-sm">اضغط على الزر أدناه لتحديث عداد المبيعات التفاعلي مباشرة:</p>
-        <button onclick="updateCount()" class="px-6 py-3 bg-[#00F2FE] hover:bg-cyan-300 text-slate-950 font-bold rounded-xl text-xs shadow-lg shadow-cyan-500/20">
-          تحديث العداد الحقيقي
-        </button>
-        <div id="counterVal" class="text-2xl font-extrabold text-[#00F2FE]">إجمالي الطلبات: 1,420</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="border-t border-slate-800 py-6 text-center text-slate-500 text-xs">
-    © 2026 CodeVortex Neural Engine. جميع الحقوق محفوظة.
-  </footer>
-
   <script src="app.js"></script>
   <script>lucide.createIcons();</script>
 </body>
@@ -140,14 +76,7 @@ const INITIAL_PROJECT: Project = {
     },
     {
       path: 'app.js',
-      content: `let count = 1420;
-function updateCount() {
-  count++;
-  document.getElementById('counterVal').innerText = "إجمالي الطلبات: " + count.toLocaleString();
-}
-function scrollDemo() {
-  document.getElementById('sandbox').scrollIntoView({ behavior: 'smooth' });
-}`,
+      content: `let count = 1420;`,
     },
   ],
 };
@@ -175,8 +104,9 @@ export default function App() {
       setActiveView('landing');
     }
   };
+
   const [projects, setProjects] = useState<Project[]>(() => {
-    const saved = localStorage.getItem('codevortex_projects_v4');
+    const saved = localStorage.getItem('cloudforge_projects_v1');
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -195,7 +125,6 @@ export default function App() {
   const [showCommandPalette, setShowCommandPalette] = useState<boolean>(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
-  // Keyboard shortcut listener (Cmd+K / Ctrl+K)
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -207,35 +136,28 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, []);
 
-  // Scroll to top on every view switch to guarantee SPA view isolation
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [activeView]);
 
-  // Sync projects to LocalStorage
   useEffect(() => {
-    localStorage.setItem('codevortex_projects_v4', JSON.stringify(projects));
+    localStorage.setItem('cloudforge_projects_v1', JSON.stringify(projects));
   }, [projects]);
 
-  const t = useMemo(() => useTranslation(language), [language]);
-
-  // Auto-switch document layout direction and update localized document title synchronously
   useEffect(() => {
     document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.lang = language;
-    document.title = `${t('appName')} | ${t('tagline')}`;
-  }, [language, t]);
+    document.title = 'CloudForge Platform | Cloud Development Engine';
+  }, [language]);
 
   const currentProject = projects.find((p) => p.id === activeProjectId) || projects[0] || INITIAL_PROJECT;
 
-  // 1. Generate Project via AI
   const handleGenerateProject = async (
     prompt: string,
     model: AIModel,
     settings?: { isRTL: boolean; projectType: string }
   ) => {
     setIsGenerating(true);
-
     try {
       const response = await fetch('/api/ai/generate', {
         method: 'POST',
@@ -254,7 +176,7 @@ export default function App() {
       const newProj: Project = {
         id: `proj-${Date.now()}`,
         name: data.title || prompt.substring(0, 24) || 'New AI Project',
-        description: data.description || 'Generated by CodeVortex AI Engine',
+        description: data.description || 'Generated by CloudForge AI Engine',
         language,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -267,7 +189,6 @@ export default function App() {
       setActiveProjectId(newProj.id);
       setActiveView('workspace');
     } catch (err) {
-      console.warn('Network issue detected. Switching to local sandbox mode:', err);
       const fallbackProj: Project = {
         ...INITIAL_PROJECT,
         id: `proj-fallback-${Date.now()}`,
@@ -284,10 +205,8 @@ export default function App() {
     }
   };
 
-  // 2. Refine Code via AI Co-Pilot
   const handleApplyCodeEdit = async (prompt: string) => {
     setIsRefining(true);
-
     try {
       const response = await fetch('/api/ai/refine', {
         method: 'POST',
@@ -297,41 +216,24 @@ export default function App() {
           currentFiles: currentProject.files,
         }),
       });
-
       if (!response.ok) throw new Error(`Server status ${response.status}`);
       const data = await response.json();
-
       if (data.updatedFiles && Array.isArray(data.updatedFiles)) {
         setProjects((prev) =>
           prev.map((p) =>
-            p.id === activeProjectId
-              ? {
-                  ...p,
-                  files: data.updatedFiles,
-                  updatedAt: new Date().toISOString(),
-                }
-              : p
+            p.id === activeProjectId ? { ...p, files: data.updatedFiles, updatedAt: new Date().toISOString() } : p
           )
         );
       }
     } catch (err) {
-      console.warn('Refinement network issue detected. Applying local edit fallback:', err);
       setProjects((prev) =>
-        prev.map((p) =>
-          p.id === activeProjectId
-            ? {
-                ...p,
-                updatedAt: new Date().toISOString(),
-              }
-            : p
-        )
+        prev.map((p) => (p.id === activeProjectId ? { ...p, updatedAt: new Date().toISOString() } : p))
       );
     } finally {
       setIsRefining(false);
     }
   };
 
-  // Update file content manually in Code Editor
   const handleUpdateFile = (path: string, content: string) => {
     setProjects((prev) =>
       prev.map((p) => {
@@ -342,7 +244,6 @@ export default function App() {
     );
   };
 
-  // Add new file to current project
   const handleAddFile = (path: string, content?: string) => {
     setProjects((prev) =>
       prev.map((p) => {
@@ -354,7 +255,6 @@ export default function App() {
     );
   };
 
-  // Delete file
   const handleDeleteFile = (path: string) => {
     setProjects((prev) =>
       prev.map((p) => {
@@ -364,7 +264,6 @@ export default function App() {
     );
   };
 
-  // Import Template from Marketplace
   const handleImportTemplate = (template: TemplateItem) => {
     const importedProj: Project = {
       id: `proj-template-${Date.now()}`,
@@ -376,20 +275,17 @@ export default function App() {
       files: template.files,
       isRTL: language === 'ar',
     };
-
     setProjects((prev) => [importedProj, ...prev]);
     setActiveProjectId(importedProj.id);
     setActiveView('workspace');
   };
 
-  // Rename Project
   const handleUpdateProjectName = (newName: string) => {
     setProjects((prev) =>
       prev.map((p) => (p.id === activeProjectId ? { ...p, name: newName, updatedAt: new Date().toISOString() } : p))
     );
   };
 
-  // Create Blank Project
   const handleCreateNewProject = () => {
     const blank: Project = {
       id: `proj-${Date.now()}`,
@@ -406,7 +302,6 @@ export default function App() {
     setActiveView('workspace');
   };
 
-  // Clone Project
   const handleCloneProject = (id: string) => {
     const target = projects.find((p) => p.id === id);
     if (!target) return;
@@ -421,7 +316,6 @@ export default function App() {
     setActiveProjectId(cloned.id);
   };
 
-  // Delete Project
   const handleDeleteProject = (id: string) => {
     const remaining = projects.filter((p) => p.id !== id);
     if (remaining.length === 0) return;
@@ -431,7 +325,6 @@ export default function App() {
     }
   };
 
-  // Export Clean Code ZIP / Bundle File
   const handleExportZip = async () => {
     try {
       const zip = new JSZip();
@@ -440,7 +333,7 @@ export default function App() {
       });
       const blob = await zip.generateAsync({ type: 'blob' });
       const safeName = currentProject.name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
-      saveAs(blob, `${safeName || 'project'}-codevortex.zip`);
+      saveAs(blob, `${safeName || 'project'}-cloudforge.zip`);
     } catch (err) {
       console.error('Failed to generate ZIP archive:', err);
     }
@@ -448,7 +341,6 @@ export default function App() {
 
   return (
     <div className={`min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans ${language === 'ar' ? 'dir-rtl' : 'dir-ltr'}`}>
-      {/* Top Main Navigation Header */}
       <Header
         currentProject={currentProject}
         onUpdateProjectName={handleUpdateProjectName}
@@ -466,7 +358,6 @@ export default function App() {
         onToggleLoginModal={setIsLoginModalOpen}
       />
 
-      {/* Main SPA Container with Complete View Isolation */}
       <main key={activeView} className="flex-1 flex flex-col relative w-full">
         {activeView === 'landing' && (
           <LandingPage
@@ -612,12 +503,9 @@ export default function App() {
             currentProject={currentProject}
             onOpenWorkspace={() => setActiveView('workspace')}
             onDeployProject={(schema) => {
-              // Update project description with schema JSON
               setProjects((prev) =>
                 prev.map((p) =>
-                  p.id === activeProjectId
-                    ? { ...p, description: JSON.stringify(schema) }
-                    : p
+                  p.id === activeProjectId ? { ...p, description: JSON.stringify(schema) } : p
                 )
               );
             }}
@@ -625,33 +513,27 @@ export default function App() {
         )}
       </main>
 
-      {/* Global Footer */}
       {activeView !== 'workspace' && activeView !== 'preview' && activeView !== 'code' && (
         <Footer language={language} onSelectView={handleSelectView} />
       )}
 
-      {/* Floating Customer Support Live Chat Widget */}
       <FloatingSupportWidget
         language={language}
         onNavigateToDepartment={(dept) => setActiveView(`support-${dept}` as any)}
       />
 
-      {/* Global Command Palette (Cmd + K) */}
       <CommandPalette
         isOpen={showCommandPalette}
         onClose={() => setShowCommandPalette(false)}
         language={language}
         files={currentProject.files}
-        onSelectFile={(path) => {
-          setActiveView('workspace');
-        }}
+        onSelectFile={(path) => setActiveView('workspace')}
         onSelectView={setActiveView}
         onOpenDeployModal={() => setShowDeployModal(true)}
         onToggleLanguage={setLanguage}
         onTriggerAI={handleApplyCodeEdit}
       />
 
-      {/* Deployment Modal */}
       {showDeployModal && (
         <DeploymentModal
           project={currentProject}
@@ -660,7 +542,6 @@ export default function App() {
         />
       )}
 
-      {/* Projects Manager Drawer */}
       {showProjectsDrawer && (
         <ProjectDrawer
           projects={projects}
@@ -674,7 +555,6 @@ export default function App() {
         />
       )}
 
-      {/* Upload ZIP Project Modal */}
       <ProjectUploadModal
         language={language}
         isOpen={showUploadModal}
@@ -686,7 +566,6 @@ export default function App() {
         }}
       />
 
-      {/* SEO & Indexing Helper Modal */}
       <SEOHelperModal
         project={currentProject}
         language={language}
