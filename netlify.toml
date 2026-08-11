@@ -1,0 +1,9 @@
+# CloudForge — Netlify configuration (Next.js via @netlify/plugin-nextjs)
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Environment variables are managed in Netlify UI / envs — never committed.
