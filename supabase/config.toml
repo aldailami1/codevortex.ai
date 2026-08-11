@@ -1,0 +1,53 @@
+# CloudForge — Supabase project configuration
+project_id = "cloudforge"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+
+[db]
+port = 54322
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["https://cloudforge.app/**"]
+jwt_expiry = 3600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+enable_confirmations = true
+otp_length = 6
+otp_expiry = 600
+
+[realtime]
+enabled = true
+
+[storage]
+enabled = true
+file_size_limit = "20MB"
+
+# ------------------------------------------------------------------
+# Edge Functions (Deno). Secrets are set in the Supabase dashboard:
+#   OPENAI_API_KEY, ANTHROPIC_API_KEY, GEMINI_API_KEY,
+#   STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, CRYPTO_WEBHOOK_SECRET
+# ------------------------------------------------------------------
+[functions.ai-completion]
+verify_jwt = true
+
+[functions.stripe-webhook]
+verify_jwt = false   # Stripe signs requests itself (Stripe-Signature)
+
+[functions.crypto-webhook]
+verify_jwt = false   # provider signs requests itself
+
+[functions.webhook-dispatcher]
+verify_jwt = true

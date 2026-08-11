@@ -1,6 +1,6 @@
 {
   "name": "CloudForge AI Platform",
-  "description": "CloudForge - AI-Native Cloud Building & Automation Engine with Schema Builder, Live Deployment Logs, Supabase RLS, and REPL Workspace.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "description": "CloudForge — AI-Native Cloud Building & Automation Engine. Next.js 15 (App Router), Tailwind CSS v4, Supabase (PostgreSQL, RLS, Realtime, Edge Functions), deployable to Vercel / Netlify.",
+  "stack": "Next.js 15 + React 19 + Tailwind CSS v4 + Supabase",
+  "version": "2.0.0"
 }
