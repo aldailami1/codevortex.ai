@@ -16,10 +16,15 @@ export function hasSupabaseConfig(): boolean {
   return Boolean(url && anonKey);
 }
 
+let browserClient: ReturnType<typeof createBrowserClient> | null = null;
+
 /** Browser-side Supabase client (used by client components). */
 export function createSupabaseBrowserClient() {
   if (!hasSupabaseConfig()) return null;
-  return createBrowserClient(url, anonKey);
+  if (!browserClient) {
+    browserClient = createBrowserClient(url, anonKey);
+  }
+  return browserClient;
 }
 
 /** Server-side Supabase client with cookie management (route handlers). */
@@ -42,7 +47,17 @@ export function createSupabaseServerClient(
   });
 }
 
-/** Default Supabase browser client instance */
-export const supabase = createSupabaseBrowserClient();
+/** Default Supabase proxy instance to prevent runtime crashes */
+export const supabase = new Proxy({}, {
+  get(_target, prop) {
+    const client = createSupabaseBrowserClient();
+    if (!client) {
+      // إرجاع دالة وهمية لتجنب الانهيار في حال عدم وجود متغيرات البيئة
+      return () => Promise.resolve({ data: null, error: null });
+    }
+    const val = (client as any)[prop];
+    return typeof val === 'function' ? val.bind(client) : val;
+  }
+});
 
 export default supabase;
