@@ -47,12 +47,19 @@ export function createSupabaseServerClient(
   });
 }
 
-/** Default Supabase proxy instance to prevent runtime crashes */
-export const supabase = new Proxy({}, {
+/** Default Safe Supabase Proxy Client with full type assertion */
+export const supabase = new Proxy({} as ReturnType<typeof createBrowserClient>, {
   get(_target, prop) {
     const client = createSupabaseBrowserClient();
     if (!client) {
-      // إرجاع دالة وهمية لتجنب الانهيار في حال عدم وجود متغيرات البيئة
+      if (prop === 'auth') {
+        return {
+          getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+          onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+          signInWithOAuth: () => Promise.resolve({ data: null, error: null }),
+          signOut: () => Promise.resolve({ error: null }),
+        };
+      }
       return () => Promise.resolve({ data: null, error: null });
     }
     const val = (client as any)[prop];
