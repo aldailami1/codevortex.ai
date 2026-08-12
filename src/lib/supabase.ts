@@ -41,3 +41,8 @@ export function createSupabaseServerClient(
     },
   });
 }
+
+/** Default Supabase browser client instance */
+export const supabase = createSupabaseBrowserClient();
+
+export default supabase;
