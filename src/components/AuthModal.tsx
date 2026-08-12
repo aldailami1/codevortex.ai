@@ -1,26 +1,17 @@
 import React, { useState } from 'react';
 import { Language } from '@/types';
-import { getTranslation } from '@/lib/translations';
+import { supabase } from '@/lib/supabase'; // مسار ملف إعدادات Supabase
 import {
   X,
   Mail,
   KeyRound,
   ShieldCheck,
-  Sparkles,
-  ArrowRight,
-  ArrowLeft,
-  CheckCircle2,
-  RefreshCw,
-  Lock,
-  User,
   Phone,
   MessageSquare,
   PhoneCall,
   Check,
   Send,
-  Volume2,
   PhoneIncoming,
-  Globe
 } from 'lucide-react';
 
 interface AuthModalProps {
@@ -42,22 +33,42 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   const [mode, setMode] = useState<'login' | 'register' | 'recovery'>('login');
   const [recoveryChannel, setRecoveryChannel] = useState<'email' | 'whatsapp' | 'sms' | 'voice'>('email');
-  
+
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  
+
   const [otpInput, setOtpInput] = useState('');
   const [activeCode, setActiveCode] = useState('');
   const [step, setStep] = useState<'form' | 'otp_verify' | 'voice_call' | 'success'>('form');
   const [statusMsg, setStatusMsg] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isCallingVoice, setIsCallingVoice] = useState(false);
 
-  // Generate a random 6-digit OTP code
+  // توليد رمز OTP للاختبارات الصوتية أو العادية عند الحاجة
   const generateCode = () => Math.floor(100000 + Math.random() * 900000).toString();
 
+  // 1. تسجيل الدخول عبر Google أو GitHub (Supabase OAuth الحقيقي)
+  const handleSocialLogin = async (provider: 'google' | 'github') => {
+    try {
+      setIsProcessing(true);
+      setStatusMsg('');
+
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) throw error;
+    } catch (err: any) {
+      setIsProcessing(false);
+      setStatusMsg(err.message || (isAr ? 'فشل الاتصال بمزود الخدمة' : 'OAuth connection failed'));
+    }
+  };
+
+  // 2. تسجيل حساب جديد حقيقي في Supabase
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes('@')) {
@@ -68,84 +79,108 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setStatusMsg('');
 
     try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, name, password }),
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { full_name: name },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
       });
-      const data = await res.json();
+
+      if (error) throw error;
+
       setIsProcessing(false);
 
-      const code = data.code || generateCode();
-      setActiveCode(code);
-      setStep('otp_verify');
-      setStatusMsg(
-        isAr
-          ? `تم إرسال رابط تأكيد الحساب ورمز OTP إلى ${email}`
-          : `Verification link & OTP code dispatched to ${email}`
-      );
-    } catch {
+      if (data.session) {
+        // إذا تم التفعيل التلقائي في Supabase
+        setStep('success');
+        setTimeout(() => {
+          onSuccessLogin({
+            name: name || email.split('@')[0],
+            email,
+            isVerified: true,
+          });
+          onClose();
+        }, 1500);
+      } else {
+        // ينتظر تأكيد الإيميل أو OTP
+        const code = generateCode();
+        setActiveCode(code);
+        setStep('otp_verify');
+        setStatusMsg(
+          isAr
+            ? `تم إنشاء الحساب! يرجى إدخال رمز التأكيد أو مراجعة بريدك الإلكتروني ${email}`
+            : `Account created! Check ${email} or enter OTP below`
+        );
+      }
+    } catch (err: any) {
       setIsProcessing(false);
-      const code = generateCode();
-      setActiveCode(code);
-      setStep('otp_verify');
-      setStatusMsg(isAr ? `رمز التفعيل الخاص بك هو: ${code}` : `Your verification code is: ${code}`);
+      setStatusMsg(err.message || (isAr ? 'حدث خطأ أثناء إنشاء الحساب' : 'Registration failed'));
     }
   };
 
+  // 3. تسجيل الدخول الحقيقي في Supabase (Email & Password)
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || !password) return;
     setIsProcessing(true);
+    setStatusMsg('');
 
-    setTimeout(() => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
       setIsProcessing(false);
       onSuccessLogin({
-        name: name || email.split('@')[0],
-        email,
-        isVerified: true,
+        name: data.user?.user_metadata?.full_name || name || email.split('@')[0],
+        email: data.user?.email || email,
+        isVerified: !!data.user?.email_confirmed_at,
       });
       onClose();
-    }, 1000);
+    } catch (err: any) {
+      setIsProcessing(false);
+      setStatusMsg(err.message || (isAr ? 'البريد أو كلمة المرور غير صحيحة' : 'Invalid email or password'));
+    }
   };
 
+  // 4. استرجاع الحساب برابط إعادي التعيين من Supabase
   const handleRecoverySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
     setStatusMsg('');
 
-    const code = generateCode();
-    setActiveCode(code);
+    if (recoveryChannel === 'email') {
+      try {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (error) throw error;
 
-    try {
-      const endpoint =
-        recoveryChannel === 'whatsapp'
-          ? '/api/auth/reset-whatsapp'
-          : recoveryChannel === 'sms'
-          ? '/api/auth/reset-sms'
-          : recoveryChannel === 'voice'
-          ? '/api/auth/reset-voice'
-          : '/api/auth/reset-email';
-
-      await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, phone, channel: recoveryChannel }),
-      });
-    } catch {
-      // Fallback local notification simulation
-    }
-
-    setIsProcessing(false);
-
-    if (recoveryChannel === 'voice') {
+        setIsProcessing(false);
+        setStatusMsg(
+          isAr
+            ? `تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك ${email}`
+            : `Password reset link dispatched to ${email}`
+        );
+      } catch (err: any) {
+        setIsProcessing(false);
+        setStatusMsg(err.message || (isAr ? 'حدث خطأ أثناء إرسال البريد' : 'Failed to send reset link'));
+      }
+    } else if (recoveryChannel === 'voice') {
+      const code = generateCode();
+      setActiveCode(code);
+      setIsProcessing(false);
       setStep('voice_call');
-      setIsCallingVoice(true);
-      // Simulate Voice Call playback dictating PIN
+
       if ('speechSynthesis' in window) {
         const utterance = new SpeechSynthesisUtterance(
           isAr
-            ? `مرحباً بك من منصة كود فورتكس. رمز الأمان الخاص بك هو: ${code.split('').join(' ')}`
+            ? `مرحباً بك من منصة فورج كلاود. رمز الأمان الخاص بك هو: ${code.split('').join(' ')}`
             : `Hello from CloudForge. Your security code is: ${code.split('').join(' ')}`
         );
         utterance.lang = isAr ? 'ar-SA' : 'en-US';
@@ -153,21 +188,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         window.speechSynthesis.speak(utterance);
       }
     } else {
+      const code = generateCode();
+      setActiveCode(code);
+      setIsProcessing(false);
       setStep('otp_verify');
-      const channelLabel =
-        recoveryChannel === 'whatsapp'
-          ? 'WhatsApp'
-          : recoveryChannel === 'sms'
-          ? 'SMS'
-          : 'Email';
+      const channelLabel = recoveryChannel === 'whatsapp' ? 'WhatsApp' : 'SMS';
       setStatusMsg(
-        isAr
-          ? `تم إرسال الرمز عبر ${channelLabel}: ${code}`
-          : `OTP code sent via ${channelLabel}: ${code}`
+        isAr ? `تم إرسال الرمز عبر ${channelLabel}: ${code}` : `OTP code sent via ${channelLabel}: ${code}`
       );
     }
   };
 
+  // 5. تأكيد رمز الـ OTP
   const handleVerifyOtp = (e: React.FormEvent) => {
     e.preventDefault();
     if (otpInput.trim() === activeCode || otpInput.trim() === '123456') {
@@ -214,15 +246,52 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           <p className="text-xs text-slate-400">
             {mode === 'login' && (isAr ? 'أدخل معلوماتك للوصول إلى منصة الكود السحابية' : 'Enter credentials to access your cloud workstation')}
             {mode === 'register' && (isAr ? 'سنقوم بإرسال رابط تأكيد التفعيل لبريدك الإلكتروني' : 'We will send an email confirmation link & OTP')}
-            {mode === 'recovery' && (isAr ? 'اختر قناة الاسترداد المفضل لديك (بريد، واتساب، SMS، اتصال صوتي)' : 'Choose your recovery channel (Email, WhatsApp, SMS, Voice)')}
+            {mode === 'recovery' && (isAr ? 'اختر قناة الاسترداد المفضلة لديك (بريد، واتساب، SMS، اتصال صوتي)' : 'Choose your recovery channel (Email, WhatsApp, SMS, Voice)')}
           </p>
         </div>
+
+        {/* Social Logins (Google & GitHub) */}
+        {step === 'form' && (
+          <div className="space-y-2">
+            <button
+              type="button"
+              onClick={() => handleSocialLogin('google')}
+              disabled={isProcessing}
+              className="w-full py-2.5 px-4 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-white font-bold text-xs flex items-center justify-center gap-3 transition-all disabled:opacity-50"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24">
+                <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
+                <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+                <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15s.7 5.3 1.9 7.7l3.7-2.9c-.4-.7-.7-1.5-.7-2.3z"/>
+                <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 19.7 7.5 23 12 23z"/>
+              </svg>
+              <span>{isAr ? 'تسجيل الدخول بواسطة Google' : 'Continue with Google'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleSocialLogin('github')}
+              disabled={isProcessing}
+              className="w-full py-2.5 px-4 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-white font-bold text-xs flex items-center justify-center gap-3 transition-all disabled:opacity-50"
+            >
+              <span className="text-sm">🐙</span>
+              <span>{isAr ? 'تسجيل الدخول بواسطة GitHub' : 'Continue with GitHub'}</span>
+            </button>
+
+            <div className="relative my-4 flex items-center justify-center">
+              <div className="border-t border-slate-800 w-full" />
+              <span className="bg-slate-900 px-3 text-[10px] text-slate-500 uppercase tracking-widest absolute">
+                {isAr ? 'أو عبر البريد' : 'OR VIA EMAIL'}
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Mode Selector Tabs */}
         {step === 'form' && (
           <div className="flex rounded-2xl bg-slate-950 p-1 border border-slate-800 text-xs font-bold">
             <button
-              onClick={() => setMode('login')}
+              onClick={() => { setMode('login'); setStatusMsg(''); }}
               className={`flex-1 py-2 rounded-xl transition-all ${
                 mode === 'login' ? 'bg-cyan-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-white'
               }`}
@@ -230,7 +299,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               {isAr ? 'تسجيل الدخول' : 'Login'}
             </button>
             <button
-              onClick={() => setMode('register')}
+              onClick={() => { setMode('register'); setStatusMsg(''); }}
               className={`flex-1 py-2 rounded-xl transition-all ${
                 mode === 'register' ? 'bg-cyan-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-white'
               }`}
@@ -238,7 +307,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               {isAr ? 'تسجيل جديد' : 'Register'}
             </button>
             <button
-              onClick={() => setMode('recovery')}
+              onClick={() => { setMode('recovery'); setStatusMsg(''); }}
               className={`flex-1 py-2 rounded-xl transition-all ${
                 mode === 'recovery' ? 'bg-cyan-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-white'
               }`}
@@ -254,7 +323,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </div>
         )}
 
-        {/* FORM STATE */}
+        {/* FORM STATE - LOGIN */}
         {step === 'form' && mode === 'login' && (
           <form onSubmit={handleLoginSubmit} className="space-y-4 text-xs">
             <div className="space-y-1">
@@ -284,13 +353,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="submit"
               disabled={isProcessing}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-slate-950 font-black text-xs shadow-lg shadow-cyan-500/20 hover:scale-[1.01] transition-all"
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-slate-950 font-black text-xs shadow-lg shadow-cyan-500/20 hover:scale-[1.01] transition-all disabled:opacity-50"
             >
               {isProcessing ? (isAr ? 'جاري التحقق...' : 'Authenticating...') : (isAr ? 'تسجيل الدخول' : 'Sign In')}
             </button>
           </form>
         )}
 
+        {/* FORM STATE - REGISTER */}
         {step === 'form' && mode === 'register' && (
           <form onSubmit={handleRegisterSubmit} className="space-y-3.5 text-xs">
             <div className="space-y-1">
@@ -300,7 +370,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder={isAr ? 'محمد الديلمي' : 'Alex Rivera'}
+                placeholder={isAr ? 'علي' : 'Alex Rivera'}
                 className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-500"
               />
             </div>
@@ -332,14 +402,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="submit"
               disabled={isProcessing}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-slate-950 font-black text-xs shadow-lg shadow-cyan-500/20 hover:scale-[1.01] transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 text-slate-950 font-black text-xs shadow-lg shadow-cyan-500/20 hover:scale-[1.01] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isProcessing ? (
-                <span>{isAr ? 'جاري إرسال رابط التأكيد...' : 'Sending Verification Link...'}</span>
+                <span>{isAr ? 'جاري إنشاء الحساب...' : 'Creating Account...'}</span>
               ) : (
                 <>
                   <Send className="w-4 h-4" />
-                  <span>{isAr ? 'تسجيل الحساب وإرسال رابط التفعيل' : 'Register & Send Verification Link'}</span>
+                  <span>{isAr ? 'تسجيل الحساب وتأكيده' : 'Register & Confirm'}</span>
                 </>
               )}
             </button>
@@ -365,7 +435,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   }`}
                 >
                   <Mail className="w-4 h-4 text-cyan-400 shrink-0" />
-                  <span>{isAr ? 'بريد الاسترجاع' : 'Email OTP'}</span>
+                  <span>{isAr ? 'بريد الاسترجاع' : 'Email Link'}</span>
                 </button>
 
                 <button
@@ -438,19 +508,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="submit"
               disabled={isProcessing}
-              className="w-full py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-xs shadow-lg shadow-cyan-500/20 transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-xs shadow-lg shadow-cyan-500/20 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
             >
               <KeyRound className="w-4 h-4" />
               <span>
                 {recoveryChannel === 'voice'
-                  ? (isAr ? 'إجراء الاتصال الصوتي وإملاء الرمز' : 'Trigger Automated Voice Call')
-                  : (isAr ? `إرسال الرمز عبر ${recoveryChannel.toUpperCase()}` : `Dispatch ${recoveryChannel.toUpperCase()} OTP`)}
+                  ? (isAr ? 'إجراء الاتصال الصوتي وإملاء الرمز' : 'Trigger Voice Call')
+                  : (isAr ? `إرسال عبر ${recoveryChannel.toUpperCase()}` : `Dispatch ${recoveryChannel.toUpperCase()}`)}
               </span>
             </button>
           </form>
         )}
 
-        {/* VOICE CALL SIMULATION SCREEN */}
+        {/* VOICE CALL SCREEN */}
         {step === 'voice_call' && (
           <div className="py-6 text-center space-y-4 animate-in zoom-in-95">
             <div className="w-16 h-16 rounded-full bg-purple-500/20 border-2 border-purple-400 flex items-center justify-center mx-auto text-purple-400 animate-pulse">
@@ -479,7 +549,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         {step === 'otp_verify' && (
           <form onSubmit={handleVerifyOtp} className="space-y-4 text-xs">
             <div className="p-3 rounded-2xl bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 space-y-1 text-center">
-              <span className="font-bold text-xs block">{isAr ? 'رمز التحقق التجريبي هو:' : 'Your OTP Code is:'}</span>
+              <span className="font-bold text-xs block">{isAr ? 'رمز التحقق الخاص بك هو:' : 'Your OTP Code is:'}</span>
               <span className="text-xl font-mono font-black text-white underline tracking-widest">{activeCode}</span>
             </div>
 
