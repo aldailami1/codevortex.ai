@@ -1,9 +1,5 @@
 /**
  * CloudForge — Supabase Clients (self-contained, SSR-safe)
- * ------------------------------------------------------------------
- * Browser and server clients. Every accessor is guarded: if the env
- * variables are absent (fresh Vercel deploy without env config) the
- * helpers return `null` instead of throwing, so the UI keeps working.
  */
 import { createBrowserClient, createServerClient } from '@supabase/ssr';
 import type { CookieOptions } from '@supabase/ssr';
@@ -18,16 +14,13 @@ export function hasSupabaseConfig(): boolean {
 
 let browserClient: ReturnType<typeof createBrowserClient> | null = null;
 
-/** Browser-side Supabase client (used by client components). */
 export function createSupabaseBrowserClient() {
-  if (!hasSupabaseConfig()) return null;
-  if (!browserClient) {
+  if (!browserClient && hasSupabaseConfig()) {
     browserClient = createBrowserClient(url, anonKey);
   }
   return browserClient;
 }
 
-/** Server-side Supabase client with cookie management (route handlers). */
 export function createSupabaseServerClient(
   request: NextRequest,
   response: NextResponse
@@ -47,23 +40,28 @@ export function createSupabaseServerClient(
   });
 }
 
-/** Default Safe Supabase Proxy Client with full type assertion */
+/** Exporting active client or fallback proxy for TypeScript and runtime safety */
 export const supabase = new Proxy({} as ReturnType<typeof createBrowserClient>, {
   get(_target, prop) {
     const client = createSupabaseBrowserClient();
-    if (!client) {
-      if (prop === 'auth') {
-        return {
-          getSession: () => Promise.resolve({ data: { session: null }, error: null }),
-          onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
-          signInWithOAuth: () => Promise.resolve({ data: null, error: null }),
-          signOut: () => Promise.resolve({ error: null }),
-        };
-      }
-      return () => Promise.resolve({ data: null, error: null });
+    if (client) {
+      const val = (client as any)[prop];
+      return typeof val === 'function' ? val.bind(client) : val;
     }
-    const val = (client as any)[prop];
-    return typeof val === 'function' ? val.bind(client) : val;
+
+    // Fallback handlers if env vars are missing during render
+    if (prop === 'auth') {
+      return {
+        getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+        onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+        signInWithOAuth: async (options: any) => {
+          console.warn('Supabase URL/Key missing in environment variables.');
+          return { data: null, error: new Error('Supabase environment variables missing') };
+        },
+        signOut: () => Promise.resolve({ error: null }),
+      };
+    }
+    return () => Promise.resolve({ data: null, error: null });
   }
 });
 
