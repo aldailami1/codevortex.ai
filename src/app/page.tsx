@@ -1,13 +1,8 @@
+'use client';
+
 import React from 'react';
 import dynamic from 'next/dynamic';
 
-// استراتيجية التخزين المؤقت عبر شبكة Vercel Edge (تفتح الصفحة فوراً كالصحفة الثابتة)
-export const revalidate = 3600;
-
-/**
- * شاشة تحميل هيكلية (Skeleton) بأسلوب دارك ومستقبلي لتظهر فوراً
- * وتمنع أي استجابة بيضاء أو بطء بصري أثناء جلب الواجهة.
- */
 function AppSkeleton() {
   return (
     <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col items-center justify-center p-6 space-y-4 animate-pulse">
@@ -20,15 +15,11 @@ function AppSkeleton() {
   );
 }
 
-// تحميل مكون App ديناميكياً لتخفيف حجم الملف الأساسي والتنفيذ المباشر
 const App = dynamic(() => import('@/components/App'), {
   ssr: false,
   loading: () => <AppSkeleton />,
 });
 
-/**
- * CloudForge — Ultra-fast Home Page Shell.
- */
 export default function Page() {
   return <App />;
 }
