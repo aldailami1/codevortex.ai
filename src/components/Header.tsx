@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ViewMode, Language, Project } from '@/types';
 import { useTranslation } from '@/lib/translations';
 import { AuthModal } from './AuthModal';
-import { supabase } from '@/lib/supabase';
+import supabase from '@/lib/supabase';
 import {
   Sparkles,
   Search,
