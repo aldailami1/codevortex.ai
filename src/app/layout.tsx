@@ -1,9 +1,18 @@
 import type { Metadata, Viewport } from 'next';
+import { Cairo } from 'next/font/google';
 import './globals.css';
+
+// تحميل خط Cairo محلياً عبر Next.js لتجنب حظر العرض وتسريع فتح الصفحة
+const cairo = Cairo({
+  subsets: ['latin', 'arabic'],
+  weight: ['400', '600', '700', '800', '900'],
+  display: 'swap',
+  variable: '--font-cairo',
+});
 
 /**
  * CloudForge — Root Layout
- * Full SEO metadata, Cairo font, dark theme shell.
+ * Full SEO metadata, Cairo font optimization, dark theme shell.
  */
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -60,17 +69,14 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" dir="ltr" className="dark">
+    <html lang="en" dir="ltr" className={`dark ${cairo.variable}`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap"
-          rel="stylesheet"
-        />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        {/* تسريع الاتصال بالخوادم الخارجية الأساسية */}
+        <link rel="dns-prefetch" href="https://supabase.co" />
+        <link rel="dns-prefetch" href="https://vercel.com" />
       </head>
-      <body className="bg-[#0B0F19] text-slate-100 font-sans min-h-screen antialiased selection:bg-cyan-500 selection:text-slate-950">
+      <body className={`${cairo.className} bg-[#0B0F19] text-slate-100 font-sans min-h-screen antialiased selection:bg-cyan-500 selection:text-slate-950`}>
         <div id="app-root" className="min-h-screen flex flex-col">
           {children}
         </div>
