@@ -1,9 +1,5 @@
 /**
  * CloudForge — High-Performance Next.js Configuration
- * ------------------------------------------------------------------
- * - Optimized bundle imports for ultra-fast load times.
- * - Long-term browser caching & Edge headers.
- * - Unoptimized remote image fallbacks for zero build-time delay.
  */
 
 /** @type {import('next').NextConfig} */
@@ -12,10 +8,6 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
 
-  // تسريع واضغط معالجة الكود باستخدام محرك SWC
-  swcMinify: true,
-
-  // تحسين استيراد الحزم الثقيلة لتقليل حجم الـ Bundle
   experimental: {
     optimizePackageImports: [
       'lucide-react',
@@ -29,7 +21,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 31536000, // حفظ الصور في الكاش لمدة سنة
+    minimumCacheTTL: 31536000,
   },
 
   async headers() {
@@ -43,7 +35,6 @@ const nextConfig = {
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
         ],
       },
-      // تخزين مؤقت فائق السرعة للملفات الثابتة والخطوط
       {
         source: '/_next/static/(.*)',
         headers: [
