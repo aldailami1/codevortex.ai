@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Language } from '@/types';
-import { supabase } from '@/lib/supabase'; // مسار ملف إعدادات Supabase
+import { createSupabaseBrowserClient } from '@/lib/supabase';
 import {
   X,
   Mail,
@@ -45,14 +45,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [statusMsg, setStatusMsg] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // توليد رمز OTP للاختبارات الصوتية أو العادية عند الحاجة
   const generateCode = () => Math.floor(100000 + Math.random() * 900000).toString();
 
-  // 1. تسجيل الدخول عبر Google أو GitHub (Supabase OAuth الحقيقي)
+  // 1. تسجيل الدخول عبر Google أو GitHub (Supabase OAuth)
   const handleSocialLogin = async (provider: 'google' | 'github') => {
     try {
       setIsProcessing(true);
       setStatusMsg('');
+
+      const supabase = createSupabaseBrowserClient();
+      if (!supabase) {
+        throw new Error(isAr ? 'إعدادات Supabase غير متوفرة حالياً' : 'Supabase config missing');
+      }
 
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
@@ -79,6 +83,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setStatusMsg('');
 
     try {
+      const supabase = createSupabaseBrowserClient();
+      if (!supabase) {
+        throw new Error(isAr ? 'إعدادات Supabase غير متوفرة حالياً' : 'Supabase config missing');
+      }
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -93,7 +102,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       setIsProcessing(false);
 
       if (data.session) {
-        // إذا تم التفعيل التلقائي في Supabase
         setStep('success');
         setTimeout(() => {
           onSuccessLogin({
@@ -104,7 +112,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           onClose();
         }, 1500);
       } else {
-        // ينتظر تأكيد الإيميل أو OTP
         const code = generateCode();
         setActiveCode(code);
         setStep('otp_verify');
@@ -128,6 +135,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setStatusMsg('');
 
     try {
+      const supabase = createSupabaseBrowserClient();
+      if (!supabase) {
+        throw new Error(isAr ? 'إعدادات Supabase غير متوفرة حالياً' : 'Supabase config missing');
+      }
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -148,7 +160,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
   };
 
-  // 4. استرجاع الحساب برابط إعادي التعيين من Supabase
+  // 4. استرجاع الحساب برابط إعادة التعيين من Supabase
   const handleRecoverySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
@@ -156,6 +168,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
     if (recoveryChannel === 'email') {
       try {
+        const supabase = createSupabaseBrowserClient();
+        if (!supabase) {
+          throw new Error(isAr ? 'إعدادات Supabase غير متوفرة حالياً' : 'Supabase config missing');
+        }
+
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/reset-password`,
         });
@@ -180,7 +197,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       if ('speechSynthesis' in window) {
         const utterance = new SpeechSynthesisUtterance(
           isAr
-            ? `مرحباً بك من منصة فورج كلاود. رمز الأمان الخاص بك هو: ${code.split('').join(' ')}`
+            ? `مرحباً بك من منصة كلود فورج. رمز الأمان الخاص بك هو: ${code.split('').join(' ')}`
             : `Hello from CloudForge. Your security code is: ${code.split('').join(' ')}`
         );
         utterance.lang = isAr ? 'ar-SA' : 'en-US';
