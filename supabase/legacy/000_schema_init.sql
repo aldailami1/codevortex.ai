@@ -1,5 +1,5 @@
 -- Enterprise Database Migration: 000_schema_init.sql
--- CodeVortex Cloud Infrastructure - Full Enterprise Relational Schema Setup
+-- CloudForge Cloud Infrastructure - Full Enterprise Relational Schema Setup
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 

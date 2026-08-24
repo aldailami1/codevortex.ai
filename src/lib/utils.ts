@@ -37,9 +37,9 @@ export function safeRemoveItem(key: string): void {
 }
 
 /**
- * One-time migration from the legacy "CodeVortex" cache keys to the
- * current "CloudForge" keys. Called from the App bootstrap so old
- * visitors never lose their projects and no stale CodeVortex data
+ * One-time migration from the legacy cache namespace to the
+ * current CloudForge keys. Called from the App bootstrap so existing
+ * visitors never lose their projects and no stale legacy data
  * ever leaks into the CloudForge UI.
  */
 export function migrateLegacyCache(): void {

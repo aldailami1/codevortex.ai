@@ -26,6 +26,7 @@ import { CommandPalette } from './CommandPalette';
 import { ProjectUploadModal } from './ProjectUploadModal';
 import { SEOHelperModal } from './SEOHelperModal';
 import { CloudForgeEngine } from './CloudForgeEngine';
+import { PlatformCommandCenter } from './PlatformCommandCenter';
 import { Footer } from './Footer';
 import { FloatingSupportWidget } from './FloatingSupportWidget';
 
@@ -371,6 +372,16 @@ export default function App() {
             onSelectView={handleSelectView}
             onGenerateFromPrompt={(prompt, model) => handleGenerateProject(prompt, model)}
             onOpenLoginModal={() => setIsLoginModalOpen(true)}
+          />
+        )}
+
+        {activeView === 'control-center' && (
+          <PlatformCommandCenter
+            language={language}
+            project={currentProject}
+            onSelectView={handleSelectView}
+            onOpenWorkspace={() => setActiveView('workspace')}
+            onOpenDeploy={() => setShowDeployModal(true)}
           />
         )}
 

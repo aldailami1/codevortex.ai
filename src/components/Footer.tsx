@@ -54,7 +54,7 @@ export const Footer: React.FC<FooterProps> = ({ language, onSelectView }) => {
                 </span>
               </div>
               <span className="text-[9px] font-bold text-slate-400 -mt-0.5 tracking-tight">
-                {t('vortexSub')}
+                {t('cloudForgeSub')}
               </span>
             </div>
           </button>

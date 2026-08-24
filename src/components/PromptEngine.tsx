@@ -108,7 +108,7 @@ export const PromptEngine: React.FC<PromptEngineProps> = ({
                 className="bg-slate-900 border border-slate-800 hover:border-cyan-500/60 text-cyan-400 font-extrabold px-3 py-1.5 rounded-xl appearance-none pr-8 cursor-pointer text-xs focus:outline-none focus:border-cyan-500 shadow-lg"
               >
                 <option value="cv-neural-v5">⚡ CloudForge Neural v5.0 (سريع ومباشر)</option>
-                <option value="vortex-quantum">🧠 Vortex Quantum Ultra (تصميم كودي ذكي)</option>
+                <option value="vortex-quantum">🧠 CloudForge Quantum Ultra (تصميم كودي ذكي)</option>
                 <option value="cortex-core-pro">🔮 Cortex Core Pro (منطق برمجيات معقد)</option>
                 <option value="cyber-logic-v3">🛡️ Cyber Logic Engine (أنظمة متكاملة)</option>
               </select>

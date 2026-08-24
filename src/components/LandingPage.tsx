@@ -238,7 +238,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
             
             <p className="text-sm sm:text-base font-extrabold text-cyan-300 tracking-wide">
-              {t('vortexSub')}
+              {t('cloudForgeSub')}
             </p>
           </div>
         </div>

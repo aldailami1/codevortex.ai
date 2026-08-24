@@ -26,6 +26,7 @@ export type Language =
 export type ViewMode =
   | 'landing'
   | 'dashboard'
+  | 'control-center'
   | 'workspace'
   | 'preview'
   | 'code'
@@ -226,4 +227,27 @@ export interface Certificate {
   score: number;
   issueDate: string;
   verificationUrl: string;
+}
+
+
+/** Control Center modules available in the CloudForge operations plane. */
+export type ControlPlaneTab = 'overview' | 'shield' | 'builder' | 'ads';
+
+/** External asset prepared for a reviewed security-provider connection. */
+export interface SecurityAsset {
+  id: string;
+  url: string;
+  status: 'draft' | 'review' | 'protected' | 'paused';
+  provider?: string;
+  lastCheckedAt?: string;
+}
+
+/** Campaign draft used by the local creative studio and future ad adapters. */
+export interface CampaignDraft {
+  id: string;
+  name: string;
+  audience: string;
+  budget?: string;
+  status: 'draft' | 'ready' | 'approved' | 'paused';
+  provider?: string;
 }

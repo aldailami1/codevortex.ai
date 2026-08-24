@@ -21,7 +21,7 @@ export type { Language };
 export const translations: Record<Language, LangDict> = {
   /* ----------------------------- ENGLISH -------------------------- */
   en: {
-    vortexSub: 'AI-Native Cloud Building & Automation Engine',
+    cloudForgeSub: 'AI-Native Cloud Building & Automation Engine',
     heroPill: '⚡ The Ultimate Cloud Development Engine',
     heroTitle: 'Build, Deploy & Scale Cloud Applications at the Speed of AI',
     heroSubtitle:
@@ -135,12 +135,12 @@ export const translations: Record<Language, LangDict> = {
     systemsOperational: 'All systems operational',
     sales: 'Sales',
     press: 'Press',
-    CodeVortex: 'CloudForge',
+    cloudForge: 'CloudForge',
   },
 
   /* ----------------------------- ARABIC --------------------------- */
   ar: {
-    vortexSub: 'محرك البناء السحابي والأتمتة المعتمد على الذكاء الاصطناعي',
+    cloudForgeSub: 'محرك البناء السحابي والأتمتة المعتمد على الذكاء الاصطناعي',
     heroPill: '⚡ محرك تطوير السحابة الأقوى على الإطلاق',
     heroTitle: 'ابنِ وانشر ووسّع تطبيقاتك السحابية بسرعة الذكاء الاصطناعي',
     heroSubtitle:
@@ -254,12 +254,12 @@ export const translations: Record<Language, LangDict> = {
     systemsOperational: 'جميع الأنظمة تعمل بكفاءة',
     sales: 'المبيعات',
     press: 'الصحافة',
-    CodeVortex: 'CloudForge',
+    cloudForge: 'CloudForge',
   },
 
   /* ----------------------------- SPANISH -------------------------- */
   es: {
-    vortexSub: 'Motor de construcción y automatización en la nube con IA',
+    cloudForgeSub: 'Motor de construcción y automatización en la nube con IA',
     heroPill: '⚡ El motor definitivo de desarrollo en la nube',
     heroTitle: 'Crea, despliega y escala apps en la nube a la velocidad de la IA',
     heroSubtitle:
@@ -373,12 +373,12 @@ export const translations: Record<Language, LangDict> = {
     systemsOperational: 'Todos los sistemas operativos',
     sales: 'Ventas',
     press: 'Prensa',
-    CodeVortex: 'CloudForge',
+    cloudForge: 'CloudForge',
   },
 
   /* ----------------------------- FRENCH --------------------------- */
   fr: {
-    vortexSub: 'Moteur de création et d’automatisation cloud natif IA',
+    cloudForgeSub: 'Moteur de création et d’automatisation cloud natif IA',
     heroPill: '⚡ Le moteur ultime de développement cloud',
     heroTitle: 'Créez, déployez et scaliez vos apps cloud à la vitesse de l’IA',
     heroSubtitle:
@@ -492,12 +492,12 @@ export const translations: Record<Language, LangDict> = {
     systemsOperational: 'Tous les systèmes opérationnels',
     sales: 'Ventes',
     press: 'Presse',
-    CodeVortex: 'CloudForge',
+    cloudForge: 'CloudForge',
   },
 
   /* ----------------------------- GERMAN --------------------------- */
   de: {
-    vortexSub: 'KI-native Cloud-Building- und Automatisierungs-Engine',
+    cloudForgeSub: 'KI-native Cloud-Building- und Automatisierungs-Engine',
     heroPill: '⚡ Die ultimative Cloud-Entwicklungs-Engine',
     heroTitle: 'Cloud-Apps mit KI-Geschwindigkeit bauen, deployen & skalieren',
     heroSubtitle:
@@ -611,12 +611,12 @@ export const translations: Record<Language, LangDict> = {
     systemsOperational: 'Alle Systeme betriebsbereit',
     sales: 'Vertrieb',
     press: 'Presse',
-    CodeVortex: 'CloudForge',
+    cloudForge: 'CloudForge',
   },
 
   /* ----------------------------- CHINESE -------------------------- */
   zh: {
-    vortexSub: 'AI 原生的云端构建与自动化引擎',
+    cloudForgeSub: 'AI 原生的云端构建与自动化引擎',
     heroPill: '⚡ 终极云开发引擎',
     heroTitle: '以 AI 的速度构建、部署和扩展云应用',
     heroSubtitle:
@@ -716,12 +716,12 @@ export const translations: Record<Language, LangDict> = {
     systemsOperational: '所有系统运行正常',
     sales: '销售',
     press: '媒体',
-    CodeVortex: 'CloudForge',
+    cloudForge: 'CloudForge',
   },
 
   /* ----------------------------- JAPANESE ------------------------- */
   ja: {
-    vortexSub: 'AIネイティブなクラウド構築・自動化エンジン',
+    cloudForgeSub: 'AIネイティブなクラウド構築・自動化エンジン',
     heroPill: '⚡ 究極のクラウド開発エンジン',
     heroTitle: 'AIの速度でクラウドアプリを構築・デプロイ・拡張',
     heroSubtitle:
@@ -822,12 +822,12 @@ export const translations: Record<Language, LangDict> = {
     systemsOperational: 'すべてのシステム稼働中',
     sales: '営業',
     press: '報道',
-    CodeVortex: 'CloudForge',
+    cloudForge: 'CloudForge',
   },
 
   /* ----------------------------- HINDI ---------------------------- */
   hi: {
-    vortexSub: 'AI-नेटिव क्लाउड बिल्डिंग और ऑटोमेशन इंजन',
+    cloudForgeSub: 'AI-नेटिव क्लाउड बिल्डिंग और ऑटोमेशन इंजन',
     heroPill: '⚡ अल्टीमेट क्लाउड डेवलपमेंट इंजन',
     heroTitle: 'AI की गति से क्लाउड ऐप्स बनाएं, डिप्लॉय करें और स्केल करें',
     heroSubtitle:
@@ -928,12 +928,12 @@ export const translations: Record<Language, LangDict> = {
     systemsOperational: 'सभी सिस्टम चालू',
     sales: 'बिक्री',
     press: 'प्रेस',
-    CodeVortex: 'CloudForge',
+    cloudForge: 'CloudForge',
   },
 
   /* ----------------------------- RUSSIAN -------------------------- */
   ru: {
-    vortexSub: 'Облачный движок сборки и автоматизации на базе ИИ',
+    cloudForgeSub: 'Облачный движок сборки и автоматизации на базе ИИ',
     heroPill: '⚡ Ультимативный движок облачной разработки',
     heroTitle: 'Создавайте, разворачивайте и масштабируйте облачные приложения со скоростью ИИ',
     heroSubtitle:
@@ -1035,12 +1035,12 @@ export const translations: Record<Language, LangDict> = {
     systemsOperational: 'Все системы работают',
     sales: 'Продажи',
     press: 'Пресса',
-    CodeVortex: 'CloudForge',
+    cloudForge: 'CloudForge',
   },
 
   /* ----------------------------- TURKISH -------------------------- */
   tr: {
-    vortexSub: 'AI tabanlı bulut oluşturma ve otomasyon motoru',
+    cloudForgeSub: 'AI tabanlı bulut oluşturma ve otomasyon motoru',
     heroPill: '⚡ Nihai bulut geliştirme motoru',
     heroTitle: 'Bulut uygulamalarını AI hızında oluşturun, dağıtın ve ölçeklendirin',
     heroSubtitle:
@@ -1142,12 +1142,12 @@ export const translations: Record<Language, LangDict> = {
     systemsOperational: 'Tüm sistemler çalışıyor',
     sales: 'Satış',
     press: 'Basın',
-    CodeVortex: 'CloudForge',
+    cloudForge: 'CloudForge',
   },
 
   /* ----------------------------- PORTUGUESE ----------------------- */
   pt: {
-    vortexSub: 'Motor de construção e automação em nuvem nativo de IA',
+    cloudForgeSub: 'Motor de construção e automação em nuvem nativo de IA',
     heroPill: '⚡ O motor definitivo de desenvolvimento em nuvem',
     heroTitle: 'Crie, implante e escale apps na nuvem na velocidade da IA',
     heroSubtitle:
@@ -1251,12 +1251,12 @@ export const translations: Record<Language, LangDict> = {
     systemsOperational: 'Todos os sistemas operacionais',
     sales: 'Vendas',
     press: 'Imprensa',
-    CodeVortex: 'CloudForge',
+    cloudForge: 'CloudForge',
   },
 
   /* ----------------------------- ITALIAN -------------------------- */
   it: {
-    vortexSub: 'Motore di creazione e automazione cloud nativo IA',
+    cloudForgeSub: 'Motore di creazione e automazione cloud nativo IA',
     heroPill: '⚡ Il motore definitivo per lo sviluppo cloud',
     heroTitle: 'Crea, distribuisci e scala app cloud alla velocità dell’IA',
     heroSubtitle:
@@ -1359,12 +1359,12 @@ export const translations: Record<Language, LangDict> = {
     systemsOperational: 'Tutti i sistemi operativi',
     sales: 'Vendite',
     press: 'Stampa',
-    CodeVortex: 'CloudForge',
+    cloudForge: 'CloudForge',
   },
 
   /* ----------------------------- KOREAN --------------------------- */
   ko: {
-    vortexSub: 'AI 네이티브 클라우드 빌딩 및 자동화 엔진',
+    cloudForgeSub: 'AI 네이티브 클라우드 빌딩 및 자동화 엔진',
     heroPill: '⚡ 궁극의 클라우드 개발 엔진',
     heroTitle: 'AI의 속도로 클라우드 앱을 구축, 배포, 확장하세요',
     heroSubtitle:
@@ -1464,12 +1464,12 @@ export const translations: Record<Language, LangDict> = {
     systemsOperational: '모든 시스템 정상 작동',
     sales: '영업',
     press: '언론',
-    CodeVortex: 'CloudForge',
+    cloudForge: 'CloudForge',
   },
 
   /* ----------------------------- DUTCH ---------------------------- */
   nl: {
-    vortexSub: 'AI-native cloudbouw- en automatiseringsengine',
+    cloudForgeSub: 'AI-native cloudbouw- en automatiseringsengine',
     heroPill: '⚡ De ultieme cloudontwikkelingsengine',
     heroTitle: 'Bouw, deploy en schaal cloudapps op AI-snelheid',
     heroSubtitle:
@@ -1571,7 +1571,7 @@ export const translations: Record<Language, LangDict> = {
     systemsOperational: 'Alle systemen operationeel',
     sales: 'Verkoop',
     press: 'Pers',
-    CodeVortex: 'CloudForge',
+    cloudForge: 'CloudForge',
   },
 };
 

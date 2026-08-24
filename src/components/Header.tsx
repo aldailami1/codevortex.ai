@@ -211,7 +211,7 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               </div>
               <span className="text-[9px] font-bold text-slate-400 -mt-0.5 tracking-tight">
-                {t('vortexSub')}
+                {t('cloudForgeSub')}
               </span>
             </div>
           </button>
@@ -432,6 +432,18 @@ export const Header: React.FC<HeaderProps> = ({
                   </button>
 
                   <button
+                    onClick={() => navigateTo('control-center')}
+                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold transition-all ${
+                      activeView === 'control-center'
+                        ? 'bg-cyan-950/80 text-[#00F2FE] border border-cyan-800/80'
+                        : 'text-slate-200 hover:bg-slate-900 hover:text-white'
+                    }`}
+                  >
+                    <Shield className="w-4 h-4 text-cyan-400" />
+                    <span>{isAr ? 'مركز قيادة CloudForge' : 'CloudForge Control Center'}</span>
+                  </button>
+
+                  <button
                     onClick={() => navigateTo('cloudforge')}
                     className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold transition-all ${
                       activeView === 'cloudforge'
@@ -440,7 +452,7 @@ export const Header: React.FC<HeaderProps> = ({
                     }`}
                   >
                     <Cpu className="w-4 h-4 text-cyan-400" />
-                    <span>CloudForge Engine</span>
+                    <span>{isAr ? 'منشئ مخطط CloudForge' : 'CloudForge Schema Builder'}</span>
                   </button>
 
                   <button
