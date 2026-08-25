@@ -80,7 +80,7 @@ export interface TemplateItem {
   titleAr: string;
   description: string;
   descriptionAr: string;
-  category: 'saas' | 'ecommerce' | 'dashboard' | 'ai' | 'landing';
+  category: 'website' | 'saas' | 'ecommerce' | 'dashboard' | 'ai' | 'landing' | 'app' | 'schema';
   badge: string;
   image: string;
   files: ProjectFile[];
@@ -229,6 +229,9 @@ export interface Certificate {
   verificationUrl: string;
 }
 
+
+/** Billing products supported by the pricing and checkout surfaces. */
+export type BillingProduct = 'pro' | 'enterprise' | 'ad-engine' | 'ad-starter' | 'ad-growth' | 'ad-scale';
 
 /** Control Center modules available in the CloudForge operations plane. */
 export type ControlPlaneTab = 'overview' | 'shield' | 'builder' | 'ads';

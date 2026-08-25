@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
+import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { Project, ViewMode, Language, TemplateItem, AIModel, ProjectFile } from '@/types';
 import { safeGetItem, safeSetItem, migrateLegacyCache } from '@/lib/utils';
 import { Header } from './Header';
@@ -13,23 +12,32 @@ import { SupportPage } from './SupportPage';
 import { CommunityPage } from './CommunityPage';
 import { ChangelogPage } from './ChangelogPage';
 import { PrivacyPage } from './PrivacyPage';
-import { AcademyPage } from './AcademyPage';
-import { PromptEngine } from './PromptEngine';
-import { ReplitWorkspace } from './ReplitWorkspace';
-import { LiveCanvas } from './LiveCanvas';
-import { CodeEditor } from './CodeEditor';
-import { AIChatAssistant } from './AIChatAssistant';
-import { Marketplace } from './Marketplace';
-import { DeploymentModal } from './DeploymentModal';
-import { ProjectDrawer } from './ProjectDrawer';
-import { CommandPalette } from './CommandPalette';
-import { ProjectUploadModal } from './ProjectUploadModal';
-import { SEOHelperModal } from './SEOHelperModal';
-import { CloudForgeEngine } from './CloudForgeEngine';
 import { PlatformCommandCenter } from './PlatformCommandCenter';
 import { Footer } from './Footer';
 import { FloatingSupportWidget } from './FloatingSupportWidget';
 
+const LazyModuleLoading = () => (
+  <div className="flex min-h-[18rem] items-center justify-center p-6 text-slate-400" role="status" aria-live="polite">
+    <div className="flex items-center gap-3 rounded-2xl border border-slate-800 bg-slate-900/70 px-4 py-3 text-xs font-semibold shadow-xl">
+      <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-cyan-400" />
+      <span>Loading CloudForge module…</span>
+    </div>
+  </div>
+);
+
+const LazyAcademyPage = dynamic(() => import('./AcademyPage').then((module) => module.AcademyPage), { loading: LazyModuleLoading, ssr: false });
+const LazyPromptEngine = dynamic(() => import('./PromptEngine').then((module) => module.PromptEngine), { loading: LazyModuleLoading, ssr: false });
+const LazyReplitWorkspace = dynamic(() => import('./ReplitWorkspace').then((module) => module.ReplitWorkspace), { loading: LazyModuleLoading, ssr: false });
+const LazyLiveCanvas = dynamic(() => import('./LiveCanvas').then((module) => module.LiveCanvas), { loading: LazyModuleLoading, ssr: false });
+const LazyCodeEditor = dynamic(() => import('./CodeEditor').then((module) => module.CodeEditor), { loading: LazyModuleLoading, ssr: false });
+const LazyAIChatAssistant = dynamic(() => import('./AIChatAssistant').then((module) => module.AIChatAssistant), { loading: LazyModuleLoading, ssr: false });
+const LazyMarketplace = dynamic(() => import('./Marketplace').then((module) => module.Marketplace), { loading: LazyModuleLoading, ssr: false });
+const LazyDeploymentModal = dynamic(() => import('./DeploymentModal').then((module) => module.DeploymentModal), { loading: LazyModuleLoading, ssr: false });
+const LazyProjectDrawer = dynamic(() => import('./ProjectDrawer').then((module) => module.ProjectDrawer), { loading: LazyModuleLoading, ssr: false });
+const LazyCommandPalette = dynamic(() => import('./CommandPalette').then((module) => module.CommandPalette), { loading: LazyModuleLoading, ssr: false });
+const LazyProjectUploadModal = dynamic(() => import('./ProjectUploadModal').then((module) => module.ProjectUploadModal), { loading: LazyModuleLoading, ssr: false });
+const LazySEOHelperModal = dynamic(() => import('./SEOHelperModal').then((module) => module.SEOHelperModal), { loading: LazyModuleLoading, ssr: false });
+const LazyCloudForgeEngine = dynamic(() => import('./CloudForgeEngine').then((module) => module.CloudForgeEngine), { loading: LazyModuleLoading, ssr: false });
 const INITIAL_PROJECT: Project = {
   id: 'proj-default',
   name: 'CloudForge Workstation',
@@ -271,7 +279,7 @@ export default function App() {
     );
   };
 
-  const handleImportTemplate = (template: TemplateItem) => {
+  const handleImportTemplate = (template: TemplateItem, options?: { openDeploy?: boolean }) => {
     const importedProj: Project = {
       id: `proj-template-${Date.now()}`,
       name: language === 'ar' ? template.titleAr : template.title,
@@ -285,6 +293,9 @@ export default function App() {
     setProjects((prev) => [importedProj, ...prev]);
     setActiveProjectId(importedProj.id);
     setActiveView('workspace');
+    if (options?.openDeploy) {
+      window.setTimeout(() => setShowDeployModal(true), 0);
+    }
   };
 
   const handleUpdateProjectName = (newName: string) => {
@@ -334,6 +345,7 @@ export default function App() {
 
   const handleExportZip = async () => {
     try {
+      const [{ default: JSZip }, { saveAs }] = await Promise.all([import('jszip'), import('file-saver')]);
       const zip = new JSZip();
       currentProject.files.forEach((file) => {
         zip.file(file.path, file.content);
@@ -451,7 +463,7 @@ export default function App() {
         )}
 
         {activeView === 'academy' && (
-          <AcademyPage
+          <LazyAcademyPage
             language={language}
             onOpenWorkspace={(initialCode) => {
               if (initialCode) {
@@ -464,12 +476,12 @@ export default function App() {
 
         {activeView === 'workspace' && (
           <div className="flex-1 flex flex-col w-full">
-            <PromptEngine
+            <LazyPromptEngine
               language={language}
               onGenerate={handleGenerateProject}
               isGenerating={isGenerating}
             />
-            <ReplitWorkspace
+            <LazyReplitWorkspace
               project={currentProject}
               language={language}
               onUpdateFileContent={handleUpdateFile}
@@ -483,7 +495,7 @@ export default function App() {
         )}
 
         {activeView === 'preview' && (
-          <LiveCanvas
+          <LazyLiveCanvas
             project={currentProject}
             language={language}
             onUpdateFileContent={handleUpdateFile}
@@ -491,7 +503,7 @@ export default function App() {
         )}
 
         {activeView === 'code' && (
-          <CodeEditor
+          <LazyCodeEditor
             project={currentProject}
             language={language}
             onUpdateFile={handleUpdateFile}
@@ -501,7 +513,7 @@ export default function App() {
         )}
 
         {activeView === 'chat' && (
-          <AIChatAssistant
+          <LazyAIChatAssistant
             project={currentProject}
             language={language}
             onApplyCodeEdit={handleApplyCodeEdit}
@@ -510,14 +522,15 @@ export default function App() {
         )}
 
         {activeView === 'marketplace' && (
-          <Marketplace
+          <LazyMarketplace
             language={language}
             onImportTemplate={handleImportTemplate}
+            onDeployTemplate={(template) => handleImportTemplate(template, { openDeploy: true })}
           />
         )}
 
         {activeView === 'cloudforge' && (
-          <CloudForgeEngine
+          <LazyCloudForgeEngine
             language={language}
             currentProject={currentProject}
             onOpenWorkspace={() => setActiveView('workspace')}
@@ -541,7 +554,7 @@ export default function App() {
         onNavigateToDepartment={(dept) => setActiveView(`support-${dept}` as any)}
       />
 
-      <CommandPalette
+      <LazyCommandPalette
         isOpen={showCommandPalette}
         onClose={() => setShowCommandPalette(false)}
         language={language}
@@ -554,7 +567,7 @@ export default function App() {
       />
 
       {showDeployModal && (
-        <DeploymentModal
+        <LazyDeploymentModal
           project={currentProject}
           language={language}
           onClose={() => setShowDeployModal(false)}
@@ -562,7 +575,7 @@ export default function App() {
       )}
 
       {showProjectsDrawer && (
-        <ProjectDrawer
+        <LazyProjectDrawer
           projects={projects}
           activeProjectId={activeProjectId}
           language={language}
@@ -574,7 +587,7 @@ export default function App() {
         />
       )}
 
-      <ProjectUploadModal
+      <LazyProjectUploadModal
         language={language}
         isOpen={showUploadModal}
         onClose={() => setShowUploadModal(false)}
@@ -585,7 +598,7 @@ export default function App() {
         }}
       />
 
-      <SEOHelperModal
+      <LazySEOHelperModal
         project={currentProject}
         language={language}
         isOpen={showSEOModal}

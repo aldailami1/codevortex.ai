@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Language, ViewMode } from '@/types';
+import { BillingProduct, Language, ViewMode } from '@/types';
 import { CheckoutModal } from './CheckoutModal';
 import {
   Check,
@@ -8,18 +8,16 @@ import {
   Rocket,
   ShieldCheck,
   Building2,
-  Users,
   ChevronDown,
   ChevronUp,
   HelpCircle,
-  Award
 } from 'lucide-react';
 
 interface PricingSectionProps {
   language: Language;
   onSelectView: (view: ViewMode) => void;
   onOpenDeployModal?: () => void;
-  onUpgradeSuccess?: (plan: 'pro' | 'enterprise') => void;
+  onUpgradeSuccess?: (plan: BillingProduct) => void;
 }
 
 export const PricingSection: React.FC<PricingSectionProps> = ({
@@ -32,7 +30,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<'pro' | 'enterprise'>('pro');
+  const [selectedPlan, setSelectedPlan] = useState<BillingProduct>('pro');
 
   const toggleFaq = (idx: number) => {
     setOpenFaq(openFaq === idx ? null : idx);
@@ -48,7 +46,12 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
     setIsCheckoutOpen(true);
   };
 
-  const handlePaymentCompleted = (plan: 'pro' | 'enterprise') => {
+  const handleOpenAdProduct = (product: Extract<BillingProduct, 'ad-engine' | 'ad-starter' | 'ad-growth' | 'ad-scale'>) => {
+    setSelectedPlan(product);
+    setIsCheckoutOpen(true);
+  };
+
+  const handlePaymentCompleted = (plan: BillingProduct) => {
     if (onUpgradeSuccess) {
       onUpgradeSuccess(plan);
     } else {
@@ -127,7 +130,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
         </div>
 
         {/* Pricing Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
           {/* Card 1: Free Hobby Plan */}
           <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 space-y-6 flex flex-col justify-between hover:border-slate-700 transition-all">
             <div className="space-y-4">
@@ -193,7 +196,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               <div>
                 <div className="flex items-baseline gap-1">
                   <span className="text-4xl font-black text-white">
-                    {billingCycle === 'yearly' ? '$20' : '$25'}
+                    {billingCycle === 'yearly' ? '$16' : '$20'}
                   </span>
                   <span className="text-slate-400 text-xs">/{isAr ? 'شهرياً' : 'month'}</span>
                 </div>
@@ -246,7 +249,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
 
               <div>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-black text-white">$49</span>
+                  <span className="text-4xl font-black text-white">{isAr ? 'مخصص' : 'Custom'}</span>
                   <span className="text-slate-500 text-xs">/{isAr ? 'مستخدم / شهرياً' : 'seat / month'}</span>
                 </div>
                 <p className="text-slate-400 text-xs mt-2">
@@ -281,7 +284,29 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
               {isAr ? 'التواصل مع مبيعات الشركات' : 'Contact Enterprise Sales'}
             </button>
           </div>
+
+          {/* Card 4: Ad-Engine Tier */}
+          <div className="bg-gradient-to-b from-amber-950/40 to-slate-900/90 border border-amber-500/30 rounded-3xl p-6 space-y-6 flex flex-col justify-between hover:border-amber-400/70 transition-all">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between"><span className="px-3 py-1 rounded-xl bg-amber-950 border border-amber-800 text-amber-300 text-xs font-bold">{isAr ? 'محرك الإعلانات' : 'Ad-Engine Tier'}</span><Rocket className="w-5 h-5 text-amber-300" /></div>
+              <div><div className="flex items-baseline gap-1"><span className="text-4xl font-black text-white">{isAr ? 'رصيد' : 'Credit'}</span><span className="text-slate-500 text-xs">/{isAr ? 'حسب الاستخدام' : 'usage based'}</span></div><p className="text-slate-400 text-xs mt-2">{isAr ? 'شحن أرصدة الحملات وإدارة المسودات والتقارير ضمن مساحة تسويق مستقلة.' : 'Fund campaign credits and manage drafts and reporting in a dedicated marketing workspace.'}</p></div>
+              <div className="space-y-2.5 pt-4 border-t border-slate-800 text-xs text-slate-300"><div className="flex items-center gap-2"><Check className="w-4 h-4 text-amber-300 shrink-0" /><span>{isAr ? 'دعم الحملات عبر Meta وGoogle وTikTok' : 'Meta, Google, and TikTok campaign support'}</span></div><div className="flex items-center gap-2"><Check className="w-4 h-4 text-amber-300 shrink-0" /><span>{isAr ? 'مسودات نص وتصميم بالذكاء الاصطناعي' : 'AI-assisted copy and creative drafts'}</span></div><div className="flex items-center gap-2"><Check className="w-4 h-4 text-amber-300 shrink-0" /><span>{isAr ? 'تقارير وتحسين بعد الموافقة' : 'Reporting and optimization after approval'}</span></div></div>
+            </div>
+            <button onClick={() => handleOpenAdProduct('ad-engine')} className="w-full py-3 rounded-xl bg-amber-300 hover:bg-amber-200 text-slate-950 font-black text-xs transition-all">{isAr ? 'فتح باقة الإعلانات' : 'Open Ad-Engine'}</button>
+          </div>
         </div>
+
+        {/* Standalone Marketing & Ad Packs */}
+        <section className="space-y-5 rounded-3xl border border-amber-500/20 bg-amber-950/10 p-5 sm:p-7">
+          <div><p className="text-xs font-black uppercase tracking-[0.18em] text-amber-300">{isAr ? 'باقات مستقلة' : 'Standalone Ad Packs'}</p><h2 className="mt-2 text-2xl font-black text-white">{isAr ? 'حوّل الرصيد إلى حملة واضحة المراحل' : 'Turn campaign credit into a clear growth workflow'}</h2><p className="mt-2 text-sm leading-6 text-slate-400">{isAr ? 'الأسعار التالية لشحن الرصيد فقط؛ ميزانية الوسائط الخارجية وأي شراء إعلاني يعتمدان على المزوّد والموافقة.' : 'These prices fund the CloudForge workflow only; external media spend and purchases depend on provider approval.'}</p></div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              { product: 'ad-starter' as const, price: '$10', nameEn: 'Starter Ad Pack', nameAr: 'باقة الانطلاق والتجربة', descEn: 'One campaign draft, AI copy and creative handoff.', descAr: 'مسودة حملة واحدة مع نص وتصميم بالذكاء الاصطناعي.' },
+              { product: 'ad-growth' as const, price: '$25', nameEn: 'Growth Marketing Pack', nameAr: 'باقة النمو المتسارع', descEn: 'Multi-channel workflow and daily reporting setup.', descAr: 'تدفق متعدد القنوات وتجهيز تقارير يومية.' },
+              { product: 'ad-scale' as const, price: '$50+', nameEn: 'Scale & Dominate Pack', nameAr: 'باقة الهيمنة والتوسع', descEn: 'Full-funnel planning, A/B test drafts and team guidance.', descAr: 'استراتيجية Full Funnel ومسودات A/B ومرافقة الفريق.' },
+            ].map((pack) => <div key={pack.product} className="flex flex-col justify-between rounded-2xl border border-slate-800 bg-slate-950/70 p-5"><div><div className="flex items-center justify-between"><h3 className="font-black text-white">{isAr ? pack.nameAr : pack.nameEn}</h3><span className="text-xl font-black text-amber-300">{pack.price}</span></div><p className="mt-3 text-xs leading-6 text-slate-400">{isAr ? pack.descAr : pack.descEn}</p><p className="mt-3 text-[10px] font-bold uppercase tracking-wider text-emerald-300">{isAr ? '100% من الرصيد للتدفق' : '100% of credit funds the workflow'}</p></div><button onClick={() => handleOpenAdProduct(pack.product)} className="mt-5 min-h-11 rounded-xl border border-amber-400/30 bg-amber-400/10 px-3 py-2 text-xs font-black text-amber-200 hover:bg-amber-400/20">{isAr ? 'شراء الباقة' : 'Buy pack'}</button></div>)}
+          </div>
+        </section>
 
         {/* FAQ Section */}
         <div className="pt-12 border-t border-slate-800/80 space-y-6 max-w-3xl mx-auto">

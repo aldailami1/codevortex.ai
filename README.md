@@ -100,3 +100,14 @@ The Control Center is intentionally honest about integration state. It can prepa
 ## 📄 License
 
 Private / proprietary. © 2026 CloudForge.
+
+
+## ⚡ Global performance and navigation upgrade
+
+The initial shell now renders directly without a black loading gate. Heavy modules are loaded on demand through `next/dynamic`, including the Monaco workspace, live preview, Academy, Marketplace, deployment modals, and command palette. Export dependencies are also loaded only when a user requests a ZIP export. The primary Header exposes concise desktop links, while the full navigation is available through a responsive, collapsible sidebar.
+
+## 🛍️ Marketplace and plans
+
+The Marketplace catalog is defined in `src/data/marketplaceCatalog.ts` and includes 20+ starter items across Websites, Cloud & SaaS, E-Commerce, Apps & Services, and Schemas & APIs. Each item supports search, category filtering, live preview, workspace installation, and deployment preparation. Pricing includes Free, Pro at $20/month, Enterprise custom, and a separate Ad-Engine with Starter ($10), Growth ($25), and Scale ($50+) workflow-credit packs.
+
+Checkout is provider-safe: production Stripe sessions require server-side price IDs such as `STRIPE_PRICE_PRO_MONTHLY` and `STRIPE_PRICE_AD_STARTER`. Sandbox success is disabled by default and can only be enabled explicitly for local development with `ALLOW_SANDBOX_CHECKOUT=true`. Apple Pay is presented through Stripe wallet support; PayPal and Binance Pay remain explicit provider adapters until their server credentials and signed webhooks are configured.

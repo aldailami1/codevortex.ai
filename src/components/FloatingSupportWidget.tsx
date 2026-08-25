@@ -72,8 +72,8 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
       console.warn('Support chat request failed:', err);
       setIsTyping(false);
       const fallbackText = isAr
-        ? 'يسعدنا تواصلك مع **CloudForge**! لقد تم تسجيل استفسارك كـ **تذكرة دعم فني** وحفظها في بنك التذاكر بالمنصة.'
-        : 'Thank you for contacting **CloudForge**! Your query has been logged as a **support ticket** in our platform database.';
+        ? 'يسعدني مساعدتك في CloudForge. يبدو أن مزوّد الرد الآلي غير متاح للحظة، لكن يمكنني إرشادك هنا: اذكر هدفك أو رسالة الخطأ وسنحدد الخطوة التالية معاً.'
+        : 'I am happy to help with CloudForge. The automated responder is briefly unavailable, but we can still work through it here: share your goal or exact error and we will find the next step together.';
 
       setMessages((prev) => [
         ...prev,
@@ -87,7 +87,7 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
   };
 
   return (
-    <div className={`fixed bottom-6 ${isAr ? 'left-6' : 'right-6'} z-50 font-sans`}>
+    <div className={`fixed bottom-4 sm:bottom-6 ${isAr ? 'left-4 sm:left-6' : 'right-4 sm:right-6'} z-50 font-sans`}>
       {/* Floating Circular Trigger Button */}
       {!isOpen && (
         <button
@@ -102,7 +102,7 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
 
       {/* Floating Live Chat Widget Popup */}
       {isOpen && (
-        <div className="w-[340px] sm:w-[410px] h-[560px] bg-slate-900/95 backdrop-blur-2xl border border-slate-800 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5">
+        <div className="w-[min(92vw,410px)] h-[min(70vh,560px)] bg-slate-900/95 backdrop-blur-2xl border border-slate-800 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5">
           {/* Widget Header */}
           <div className="p-4 bg-gradient-to-r from-slate-950 via-slate-900 to-cyan-950 border-b border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -116,7 +116,7 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
                 </h3>
                 <div className="flex items-center gap-1.5 text-[10px] text-emerald-400 font-mono">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                  <span>{isAr ? 'فريق الدعم المباشر متصل' : 'Support Team Online'}</span>
+                  <span>{isAr ? 'مساعد الدعم الذكي جاهز' : 'AI support partner ready'}</span>
                 </div>
               </div>
             </div>

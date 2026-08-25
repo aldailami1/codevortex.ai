@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Language } from '@/types';
+import React, { useEffect, useState } from 'react';
+import { BillingProduct, Language } from '@/types';
 import {
   X,
   CreditCard,
@@ -11,16 +11,17 @@ import {
   Lock,
   ArrowRight,
   Send,
-  Check
+  Check,
+  Rocket
 } from 'lucide-react';
 
 interface CheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
   language: Language;
-  planType: 'pro' | 'enterprise';
+  planType: BillingProduct;
   billingCycle: 'monthly' | 'yearly';
-  onPaymentSuccess: (plan: 'pro' | 'enterprise') => void;
+  onPaymentSuccess: (plan: BillingProduct) => void;
 }
 
 export const CheckoutModal: React.FC<CheckoutModalProps> = ({
@@ -38,10 +39,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [cardName, setCardName] = useState('Mohammed Al-Dailami');
   const [cardExpiry, setCardExpiry] = useState('12/28');
   const [cardCvc, setCardCvc] = useState('123');
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'bank' | 'apple'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal' | 'crypto' | 'apple_pay'>('card');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [txnId, setTxnId] = useState('');
+  const [checkoutError, setCheckoutError] = useState('');
 
   // Enterprise Sales State
   const [companyName, setCompanyName] = useState('');
@@ -51,9 +53,21 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [salesSubmitted, setSalesSubmitted] = useState(false);
   const [salesTicketId, setSalesTicketId] = useState('');
 
+  useEffect(() => {
+    if (isOpen) {
+      setIsCompleted(false);
+      setSalesSubmitted(false);
+      setCheckoutError('');
+      setTxnId('');
+    }
+  }, [isOpen, planType]);
+
   if (!isOpen) return null;
 
-  const priceAmount = billingCycle === 'yearly' ? '$20' : '$25';
+  const isEnterprise = planType === 'enterprise';
+  const isAdProduct = planType.startsWith('ad-');
+  const priceAmount = planType === 'ad-starter' ? '$10' : planType === 'ad-growth' ? '$25' : planType === 'ad-scale' ? '$50+' : planType === 'ad-engine' ? '$10+' : billingCycle === 'yearly' ? '$16' : '$20';
+  const productName = planType === 'pro' ? (isAr ? 'باقة المطورين Pro' : 'Pro Developer Plan') : planType === 'ad-engine' ? (isAr ? 'محرك الإعلانات' : 'Ad-Engine') : planType === 'ad-starter' ? (isAr ? 'باقة الانطلاق والتجربة' : 'Starter Ad Pack') : planType === 'ad-growth' ? (isAr ? 'باقة النمو المتسارع' : 'Growth Marketing Pack') : (isAr ? 'باقة الهيمنة والتوسع' : 'Scale & Dominate Pack');
 
   const handleFillTestCard = (type: 'visa' | 'master') => {
     if (type === 'visa') {
@@ -66,6 +80,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const handleExecuteCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
+    setCheckoutError('');
 
     try {
       const cardLast4 = cardNumber.replace(/\s+/g, '').slice(-4) || '4242';
@@ -74,27 +89,28 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: workEmail || 'user@cloudforge.com',
-          plan: 'pro',
+          plan: planType,
           billing_cycle: billingCycle,
           payment_method: paymentMethod,
-          card_last4: cardLast4,
+          card_last4: paymentMethod === 'card' || paymentMethod === 'apple_pay' ? cardLast4 : undefined,
         }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       setIsProcessing(false);
 
-      if (data.success) {
-        setTxnId(data.transaction_id || `txn_sbx_${Date.now()}`);
-        setIsCompleted(true);
-      } else {
-        throw new Error(data.error || 'Checkout failed');
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || (isAr ? 'تعذر بدء عملية الدفع. تحقق من إعدادات المزوّد.' : 'Unable to start checkout. Check provider configuration.'));
       }
-    } catch (err) {
-      console.warn('Sandbox checkout warn, fallback to simulation:', err);
-      setIsProcessing(false);
-      setTxnId(`txn_sbx_${Date.now()}`);
+      if (data.url) {
+        window.location.assign(data.url);
+        return;
+      }
+      setTxnId(data.transaction_id || `txn_${Date.now()}`);
       setIsCompleted(true);
+    } catch (err) {
+      setIsProcessing(false);
+      setCheckoutError(err instanceof Error ? err.message : (isAr ? 'تعذر بدء عملية الدفع.' : 'Unable to start checkout.'));
     }
   };
 
@@ -133,23 +149,23 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         <div className="px-6 py-4 bg-gradient-to-r from-slate-950 via-slate-900 to-cyan-950 border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#00F2FE] via-blue-600 to-[#7928CA] flex items-center justify-center text-slate-950 font-black shadow-lg">
-              {planType === 'pro' ? <Zap className="w-5 h-5" /> : <Building2 className="w-5 h-5" />}
+              {planType === 'pro' ? <Zap className="w-5 h-5" /> : isEnterprise ? <Building2 className="w-5 h-5" /> : <Rocket className="w-5 h-5" />}
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-sm font-black text-white">
-                  {planType === 'pro'
-                    ? isAr ? 'بوابة الدفع التجريبي (Sandbox Payment Gateway)' : 'Sandbox Payment Gateway'
-                    : isAr ? 'نموذج التواصل مع مبيعات الشركات' : 'Enterprise Sales Inquiry'}
+                  {isEnterprise
+                    ? isAr ? 'نموذج التواصل مع مبيعات الشركات' : 'Enterprise Sales Inquiry'
+                    : productName}
                 </h3>
                 <span className="px-2 py-0.5 rounded-full bg-cyan-950 border border-cyan-800 text-cyan-300 text-[10px] font-mono font-bold">
-                  TEST MODE
+                  SECURE CHECKOUT
                 </span>
               </div>
               <p className="text-[11px] text-slate-400">
-                {planType === 'pro'
-                  ? isAr ? 'ترقية الحساب لخطة المطورين Pro ($20/شهر)' : 'Pro Developer Plan Subscription'
-                  : isAr ? 'حجز مساحات عمل وتخصيص خوادم معزولة' : 'Custom Infrastructure & Team Seats'}
+                {isEnterprise
+                  ? isAr ? 'حجز مساحات عمل وتخصيص خوادم معزولة' : 'Custom Infrastructure & Team Seats'
+                  : isAdProduct ? (isAr ? 'رصيد تشغيل إعلاني — الدفع عبر مزوّد معتمد' : 'Advertising workflow credit — paid through an approved provider') : (isAr ? 'اشتراك باقة المطورين Pro' : 'Pro Developer Plan Subscription')}
               </p>
             </div>
           </div>
@@ -163,15 +179,24 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         </div>
 
         {/* PRO PLAN CHECKOUT FLOW */}
-        {planType === 'pro' && (
+        {!isEnterprise && (
           <div className="p-6 space-y-6">
             {!isCompleted ? (
               <form onSubmit={handleExecuteCheckout} className="space-y-5">
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label={isAr ? 'اختيار طريقة الدفع' : 'Payment method'}>
+                  {[
+                    { value: 'card' as const, label: 'Stripe', detail: 'Card' },
+                    { value: 'apple_pay' as const, label: 'Apple Pay', detail: 'Wallet' },
+                    { value: 'paypal' as const, label: 'PayPal', detail: 'Redirect' },
+                    { value: 'crypto' as const, label: 'Crypto', detail: 'Binance Pay' },
+                  ].map((method) => <button key={method.value} type="button" onClick={() => setPaymentMethod(method.value)} className={`min-h-12 rounded-xl border px-2 py-2 text-[10px] font-black transition ${paymentMethod === method.value ? 'border-cyan-300 bg-cyan-400/10 text-cyan-200' : 'border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-600'}`}><span className="block">{method.label}</span><span className="mt-0.5 block text-[9px] font-medium text-slate-500">{method.detail}</span></button>)}
+                </div>
+
                 {/* Order Summary Box */}
                 <div className="p-4 rounded-2xl bg-slate-950/80 border border-cyan-500/30 flex items-center justify-between">
                   <div>
                     <span className="text-xs font-bold text-slate-300 block">
-                      {isAr ? 'الباقة المختارة:' : 'Selected Plan:'} <strong className="text-[#00F2FE]">Pro Developer Plan</strong>
+                      {isAr ? 'الباقة المختارة:' : 'Selected Plan:'}                       <strong className="text-[#00F2FE]">{productName}</strong>
                     </span>
                     <span className="text-[11px] text-slate-400">
                       {isAr ? `دفع ${billingCycle === 'yearly' ? 'سنوي (خصم 20%)' : 'شهري'}` : `${billingCycle === 'yearly' ? 'Yearly (20% OFF)' : 'Monthly Billing'}`}
@@ -183,11 +208,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   </div>
                 </div>
 
+                {paymentMethod === 'card' && (<>
                 {/* Test Card Fill Quick Buttons */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-slate-400 font-bold">{isAr ? 'أرقام البطاقات التجريبية المعتمدة:' : 'Quick Test Card Fill:'}</span>
-                    <span className="text-emerald-400 font-mono text-[10px]">{isAr ? 'مقبول آلياً' : 'Auto-Approved'}</span>
+                    <span className="text-slate-400 font-bold">{isAr ? 'أمثلة بطاقات Stripe في بيئة التطوير:' : 'Stripe test cards in development:'}</span>
+                    <span className="text-emerald-400 font-mono text-[10px]">{isAr ? 'للتطوير فقط' : 'Development only'}</span>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <button
@@ -271,6 +297,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   </div>
                 </div>
 
+                </>)}
+
+                {checkoutError && <div role="alert" className="rounded-xl border border-rose-400/30 bg-rose-400/10 px-3 py-2 text-xs font-bold text-rose-200">{checkoutError}</div>}
+
                 {/* Execute Button */}
                 <button
                   type="submit"
@@ -285,7 +315,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   ) : (
                     <>
                       <ShieldCheck className="w-4 h-4" />
-                      <span>{isAr ? `إتمام الدفع التجريبي (${priceAmount})` : `Complete Sandbox Checkout (${priceAmount})`}</span>
+                      <span>{isAr ? `المتابعة إلى الدفع الآمن (${priceAmount})` : `Continue to secure checkout (${priceAmount})`}</span>
                     </>
                   )}
                 </button>
@@ -299,12 +329,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
                 <div className="space-y-2">
                   <h3 className="text-xl font-black text-white">
-                    {isAr ? 'تمت عملية الدفع التجريبية بنجاح! 🎉' : 'Sandbox Checkout Completed! 🎉'}
+                    {isAr ? 'تم بدء عملية الدفع بنجاح' : 'Checkout started successfully'}
                   </h3>
                   <p className="text-xs text-slate-300 max-w-md mx-auto">
                     {isAr
-                      ? 'تم ترقية حسابك رسمياً إلى باقة المطورين (Pro Plan). تم تفعيل المشاريع الخاصة غير المحدودة وخوادم الحوسبة السريعة.'
-                      : 'Your account has been successfully upgraded to the Pro Developer Plan. Unlimited Private Repls and boosted compute resources are now unlocked.'}
+                      ? `تم إنشاء جلسة دفع آمنة للمنتج ${productName}. ستظهر حالة التفعيل بعد تأكيد المزوّد.`
+                      : `A secure checkout session was created for ${productName}. Activation will follow provider confirmation.`}
                   </p>
                 </div>
 
@@ -314,7 +344,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
                 <button
                   onClick={() => {
-                    onPaymentSuccess('pro');
+                    onPaymentSuccess(planType);
                     onClose();
                   }}
                   className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#00F2FE] to-blue-600 text-slate-950 font-black text-xs shadow-lg hover:scale-105 transition-all inline-flex items-center gap-2"

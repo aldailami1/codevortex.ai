@@ -173,7 +173,7 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <>
       {/* 1. Clutter-free 3-Item Header */}
-      <header className="bg-[#0B0F19]/95 backdrop-blur-xl border-b border-slate-800/80 px-4 sm:px-6 py-2.5 flex items-center justify-between sticky top-0 z-40 shadow-2xl font-sans">
+      <header className="bg-[#0B0F19]/65 backdrop-blur-2xl border-b border-white/10 px-4 sm:px-6 py-3 flex items-center justify-between gap-4 sticky top-0 z-40 shadow-2xl font-sans">
         
         {/* Right Side (Platform Logo & Version Badge) */}
         <div className="flex items-center gap-3">
@@ -217,7 +217,25 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         </div>
 
-        {/* Left Side (3 Key Action Items: Search, Login Button, Hamburger Menu) */}
+        {/* Desktop navigation stays short; the full workspace menu lives in the collapsible rail. */}
+        <nav className="hidden xl:flex items-center gap-1 rounded-2xl border border-white/10 bg-slate-950/35 p-1" aria-label={isAr ? 'روابط CloudForge الأساسية' : 'CloudForge primary links'}>
+          {[
+            { view: 'landing' as ViewMode, label: isAr ? 'الرئيسية' : 'Home' },
+            { view: 'control-center' as ViewMode, label: isAr ? 'مركز القيادة' : 'Control Center' },
+            { view: 'marketplace' as ViewMode, label: isAr ? 'السوق' : 'Marketplace' },
+            { view: 'pricing' as ViewMode, label: isAr ? 'الأسعار' : 'Pricing' },
+          ].map((item) => (
+            <button
+              key={item.view}
+              onClick={() => onSelectView(item.view)}
+              className={`rounded-xl px-3 py-2 text-xs font-bold transition ${activeView === item.view ? 'bg-cyan-400 text-slate-950' : 'text-slate-300 hover:bg-white/10 hover:text-white'}`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </nav>
+
+        {/* Action cluster: search, account, language, collapsible rail */}
         <div className="flex items-center gap-2.5 sm:gap-3">
           
           {/* Item 1: Quick Search / Command Palette */}
@@ -316,8 +334,8 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             onClick={() => setIsDrawerOpen(true)}
             className="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 hover:text-[#00F2FE] transition-all focus:outline-none shadow-md"
-            aria-label="Open Navigation Drawer"
-            title={t('navigation')}
+            aria-label={isAr ? 'فتح قائمة CloudForge' : 'Open CloudForge menu'}
+            title={isAr ? 'فتح القائمة' : 'Open menu'}
           >
             <Menu className="w-5 h-5" />
           </button>
@@ -326,13 +344,14 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* 2. Full-Pages Mobile & Desktop Drawer Menu */}
       {isDrawerOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end font-sans">
+        <div className={`fixed inset-0 z-50 flex font-sans ${isAr ? 'justify-start' : 'justify-end'}`}>
+
           <div
             onClick={() => setIsDrawerOpen(false)}
             className="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity animate-in fade-in"
           />
 
-          <aside className="relative w-full max-w-md bg-slate-950 border-l border-slate-800 shadow-2xl flex flex-col h-full overflow-hidden z-10 animate-in slide-in-from-right duration-300">
+          <aside aria-label={isAr ? 'قائمة CloudForge الجانبية' : 'CloudForge sidebar'} className={`relative w-[min(92vw,26rem)] bg-slate-950/98 border-slate-800 shadow-2xl flex flex-col h-full overflow-hidden z-10 animate-in duration-300 ${isAr ? 'border-r slide-in-from-left' : 'border-l slide-in-from-right'}`}>
             <div className="p-5 border-b border-slate-800 bg-slate-900/50 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#00F2FE] via-blue-600 to-[#7928CA] flex items-center justify-center text-slate-950 font-black">
@@ -340,7 +359,7 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
                 <div>
                   <h2 className="font-extrabold text-slate-100 text-sm">
-                    {t('navigation')}
+                    {isAr ? 'استكشف CloudForge' : 'Explore CloudForge'}
                   </h2>
                   <span className="text-[10px] text-slate-400 font-mono">CloudForge v2.4 Pro</span>
                 </div>
