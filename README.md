@@ -118,3 +118,10 @@ Checkout is provider-safe: production Stripe sessions require server-side price 
 The Academy now presents three engineering paths: **Full-Stack AI Cloud Architecture**, **Supabase & Database Engineering**, and **Agentic AI & Automation Workflows**. Each path includes lesson navigation, video or visual theory briefing, a safe deterministic code sandbox, quiz support, progress percentage, completed hours, XP, and skill badges. The sandbox never executes untrusted learner code on the server; it performs bounded static checks before allowing lesson completion.
 
 Learner state is persisted locally under the versioned `cloudforge_user_progress_v2` key. Production-grade grading, video hosting, identity-linked transcripts, and certificate verification should be connected to authenticated server storage before being used as an official academic record.
+
+
+## 🏅 Verified Digital Certificate Engine
+
+Academy graduates can preview a branded **CERTIFICATE OF PROFICIENCY & COMPLETION** with CloudForge International Engineering Academy branding, student identity, professional title, certificate ID, score, issue date, gold seal, signatures, and a QR code targeting `/verify/{certificateId}`. The certificate action bar supports browser print-to-PDF, LinkedIn sharing, X sharing, and copying the public verification link.
+
+The public route `/verify/[certificateId]` uses `/api/verify/[certificateId]` and accepts both new `CF-*` IDs and legacy `CVX-ACADEMY-*` IDs. The API returns a valid record only when `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and a protected `certificates` table are configured. Without those production settings it explicitly reports `registry_unavailable`; it never presents a local preview as an officially verified credential.

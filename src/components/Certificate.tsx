@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+'use client';
+
+import React, { useMemo, useState } from 'react';
 import { CertificateRecord } from '@/types/academy';
-import { Award, ShieldCheck, Printer, CheckCircle2, Edit3, Sparkles } from 'lucide-react';
+import { Award, Check, CheckCircle2, Copy, Download, Edit3, Linkedin, Printer, ShieldCheck, Sparkles, Twitter, X } from 'lucide-react';
 
 interface CertificateProps {
   certificate: CertificateRecord;
@@ -8,182 +10,68 @@ interface CertificateProps {
   onUpdateStudentName?: (newName: string) => void;
 }
 
-export const Certificate: React.FC<CertificateProps> = ({
-  certificate,
-  isArabic,
-  onUpdateStudentName,
-}) => {
-  const [studentName, setStudentName] = useState<string>(certificate.studentName || 'سعيد السعيدي');
-  const [isEditingName, setIsEditingName] = useState<boolean>(false);
+const professionalTitle = 'Certified Cloud Automation & Full-Stack AI Engineer';
+
+export const Certificate: React.FC<CertificateProps> = ({ certificate, isArabic, onUpdateStudentName }) => {
+  const [studentName, setStudentName] = useState(certificate.studentName || 'CloudForge Learner');
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const verificationUrl = useMemo(() => {
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://cloudforge.app';
+    return `${origin}/verify/${encodeURIComponent(certificate.verificationCode)}`;
+  }, [certificate.verificationCode]);
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=10&data=${encodeURIComponent(verificationUrl)}`;
 
   const handleSaveName = () => {
     setIsEditingName(false);
-    if (onUpdateStudentName) {
-      onUpdateStudentName(studentName);
-    }
+    onUpdateStudentName?.(studentName);
   };
 
   const handlePrint = () => {
+    const previousTitle = document.title;
+    document.title = `CloudForge-Certificate-${certificate.verificationCode}`;
     window.print();
+    window.setTimeout(() => { document.title = previousTitle; }, 1000);
   };
 
+  const handleCopyVerification = async () => {
+    try {
+      await navigator.clipboard.writeText(verificationUrl);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  const shareLinkedIn = () => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(verificationUrl)}`, '_blank', 'noopener,noreferrer');
+  const shareTwitter = () => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I earned ${professionalTitle} at CloudForge International Engineering Academy.`)}&url=${encodeURIComponent(verificationUrl)}`, '_blank', 'noopener,noreferrer');
+
   return (
-    <div className="space-y-6 max-w-4xl mx-auto print:p-0">
-      {/* Top Action Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-900 border border-slate-800 p-4 rounded-2xl print:hidden">
-        <div className="flex items-center gap-3">
-          <Award className="w-6 h-6 text-amber-400" />
-          <div>
-            <h3 className="font-bold text-white text-base">
-              {isArabic ? 'الشهادة المعتمدة الرسمية' : 'Official Accredited Certificate'}
-            </h3>
-            <p className="text-xs text-slate-400">
-              {isArabic ? 'صادرة وموثقة من أكاديمية CloudForge السحابية' : 'Issued & Verified by CloudForge Cloud Academy'}
-            </p>
-          </div>
-        </div>
+    <section className="mx-auto w-full max-w-6xl space-y-6 print:max-w-none print:p-0">
+      <div className="flex flex-col justify-between gap-4 rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-xl print:hidden sm:flex-row sm:items-center"><div className="flex items-center gap-3"><div className="rounded-xl bg-amber-400/10 p-2 text-amber-300"><Award className="h-5 w-5" /></div><div><h2 className="text-sm font-black text-white">{isArabic ? 'شهادة CloudForge الرقمية الموثقة' : 'Verified CloudForge Digital Certificate'}</h2><p className="text-xs text-slate-400">{isArabic ? 'تحقق عام، QR، مشاركة اجتماعية، وتصدير PDF' : 'Public verification, QR, social sharing, and PDF export'}</p></div></div><div className="flex flex-wrap gap-2"><button onClick={() => setIsEditingName((value) => !value)} className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-xs font-bold text-slate-200 hover:border-cyan-300"><Edit3 className="h-3.5 w-3.5 text-cyan-300" />{isArabic ? 'تعديل الاسم' : 'Edit name'}</button><button onClick={handlePrint} className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-amber-300 to-amber-500 px-3 py-2 text-xs font-black text-slate-950"><Download className="h-3.5 w-3.5" />{isArabic ? 'تحميل PDF' : 'Download PDF'}</button><button onClick={shareLinkedIn} className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-sky-400/30 bg-sky-400/10 px-3 py-2 text-xs font-bold text-sky-200"><Linkedin className="h-3.5 w-3.5" />LinkedIn</button><button onClick={shareTwitter} className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-slate-700 bg-slate-950 px-3 py-2 text-xs font-bold text-slate-200"><Twitter className="h-3.5 w-3.5" />X</button></div></div>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          {/* Edit Name Button */}
-          <button
-            onClick={() => setIsEditingName(!isEditingName)}
-            className="px-4 py-2 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700 text-xs font-bold text-slate-200 transition-all flex items-center gap-1.5"
-          >
-            <Edit3 className="w-3.5 h-3.5 text-cyan-400" />
-            <span>{isArabic ? 'تعديل اسم الطالب' : 'Edit Student Name'}</span>
-          </button>
+      {isEditingName && <div className="flex flex-col gap-2 rounded-2xl border border-cyan-400/30 bg-cyan-400/5 p-4 print:hidden sm:flex-row"><input value={studentName} onChange={(event) => setStudentName(event.target.value)} dir="auto" className="min-h-11 flex-1 rounded-xl border border-slate-700 bg-slate-950 px-3 text-sm text-white outline-none focus:border-cyan-300" placeholder={isArabic ? 'اسم الطالب الكامل' : 'Full student name'} /><button onClick={handleSaveName} className="min-h-11 rounded-xl bg-cyan-300 px-4 text-xs font-black text-slate-950">{isArabic ? 'حفظ الاسم' : 'Save name'}</button></div>}
 
-          {/* Print Certificate Button */}
-          <button
-            onClick={handlePrint}
-            className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs transition-all shadow-lg shadow-amber-500/20 hover:scale-105 flex items-center gap-1.5"
-          >
-            <Printer className="w-3.5 h-3.5" />
-            <span>{isArabic ? 'طباعة / حفظ PDF' : 'Print / Save PDF'}</span>
-          </button>
+      <div id="official-certificate" className="relative overflow-hidden rounded-2xl border-2 border-cyan-400 bg-[radial-gradient(circle_at_15%_15%,rgba(0,242,254,0.16),transparent_26%),radial-gradient(circle_at_85%_80%,rgba(245,158,11,0.15),transparent_28%),linear-gradient(135deg,#050914,#0b1224_48%,#070b15)] p-5 text-slate-100 shadow-[0_25px_90px_rgba(0,0,0,0.5)] sm:p-8 md:p-12 print:rounded-none print:border-black print:bg-white print:p-8 print:text-black print:shadow-none">
+        <div className="pointer-events-none absolute inset-3 rounded-xl border border-amber-400/40 sm:inset-5 print:border-black" />
+        <div className="pointer-events-none absolute inset-5 rounded-lg border border-cyan-400/20 sm:inset-8 print:border-slate-400" />
+        <div className="pointer-events-none absolute -left-20 -top-20 h-56 w-56 rounded-full bg-cyan-400/10 blur-3xl" /><div className="pointer-events-none absolute -bottom-20 -right-20 h-56 w-56 rounded-full bg-amber-400/10 blur-3xl" />
+
+        <div className="relative z-10 space-y-7 sm:space-y-10">
+          <header className="flex flex-col items-center justify-between gap-5 border-b border-amber-400/25 pb-6 sm:flex-row sm:items-start print:border-black"><div className="flex items-center gap-3"><div className="grid h-14 w-14 place-items-center rounded-2xl border border-amber-300/60 bg-gradient-to-br from-cyan-300 via-blue-600 to-amber-400 text-slate-950 shadow-[0_8px_0_rgba(146,64,14,0.6),0_15px_30px_rgba(0,242,254,0.25)]"><Sparkles className="h-7 w-7" /></div><div><p className="text-lg font-black tracking-tight text-white print:text-black">CloudForge</p><p className="max-w-[14rem] text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-200 print:text-black">CloudForge International Engineering Academy</p></div></div><div className="text-center sm:text-right"><p className="text-[10px] font-black uppercase tracking-[0.25em] text-amber-300 print:text-black">{isArabic ? 'اعتماد رقمي' : 'DIGITAL CREDENTIAL'}</p><p className="mt-1 text-[10px] font-mono text-slate-400 print:text-black">{certificate.issueDate}</p></div></header>
+
+          <div className="text-center"><p className="text-xs font-black uppercase tracking-[0.35em] text-cyan-200 print:text-black">CloudForge International Engineering Academy</p><h1 className="mt-4 text-3xl font-black tracking-[0.08em] text-amber-300 sm:text-5xl print:text-black">CERTIFICATE OF PROFICIENCY &amp; COMPLETION</h1><div className="mx-auto mt-5 h-px max-w-xl bg-gradient-to-r from-transparent via-amber-300 to-transparent print:bg-black" /></div>
+
+          <div className="mx-auto max-w-4xl space-y-4 text-center"><p className="text-sm leading-7 text-slate-300 print:text-black">This is to certify that <span className="sr-only">{studentName}</span></p><h2 className="inline-block border-b-2 border-amber-300 px-5 pb-2 text-3xl font-black text-white sm:text-5xl print:border-black print:text-black">{studentName}</h2><p className="text-sm leading-7 text-slate-300 print:text-black">has successfully passed all technical requirements and hands-on cloud architecture labs to earn the professional title:</p><div className="mx-auto inline-flex max-w-full rounded-xl border border-cyan-300/30 bg-cyan-300/10 px-5 py-3 text-center text-base font-black text-cyan-200 shadow-inner sm:text-xl print:border-black print:bg-slate-100 print:text-black">{professionalTitle}</div><p className="pt-2 text-xs text-slate-400 print:text-black">{isArabic ? `المسار المكتمل: ${certificate.courseTitleAr}` : `Completed path: ${certificate.courseTitleEn}`}</p></div>
+
+          <div className="grid gap-6 border-y border-amber-400/25 py-6 sm:grid-cols-[1fr_auto_1fr] sm:items-center print:border-black"><div className="order-2 space-y-1 text-center sm:order-1"><div className="font-serif text-lg italic text-amber-200 print:text-black">Dr. Ali Muhammad Al-Dailami</div><p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 print:text-black">Head of Cloud Engineering</p><p className="text-[10px] text-slate-500 print:text-black">{isArabic ? 'رئيس قطاع الهندسة السحابية' : 'Cloud Engineering Sector'}</p></div><div className="order-1 flex flex-col items-center gap-3 sm:order-2"><div className="relative grid h-28 w-28 place-items-center rounded-full border-4 border-amber-300 bg-gradient-to-br from-amber-200 via-amber-500 to-amber-800 text-slate-950 shadow-[0_8px_0_rgba(120,53,15,0.8),0_15px_35px_rgba(245,158,11,0.25)]"><div className="grid h-20 w-20 place-items-center rounded-full border-2 border-dashed border-slate-950/60"><ShieldCheck className="h-9 w-9" /><span className="absolute bottom-5 text-[8px] font-black tracking-[0.18em]">CLOUD</span></div></div><span className="text-[9px] font-black uppercase tracking-[0.2em] text-amber-300 print:text-black">Gold holographic seal</span></div><div className="order-3 space-y-1 text-center"><div className="font-serif text-lg italic text-cyan-200 print:text-black">Eng. Eileen Ibrahim</div><p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 print:text-black">Academy Director</p><p className="text-[10px] text-slate-500 print:text-black">{isArabic ? 'مدير أكاديمية CloudForge' : 'CloudForge International Academy'}</p></div></div>
+
+          <footer className="grid gap-6 sm:grid-cols-[1fr_auto] sm:items-end"><div className="flex flex-col gap-3 text-[10px] text-slate-400 print:text-black"><div className="flex flex-wrap items-center gap-2"><span className="font-black uppercase tracking-wider text-cyan-200 print:text-black">Certificate ID</span><code className="rounded-lg border border-slate-700 bg-slate-950 px-2 py-1 font-mono text-cyan-200 print:border-black print:bg-white print:text-black">{certificate.verificationCode}</code><span className="text-slate-600 print:text-black">·</span><span>{isArabic ? `النتيجة: ${certificate.score}%` : `Score: ${certificate.score}%`}</span></div><button onClick={handleCopyVerification} className="inline-flex w-fit items-center gap-2 text-start text-[10px] text-slate-400 hover:text-cyan-200 print:hidden"><Copy className="h-3.5 w-3.5" />{copied ? (isArabic ? 'تم نسخ رابط التحقق' : 'Verification link copied') : (isArabic ? 'نسخ رابط التحقق العام' : 'Copy public verification link')}</button><p className="max-w-lg leading-5">{isArabic ? 'امسح رمز QR للتحقق من معرف الشهادة عبر صفحة التحقق العامة.' : 'Scan the QR code to verify this credential through the public verification page.'}</p></div><div className="mx-auto w-32 rounded-xl border border-white/15 bg-white p-2 shadow-xl print:w-28"><img src={qrUrl} alt={isArabic ? 'رمز QR للتحقق من الشهادة' : 'Certificate verification QR code'} className="aspect-square w-full" referrerPolicy="no-referrer" /><p className="mt-1 break-all text-center text-[7px] font-bold text-slate-700">VERIFY</p></div></footer>
         </div>
       </div>
 
-      {/* Edit Student Name Inline Box */}
-      {isEditingName && (
-        <div className="p-4 bg-slate-950 border border-cyan-800/60 rounded-xl flex items-center gap-3 print:hidden">
-          <input
-            type="text"
-            value={studentName}
-            onChange={(e) => setStudentName(e.target.value)}
-            placeholder={isArabic ? 'أدخل اسمك الثلاثي بالشهادة' : 'Enter full name for certificate'}
-            className="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-cyan-500"
-          />
-          <button
-            onClick={handleSaveName}
-            className="px-4 py-2 rounded-lg bg-cyan-400 text-slate-950 font-extrabold text-xs hover:bg-cyan-300"
-          >
-            {isArabic ? 'حفظ وتحديث' : 'Save'}
-          </button>
-        </div>
-      )}
-
-      {/* High-Grade Printable Certificate Frame */}
-      <div
-        id="official-certificate"
-        className="relative bg-slate-900 text-slate-100 border-4 border-amber-600/80 p-8 md:p-12 rounded-2xl shadow-2xl space-y-6 overflow-hidden print:border-black print:text-black print:bg-white"
-      >
-        {/* Decorative Luxury Corner Ornaments */}
-        <div className="absolute top-3 left-3 w-10 h-10 border-t-2 border-l-2 border-amber-400/80 rounded-tl-lg print:border-black" />
-        <div className="absolute top-3 right-3 w-10 h-10 border-t-2 border-r-2 border-amber-400/80 rounded-tr-lg print:border-black" />
-        <div className="absolute bottom-3 left-3 w-10 h-10 border-b-2 border-l-2 border-amber-400/80 rounded-bl-lg print:border-black" />
-        <div className="absolute bottom-3 right-3 w-10 h-10 border-b-2 border-r-2 border-amber-400/80 rounded-br-lg print:border-black" />
-
-        {/* Top Header / Logo */}
-        <div className="flex flex-col items-center justify-center mb-4">
-          <div className="flex items-center gap-2 mb-1">
-            <Sparkles className="w-6 h-6 text-amber-400 print:text-black" />
-            <h1 className="text-3xl font-extrabold text-white tracking-wide print:text-black">
-              CloudForge Academy
-            </h1>
-          </div>
-          <div className="flex items-center gap-2 text-[11px] font-mono text-slate-400 print:text-black mt-1">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 print:text-black" />
-            <span>ID: {certificate.verificationCode}</span>
-            {certificate.score && (
-              <>
-                <span>•</span>
-                <span className="text-amber-400 font-bold print:text-black">
-                  {isArabic ? `الدرجة: ${certificate.score}%` : `Score: ${certificate.score}%`}
-                </span>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Certificate Text & Body */}
-        <div className="text-center space-y-5 my-6">
-          <p className="text-gray-300 text-lg font-medium print:text-black">
-            {isArabic ? 'تشهد أكاديمية CloudForge لـ' : 'This is to certify that:'}
-          </p>
-
-          <h2 className="text-3xl md:text-4xl font-black text-amber-400 tracking-wide border-b-2 border-amber-500/40 inline-block pb-2 px-8 print:text-black">
-            {studentName}
-          </h2>
-
-          <p className="text-gray-300 text-base pt-2 print:text-black">
-            {isArabic ? 'قد أتم بنجاح' : 'has successfully completed'}
-          </p>
-
-          <div className="inline-block bg-cyan-950/60 border border-cyan-500/40 rounded-xl px-6 py-3 my-2 shadow-inner print:bg-slate-100 print:border-black">
-            <span className="text-cyan-400 text-xl font-bold print:text-black">
-              {isArabic ? certificate.courseTitleAr : certificate.courseTitleEn}
-            </span>
-          </div>
-
-          <div className="text-gray-400 text-sm mt-4 print:text-black">
-            {isArabic ? `تاريخ الإصدار: ${certificate.issueDate}` : `Issue Date: ${certificate.issueDate}`}
-          </div>
-        </div>
-
-        <hr className="border-slate-800 my-6 print:border-slate-300" />
-
-        {/* Signatures and Official Seal */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center text-center mt-6">
-          {/* Head of Academic Board */}
-          <div className="space-y-1">
-            <h3 className="text-amber-400 font-serif font-bold text-lg italic print:text-black">
-              Dr. Ali Muhammad Al-Dailami
-            </h3>
-            <p className="text-xs text-gray-300 font-semibold print:text-black">
-              {isArabic ? 'رئيس المجلس الأكاديمي' : 'Head of Academic Board'}
-            </p>
-            <p className="text-[10px] text-gray-500 print:text-black">
-              {isArabic ? 'مجلس CloudForge التعليمي' : 'CloudForge Learning Council'}
-            </p>
-          </div>
-
-          {/* Official Seal */}
-          <div className="flex justify-center my-2 md:my-0">
-            <div className="w-20 h-20 rounded-full border-2 border-dashed border-amber-500 flex items-center justify-center bg-amber-500/10 p-2 shadow-lg print:border-black print:bg-slate-100">
-              <div className="w-full h-full rounded-full border border-amber-500 flex flex-col items-center justify-center text-[9px] font-bold text-amber-400 print:border-black print:text-black">
-                <ShieldCheck className="w-5 h-5 text-amber-400 print:text-black mb-0.5" />
-                <span>OFFICIAL</span>
-                <span>SEAL</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Director of Accreditation */}
-          <div className="space-y-1">
-            <h3 className="text-cyan-400 font-serif font-bold text-lg italic print:text-black">
-              Eng. Eileen Ibrahim
-            </h3>
-            <p className="text-xs text-gray-300 font-semibold print:text-black">
-              {isArabic ? 'مدير اعتماد الشهادات' : 'Director of Accreditation'}
-            </p>
-            <p className="text-[10px] text-gray-500 print:text-black">
-              {isArabic ? 'هيئة الاعتماد الرقمي' : 'Digital Accreditation Council'}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-900/60 p-4 text-xs text-slate-400 print:hidden"><span className="inline-flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-emerald-300" />{isArabic ? 'المعرّف مرتبط بصفحة تحقق عامة' : 'ID is linked to a public verification page'}</span><button onClick={handlePrint} className="inline-flex items-center gap-2 text-cyan-200 hover:text-cyan-100"><Printer className="h-4 w-4" />{isArabic ? 'طباعة عالية الدقة / حفظ PDF' : 'High-resolution print / Save PDF'}</button></div>
+    </section>
   );
 };
-

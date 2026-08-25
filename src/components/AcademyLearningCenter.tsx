@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
-import type { CourseTrack, Lesson, CodeSandboxSpec, UserProgress } from '@/types/academy';
+import type { CertificateRecord, CourseTrack, Lesson, CodeSandboxSpec, UserProgress } from '@/types/academy';
 import { COURSES_DATA } from '@/data/coursesData';
 import { Language } from '@/types';
 import { safeGetItem, safeSetItem } from '@/lib/utils';
 import { Quiz } from './Quiz';
+import { Certificate } from './Certificate';
 import {
   Award,
   BookOpen,
@@ -90,6 +91,7 @@ export const AcademyLearningCenter: React.FC<AcademyLearningCenterProps> = ({ la
   const [sandboxCode, setSandboxCode] = useState('');
   const [sandboxResult, setSandboxResult] = useState<SandboxResult | null>(null);
   const [openChapters, setOpenChapters] = useState<Record<string, boolean>>({});
+  const [showCertificate, setShowCertificate] = useState(false);
 
   const currentTrack = tracks.find((track) => track.id === activeTrackId) || tracks[0];
   const allLessons = useMemo(() => currentTrack.chapters.flatMap((chapter) => chapter.lessons), [currentTrack]);
@@ -100,6 +102,19 @@ export const AcademyLearningCenter: React.FC<AcademyLearningCenterProps> = ({ la
   const completionPercent = Math.round((completedCount / Math.max(1, allLessons.length)) * 100);
   const earnedForTrack = [0, 1, 2].filter((index) => completionPercent >= [1, 50, 100][index]).map((index) => currentTrack.skillBadges?.[index] || trackBadge(currentTrack, index));
   const trackHoursCompleted = allLessons.reduce((sum, lesson) => progress.completedLessonIds.includes(lesson.id) ? sum + (lesson.estimatedHours || minutesToHours(lesson.duration)) : sum, 0);
+  const certificateRecord = useMemo<CertificateRecord>(() => {
+    const saved = progress.earnedCertificates.find((certificate) => certificate.courseId === currentTrack.id);
+    return saved || {
+      id: `cert-${currentTrack.id}`,
+      courseId: currentTrack.id,
+      courseTitleEn: currentTrack.titleEn,
+      courseTitleAr: currentTrack.titleAr,
+      studentName: progress.studentName,
+      issueDate: new Date().toLocaleDateString(isAr ? 'ar-EG' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+      score: 100,
+      verificationCode: `CF-${currentTrack.id.replace(/[^a-z0-9]/gi, '').slice(-6).toUpperCase()}-${String(new Date().getFullYear()).slice(-2)}`,
+    };
+  }, [currentTrack, isAr, progress]);
 
   useEffect(() => {
     safeSetItem('cloudforge_user_progress_v2', JSON.stringify(progress));
@@ -156,6 +171,14 @@ export const AcademyLearningCenter: React.FC<AcademyLearningCenterProps> = ({ la
     markComplete(currentLesson);
   };
 
+  if (showCertificate) {
+    return (
+      <main className="min-h-screen w-full overflow-x-hidden bg-[#080B14] px-4 py-6 text-slate-100 sm:px-6 lg:px-8 lg:py-10" dir={isAr ? 'rtl' : 'ltr'}>
+        <div className="mx-auto w-full max-w-6xl"><button onClick={() => setShowCertificate(false)} className="mb-5 inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-4 py-2.5 text-xs font-black text-slate-200 hover:border-cyan-300">{isAr ? 'العودة إلى المسار' : 'Back to learning path'}</button><Certificate certificate={certificateRecord} isArabic={isAr} onUpdateStudentName={(name) => setProgress((previous) => ({ ...previous, studentName: name }))} /></div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen w-full overflow-x-hidden bg-[#080B14] text-slate-100" dir={isAr ? 'rtl' : 'ltr'}>
       <header className="border-b border-slate-800/80 bg-slate-950/80 px-4 py-6 backdrop-blur-xl sm:px-6 lg:px-8 lg:py-10">
@@ -166,6 +189,15 @@ export const AcademyLearningCenter: React.FC<AcademyLearningCenterProps> = ({ la
           </div>
           <div className="grid gap-3 md:grid-cols-3">{tracks.map((track) => <button key={track.id} onClick={() => changeTrack(track)} className={`min-h-24 rounded-2xl border p-4 text-start transition ${track.id === currentTrack.id ? 'border-cyan-300 bg-cyan-400/10 shadow-lg shadow-cyan-950/30' : 'border-slate-800 bg-slate-900/60 hover:border-slate-600'}`}><span className="text-[10px] font-black uppercase tracking-wider text-cyan-300">{track.category} · {track.level}</span><span className="mt-2 block text-sm font-black text-white">{isAr ? track.titleAr : track.titleEn}</span><span className="mt-1 block text-xs leading-5 text-slate-400">{isAr ? track.shortDescriptionAr : track.shortDescriptionEn}</span></button>)}</div>
         </div>
+      <div className="mx-auto mt-5 flex w-full max-w-7xl justify-end">
+        <button
+          onClick={() => setShowCertificate(true)}
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-amber-300/30 bg-amber-300/10 px-4 py-2.5 text-xs font-black text-amber-200 transition hover:bg-amber-300/20"
+        >
+          <Award className="h-4 w-4" />
+          {isAr ? 'عرض نموذج الشهادة الرقمية' : 'Preview digital certificate'}
+        </button>
+      </div>
       </header>
 
       <section className="mx-auto grid w-full max-w-7xl gap-6 overflow-x-hidden px-4 py-6 sm:px-6 lg:grid-cols-[20rem_minmax(0,1fr)] lg:px-8 lg:py-10">
