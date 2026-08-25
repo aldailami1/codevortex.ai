@@ -10,14 +10,14 @@ export const COURSES_DATA: CourseTrack[] = [
   {
     id: 'track-cloud-foundations',
     slug: 'cloud-foundations',
-    titleEn: 'Cloud Foundations',
-    titleAr: 'أساسيات الحوسبة السحابية',
+    titleEn: 'Full-Stack AI Cloud Architecture',
+    titleAr: 'معمارية السحابة والذكاء الاصطناعي Full-Stack',
     descriptionEn:
       'Understand cloud infrastructure, deployment models, and how CloudForge provisions live environments.',
     descriptionAr:
       'افهم البنية التحتية السحابية ونماذج النشر وكيف يجهز CloudForge بيئات تشغيل حية.',
-    shortDescriptionEn: 'Cloud computing fundamentals with hands-on CloudForge labs.',
-    shortDescriptionAr: 'أساسيات الحوسبة السحابية مع تطبيقات عملية على CloudForge.',
+    shortDescriptionEn: 'Design and deploy full-stack AI cloud systems with hands-on labs.',
+    shortDescriptionAr: 'صمّم وانشر أنظمة سحابية ذكية Full-Stack عبر تطبيقات عملية.',
     category: 'cloud',
     level: 'beginner',
     iconName: 'Cloud',
@@ -32,6 +32,12 @@ export const COURSES_DATA: CourseTrack[] = [
       titleAr: 'كبير المدربين التقنيين',
     },
     accentColor: '#00F2FE',
+    totalHours: 8.5,
+    skillBadges: [
+      { id: 'cloud-architect-foundations', titleEn: 'Cloud Architect Foundations', titleAr: 'أساسيات معمارية السحابة', descriptionEn: 'Can map a full-stack cloud deployment.', descriptionAr: 'يستطيع رسم بنية نشر سحابية Full-Stack.' },
+      { id: 'cloud-deployment-builder', titleEn: 'Deployment Builder', titleAr: 'باني النشر', descriptionEn: 'Understands safe preview and production boundaries.', descriptionAr: 'يفهم حدود المعاينة والإنتاج الآمن.' },
+      { id: 'cloudforge-cloud-specialist', titleEn: 'CloudForge Cloud Specialist', titleAr: 'متخصص CloudForge السحابي', descriptionEn: 'Completed the cloud architecture path.', descriptionAr: 'أكمل مسار معمارية السحابة.' },
+    ],
     rating: 4.9,
     totalStudents: 12400,
     chapters: [
@@ -208,14 +214,14 @@ export const COURSES_DATA: CourseTrack[] = [
   {
     id: 'track-fullstack-supabase',
     slug: 'fullstack-supabase',
-    titleEn: 'Full-Stack with Supabase',
-    titleAr: 'تطوير Full-Stack مع Supabase',
+    titleEn: 'Supabase & Database Engineering',
+    titleAr: 'هندسة Supabase وقواعد البيانات',
     descriptionEn:
       'Auth, PostgreSQL, Row Level Security, and Realtime — build complete backends without a server.',
     descriptionAr:
       'المصادقة وPostgreSQL وسياسات الأمان RLS والبيانات اللحظية — ابنِ خلفيات كاملة بدون خوادم.',
-    shortDescriptionEn: 'Ship databases, auth and realtime with Supabase.',
-    shortDescriptionAr: 'أطلق قواعد البيانات والمصادقة والبيانات اللحظية مع Supabase.',
+    shortDescriptionEn: 'Engineer secure schemas, auth, RLS, and realtime with Supabase.',
+    shortDescriptionAr: 'اهندس المخططات الآمنة والمصادقة وRLS والبيانات اللحظية مع Supabase.',
     category: 'fullstack',
     level: 'intermediate',
     iconName: 'Database',
@@ -230,6 +236,12 @@ export const COURSES_DATA: CourseTrack[] = [
       titleAr: 'مهندس خلفيات أول',
     },
     accentColor: '#3B82F6',
+    totalHours: 7.5,
+    skillBadges: [
+      { id: 'supabase-schema-engineer', titleEn: 'Schema Engineer', titleAr: 'مهندس مخططات', descriptionEn: 'Designs relational schemas with clear boundaries.', descriptionAr: 'يصمم مخططات علائقية بحدود واضحة.' },
+      { id: 'supabase-security-builder', titleEn: 'RLS Security Builder', titleAr: 'باني أمان RLS', descriptionEn: 'Applies row-level access controls.', descriptionAr: 'يطبق ضوابط الوصول على مستوى الصف.' },
+      { id: 'supabase-database-specialist', titleEn: 'Supabase Database Specialist', titleAr: 'متخصص قواعد بيانات Supabase', descriptionEn: 'Completed the database engineering path.', descriptionAr: 'أكمل مسار هندسة قواعد البيانات.' },
+    ],
     rating: 4.8,
     totalStudents: 8900,
     chapters: [
@@ -351,14 +363,14 @@ export const COURSES_DATA: CourseTrack[] = [
   {
     id: 'track-ai-engineering',
     slug: 'ai-engineering',
-    titleEn: 'AI Application Engineering',
-    titleAr: 'هندسة تطبيقات الذكاء الاصطناعي',
+    titleEn: 'Agentic AI & Automation Workflows',
+    titleAr: 'الذكاء الاصطناعي الوكيلي وتدفقات الأتمتة',
     descriptionEn:
       'Prompt engineering, LLM APIs, edge functions, and shipping AI features safely.',
     descriptionAr:
       'هندسة الأوامر وواجهات نماذج اللغة ودوال الحافة ونشر ميزات الذكاء الاصطناعي بأمان.',
-    shortDescriptionEn: 'Build production AI features with LLM APIs.',
-    shortDescriptionAr: 'ابنِ ميزات ذكاء اصطناعي إنتاجية مع واجهات نماذج اللغة.',
+    shortDescriptionEn: 'Build reliable agentic systems and automation workflows.',
+    shortDescriptionAr: 'ابنِ أنظمة وكيلية موثوقة وتدفقات أتمتة قابلة للتشغيل.',
     category: 'ai',
     level: 'advanced',
     iconName: 'Brain',
@@ -373,6 +385,12 @@ export const COURSES_DATA: CourseTrack[] = [
       titleAr: 'مهندس حلول ذكاء اصطناعي',
     },
     accentColor: '#7928CA',
+    totalHours: 9,
+    skillBadges: [
+      { id: 'agentic-ai-builder', titleEn: 'Agentic AI Builder', titleAr: 'باني الذكاء الوكيلي', descriptionEn: 'Designs reliable agent instructions and tools.', descriptionAr: 'يصمم تعليمات وأدوات وكيلية موثوقة.' },
+      { id: 'automation-orchestrator', titleEn: 'Automation Orchestrator', titleAr: 'منسق الأتمتة', descriptionEn: 'Connects triggers, actions, and safe approvals.', descriptionAr: 'يربط المحفزات والإجراءات والموافقات الآمنة.' },
+      { id: 'agentic-workflows-specialist', titleEn: 'Agentic Workflows Specialist', titleAr: 'متخصص التدفقات الوكيلية', descriptionEn: 'Completed the agentic automation path.', descriptionAr: 'أكمل مسار الأتمتة الوكيلية.' },
+    ],
     rating: 4.9,
     totalStudents: 6400,
     chapters: [

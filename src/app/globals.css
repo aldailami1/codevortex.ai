@@ -136,3 +136,12 @@ a[role='button'] {
     outline: 2px solid CanvasText;
   }
 }
+
+
+/* Enterprise layout guard: every route stays inside the viewport. */
+html,
+body,
+#__next {
+  max-width: 100%;
+  overflow-x: hidden;
+}

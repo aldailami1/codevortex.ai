@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Markdown from 'react-markdown';
 import { Language } from '@/types';
 import { MessageSquare, X, Send, Bot, Sparkles } from 'lucide-react';
@@ -24,6 +24,11 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
   ]);
   const [inputVal, setInputVal] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, [messages, isTyping]);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,10 +137,11 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
           {/* Messages Container */}
           <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-950/90 font-sans text-xs">
             {messages.map((m, idx) => (
-              <div
-                key={idx}
-                className={`flex flex-col ${m.sender === 'user' ? 'items-end' : 'items-start'} space-y-1`}
-              >
+                <div
+                  key={idx}
+                  dir="auto"
+                  className={`flex flex-col ${m.sender === 'user' ? 'items-end' : 'items-start'} space-y-1`}
+                >
                 <div
                   className={`max-w-[90%] px-3.5 py-2.5 rounded-2xl leading-relaxed text-xs ${
                     m.sender === 'user'
@@ -156,13 +162,14 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
             ))}
 
             {isTyping && (
-              <div className="flex items-center gap-2 text-cyan-400 text-xs font-mono p-2 bg-slate-900/50 rounded-xl border border-slate-800/50 w-fit">
+              <div dir="auto" className="flex items-center gap-2 text-cyan-400 text-xs font-mono p-2 bg-slate-900/50 rounded-xl border border-slate-800/50 w-fit">
                 <Bot className="w-4 h-4 animate-spin text-[#00F2FE]" />
                 <span>
                   {isAr ? 'جاري الصياغة والإجابة...' : 'Formulating answer...'}
                 </span>
               </div>
             )}
+            <div ref={messagesEndRef} aria-hidden="true" />
           </div>
 
           {/* Input Footer */}
@@ -171,6 +178,7 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
               type="text"
               value={inputVal}
               onChange={(e) => setInputVal(e.target.value)}
+              dir="auto"
               placeholder={isAr ? 'اكتب رسالتك أو استفسارك هنا...' : 'Type your question...'}
               className="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500/50"
             />

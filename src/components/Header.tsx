@@ -18,8 +18,6 @@ import {
   HelpCircle,
   Users,
   FileText,
-  Info,
-  PhoneCall,
   Shield,
   Rocket,
   Download,
@@ -29,12 +27,12 @@ import {
   ChevronDown,
   ArrowRight,
   ArrowLeft,
-  FolderKanban,
   Mail,
   Lock,
   Eye,
   EyeOff,
-  Zap
+  Zap,
+  Settings
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -420,201 +418,70 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
               </div>
 
-              {/* Navigation Sections */}
-              <div className="space-y-2">
-                <h3 className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider px-1">
-                  {t('mainNav')}
-                </h3>
-                <div className="space-y-1">
-                  <button
-                    onClick={() => navigateTo('landing')}
-                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold transition-all ${
-                      activeView === 'landing'
-                        ? 'bg-cyan-950/80 text-[#00F2FE] border border-cyan-800/80'
-                        : 'text-slate-200 hover:bg-slate-900 hover:text-white'
-                    }`}
-                  >
-                    <Home className="w-4 h-4 text-[#00F2FE]" />
-                    <span>{t('home')}</span>
-                  </button>
-
-                  <button
-                    onClick={() => navigateTo('dashboard')}
-                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold transition-all ${
-                      activeView === 'dashboard'
-                        ? 'bg-cyan-950/80 text-[#00F2FE] border border-cyan-800/80'
-                        : 'text-slate-200 hover:bg-slate-900 hover:text-white'
-                    }`}
-                  >
-                    <FolderKanban className="w-4 h-4 text-purple-400" />
-                    <span>{t('dashboardAndProjects')}</span>
-                  </button>
-
-                  <button
-                    onClick={() => navigateTo('control-center')}
-                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold transition-all ${
-                      activeView === 'control-center'
-                        ? 'bg-cyan-950/80 text-[#00F2FE] border border-cyan-800/80'
-                        : 'text-slate-200 hover:bg-slate-900 hover:text-white'
-                    }`}
-                  >
-                    <Shield className="w-4 h-4 text-cyan-400" />
-                    <span>{isAr ? 'مركز قيادة CloudForge' : 'CloudForge Control Center'}</span>
-                  </button>
-
-                  <button
-                    onClick={() => navigateTo('cloudforge')}
-                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold transition-all ${
-                      activeView === 'cloudforge'
-                        ? 'bg-cyan-950/80 text-[#00F2FE] border border-cyan-800/80'
-                        : 'text-slate-200 hover:bg-slate-900 hover:text-white'
-                    }`}
-                  >
-                    <Cpu className="w-4 h-4 text-cyan-400" />
-                    <span>{isAr ? 'منشئ مخطط CloudForge' : 'CloudForge Schema Builder'}</span>
-                  </button>
-
-                  <button
-                    onClick={() => navigateTo('workspace')}
-                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold transition-all ${
-                      activeView === 'workspace'
-                        ? 'bg-cyan-950/80 text-[#00F2FE] border border-cyan-800/80'
-                        : 'text-slate-200 hover:bg-slate-900 hover:text-white'
-                    }`}
-                  >
-                    <LayoutGrid className="w-4 h-4 text-emerald-400" />
-                    <span>{t('workspace')}</span>
-                  </button>
-
-                  <button
-                    onClick={() => navigateTo('chat')}
-                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold transition-all ${
-                      activeView === 'chat'
-                        ? 'bg-cyan-950/80 text-[#00F2FE] border border-cyan-800/80'
-                        : 'text-slate-200 hover:bg-slate-900 hover:text-white'
-                    }`}
-                  >
-                    <MessageSquareCode className="w-4 h-4 text-cyan-400" />
-                    <span>{t('aiAssistant')}</span>
-                  </button>
-
-                  <button
-                    onClick={() => navigateTo('marketplace')}
-                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold transition-all ${
-                      activeView === 'marketplace'
-                        ? 'bg-cyan-950/80 text-[#00F2FE] border border-cyan-800/80'
-                        : 'text-slate-200 hover:bg-slate-900 hover:text-white'
-                    }`}
-                  >
-                    <ShoppingBag className="w-4 h-4 text-amber-400" />
-                    <span>{t('marketplace')}</span>
-                  </button>
-
-                  <button
-                    onClick={() => navigateTo('academy')}
-                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold transition-all ${
-                      activeView === 'academy'
-                        ? 'bg-cyan-950/80 text-[#00F2FE] border border-cyan-800/80'
-                        : 'text-slate-200 hover:bg-slate-900 hover:text-white'
-                    }`}
-                  >
-                    <Zap className="w-4 h-4 text-yellow-400" />
-                    <span>{t('academy')}</span>
-                  </button>
+              {/* Enterprise information architecture: three concise groups, no duplicated labels. */}
+              {[
+                {
+                  title: 'CORE ENGINE',
+                  titleAr: 'المحرك الأساسي',
+                  items: [
+                    { label: isAr ? 'الرئيسية' : 'Home', view: 'landing' as ViewMode, icon: Home },
+                    { label: isAr ? 'محطة العمل' : 'Workstation', view: 'workspace' as ViewMode, icon: LayoutGrid },
+                    { label: isAr ? 'منشئ المخطط' : 'Schema Builder', view: 'cloudforge' as ViewMode, icon: Cpu },
+                    { label: isAr ? 'مركز القيادة' : 'Control Center', view: 'control-center' as ViewMode, icon: Shield },
+                  ],
+                },
+                {
+                  title: 'ECOSYSTEM',
+                  titleAr: 'المنظومة',
+                  items: [
+                    { label: isAr ? 'مساعد الذكاء الاصطناعي' : 'AI Assistant', view: 'chat' as ViewMode, icon: MessageSquareCode },
+                    { label: isAr ? 'السوق' : 'Marketplace', view: 'marketplace' as ViewMode, icon: ShoppingBag },
+                    { label: isAr ? 'الأكاديمية' : 'Academy', view: 'academy' as ViewMode, icon: Zap },
+                  ],
+                },
+                {
+                  title: 'RESOURCES',
+                  titleAr: 'المصادر',
+                  items: [
+                    { label: isAr ? 'التوثيق' : 'Documentation', view: 'changelog' as ViewMode, icon: FileText },
+                    { label: isAr ? 'المجتمع' : 'Community', view: 'community' as ViewMode, icon: Users },
+                    { label: isAr ? 'الدعم' : 'Support', view: 'support' as ViewMode, icon: HelpCircle },
+                  ],
+                },
+              ].map((group) => (
+                <div key={group.title} className="space-y-2">
+                  <h3 className="px-1 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">{isAr ? group.titleAr : group.title}</h3>
+                  <div className="space-y-1">
+                    {group.items.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <button
+                          key={item.view}
+                          onClick={() => navigateTo(item.view)}
+                          className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-bold transition-all border-l-2 ${activeView === item.view ? 'bg-cyan-500/10 text-cyan-400 border-cyan-400' : 'border-transparent text-slate-200 hover:bg-slate-900 hover:text-white'}`}
+                        >
+                          <Icon className="h-4 w-4 shrink-0" />
+                          <span>{item.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider px-1">
-                  {t('supportPortal')}
-                </h3>
-                <div className="space-y-1">
-                  <button
-                    onClick={() => navigateTo('support')}
-                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold transition-all ${
-                      activeView === 'support'
-                        ? 'bg-cyan-950/80 text-[#00F2FE] border border-cyan-800/80'
-                        : 'text-slate-300 hover:bg-slate-900 hover:text-white'
-                    }`}
-                  >
-                    <HelpCircle className="w-4 h-4 text-blue-400" />
-                    <span>{t('support')}</span>
-                  </button>
-
-                  <button
-                    onClick={() => navigateTo('community')}
-                    className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl font-semibold transition-all ${
-                      activeView === 'community'
-                        ? 'bg-cyan-950/80 text-[#00F2FE] border border-cyan-800/80'
-                        : 'text-slate-300 hover:bg-slate-900 hover:text-white'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <Users className="w-4 h-4 text-orange-400" />
-                      <span>{t('devCommunity')}</span>
-                    </div>
-                    <span className="text-[10px] text-slate-500 font-mono">Reddit & Discord</span>
-                  </button>
-
-                  <button
-                    onClick={() => navigateTo('changelog')}
-                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold transition-all ${
-                      activeView === 'changelog'
-                        ? 'bg-cyan-950/80 text-[#00F2FE] border border-cyan-800/80'
-                        : 'text-slate-300 hover:bg-slate-900 hover:text-white'
-                    }`}
-                  >
-                    <FileText className="w-4 h-4 text-purple-400" />
-                    <span>{t('changelog')}</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider px-1">
-                  {t('about')}
-                </h3>
-                <div className="space-y-1">
-                  <button
-                    onClick={() => navigateTo('about')}
-                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold transition-all ${
-                      activeView === 'about'
-                        ? 'bg-cyan-950/80 text-[#00F2FE] border border-cyan-800/80'
-                        : 'text-slate-300 hover:bg-slate-900 hover:text-white'
-                    }`}
-                  >
-                    <Info className="w-4 h-4 text-emerald-400" />
-                    <span>{t('about')}</span>
-                  </button>
-
-                  <button
-                    onClick={() => navigateTo('contact')}
-                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold transition-all ${
-                      activeView === 'contact'
-                        ? 'bg-cyan-950/80 text-[#00F2FE] border border-cyan-800/80'
-                        : 'text-slate-300 hover:bg-slate-900 hover:text-white'
-                    }`}
-                  >
-                    <PhoneCall className="w-4 h-4 text-cyan-400" />
-                    <span>{t('contact')}</span>
-                  </button>
-
-                  <button
-                    onClick={() => navigateTo('privacy')}
-                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold transition-all ${
-                      activeView === 'privacy'
-                        ? 'bg-cyan-950/80 text-[#00F2FE] border border-cyan-800/80'
-                        : 'text-slate-300 hover:bg-slate-900 hover:text-white'
-                    }`}
-                  >
-                    <Shield className="w-4 h-4 text-amber-400" />
-                    <span>{isAr ? 'سياسة الخصوصية وشروط الخدمة' : 'Privacy & Terms'}</span>
-                  </button>
-                </div>
-              </div>
+              ))}
             </div>
 
-            <div className="p-4 bg-slate-900/90 border-t border-slate-800 space-y-3">
+            <div className="grid grid-cols-1 gap-2 border-t border-slate-800 bg-slate-900/90 p-4 sm:grid-cols-3">
+              <button
+                onClick={() => {
+                  setIsDrawerOpen(false);
+                  navigateTo('privacy');
+                }}
+                className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 text-xs font-bold text-slate-300 transition-all hover:border-cyan-400/50 hover:text-white"
+              >
+                <Settings className="h-4 w-4 text-cyan-300" />
+                <span>{isAr ? 'الإعدادات' : 'Settings'}</span>
+              </button>
+
               <button
                 onClick={() => {
                   setIsDrawerOpen(false);

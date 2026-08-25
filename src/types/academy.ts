@@ -36,7 +36,24 @@ export interface Exam {
   questions: QuizQuestion[];
 }
 
+export interface CodeSandboxSpec {
+  language: 'javascript' | 'typescript' | 'sql' | 'python';
+  starterCode: string;
+  expectedOutput?: string;
+  evaluationHints?: string[];
+}
+
+export interface SkillBadge {
+  id: string;
+  titleEn: string;
+  titleAr: string;
+  descriptionEn: string;
+  descriptionAr: string;
+  icon?: string;
+}
+
 export interface Lesson {
+
   id: string;
   type: ContentType;
   titleEn: string;
@@ -46,6 +63,9 @@ export interface Lesson {
   textContentEn?: string;
   textContentAr?: string;
   quiz?: QuizQuestion[];
+  theoryVisualUrl?: string;
+  sandbox?: CodeSandboxSpec;
+  estimatedHours?: number;
 }
 
 export interface Chapter {
@@ -85,6 +105,10 @@ export interface CourseTrack {
   accentColor?: string;
   chapters: Chapter[];
   finalExam: Exam;
+  totalHours?: number;
+  skillBadges?: SkillBadge[];
+  learningOutcomesEn?: string[];
+  learningOutcomesAr?: string[];
 }
 
 export interface CertificateRecord {
@@ -106,6 +130,9 @@ export interface UserProgress {
   totalXP: number;
   studentName: string;
   lastTrackId?: string;
+  completedCodeChallengeIds?: string[];
+  earnedBadgeIds?: string[];
+  completedHours?: number;
 }
 
 export type { Language };

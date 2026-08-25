@@ -111,3 +111,10 @@ The initial shell now renders directly without a black loading gate. Heavy modul
 The Marketplace catalog is defined in `src/data/marketplaceCatalog.ts` and includes 20+ starter items across Websites, Cloud & SaaS, E-Commerce, Apps & Services, and Schemas & APIs. Each item supports search, category filtering, live preview, workspace installation, and deployment preparation. Pricing includes Free, Pro at $20/month, Enterprise custom, and a separate Ad-Engine with Starter ($10), Growth ($25), and Scale ($50+) workflow-credit packs.
 
 Checkout is provider-safe: production Stripe sessions require server-side price IDs such as `STRIPE_PRICE_PRO_MONTHLY` and `STRIPE_PRICE_AD_STARTER`. Sandbox success is disabled by default and can only be enabled explicitly for local development with `ALLOW_SANDBOX_CHECKOUT=true`. Apple Pay is presented through Stripe wallet support; PayPal and Binance Pay remain explicit provider adapters until their server credentials and signed webhooks are configured.
+
+
+## 🎓 CloudForge Academy Learning Center
+
+The Academy now presents three engineering paths: **Full-Stack AI Cloud Architecture**, **Supabase & Database Engineering**, and **Agentic AI & Automation Workflows**. Each path includes lesson navigation, video or visual theory briefing, a safe deterministic code sandbox, quiz support, progress percentage, completed hours, XP, and skill badges. The sandbox never executes untrusted learner code on the server; it performs bounded static checks before allowing lesson completion.
+
+Learner state is persisted locally under the versioned `cloudforge_user_progress_v2` key. Production-grade grading, video hosting, identity-linked transcripts, and certificate verification should be connected to authenticated server storage before being used as an official academic record.

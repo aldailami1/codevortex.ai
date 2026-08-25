@@ -1,12 +1,14 @@
+'use client';
+
 import React from 'react';
 import { Language } from '@/types';
-import { AcademyModule } from './AcademyModule';
+import { AcademyLearningCenter } from './AcademyLearningCenter';
 
 interface AcademyPageProps {
   language: Language;
   onOpenWorkspace: (initialCode?: string) => void;
 }
 
-export const AcademyPage: React.FC<AcademyPageProps> = ({ language, onOpenWorkspace }) => {
-  return <AcademyModule language={language} onOpenWorkspace={onOpenWorkspace} />;
-};
+export const AcademyPage: React.FC<AcademyPageProps> = ({ language, onOpenWorkspace }) => (
+  <AcademyLearningCenter language={language} onOpenWorkspace={onOpenWorkspace} />
+);
