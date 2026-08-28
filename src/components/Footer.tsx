@@ -58,9 +58,9 @@ export const Footer: React.FC<FooterProps> = ({ language, onSelectView }) => {
     <footer className="w-full overflow-x-hidden border-t border-slate-800/80 bg-[#0B0F19] px-4 pb-8 pt-12 font-sans text-slate-400 sm:px-6 lg:px-8 lg:pt-16">
       <div className="mx-auto grid w-full max-w-7xl grid-cols-2 gap-8 lg:grid-cols-12">
         <div className="col-span-2 space-y-4 lg:col-span-4">
-          <button onClick={() => onSelectView('landing')} className="flex items-center gap-3 text-start">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-tr from-cyan-300 via-blue-600 to-violet-600 text-slate-950 shadow-lg shadow-cyan-500/20">✦</span>
-            <span><strong className="block bg-gradient-to-r from-white to-cyan-300 bg-clip-text text-xl font-black text-transparent">CloudForge</strong><span className="block text-[10px] font-bold text-slate-500">{t('cloudForgeSub')}</span></span>
+          <button onClick={() => onSelectView('landing')} className="flex flex-row items-center gap-3 whitespace-nowrap text-start">
+            <img src="/favicon.svg" alt="CloudForge" className="h-10 w-10 shrink-0 rounded-2xl" width={40} height={40} />
+            <span><strong className="block whitespace-nowrap bg-gradient-to-r from-white to-cyan-300 bg-clip-text text-xl font-black text-transparent">CloudForge</strong><span className="block text-[10px] font-bold text-slate-500">{t('cloudForgeSub')}</span></span>
           </button>
           <p className="max-w-sm text-xs leading-6 text-slate-400">{t('footerDesc')}</p>
           <div className="inline-flex items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-400/5 px-3 py-2 text-[10px] font-bold text-emerald-300"><span className="h-2 w-2 rounded-full bg-emerald-300" />{isAr ? 'الخدمات الأساسية تعمل' : 'Core services operational'}</div>

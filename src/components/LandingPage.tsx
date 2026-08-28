@@ -195,7 +195,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans overflow-x-hidden">
+    <div className="min-h-0 w-full overflow-x-hidden bg-[#0B0F19] pb-24 text-slate-100 flex flex-col font-sans sm:pb-0">
       {/* Background Glow Orbs */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[500px] bg-gradient-to-b from-cyan-500/10 via-purple-600/10 to-transparent blur-3xl pointer-events-none -z-10" />
 

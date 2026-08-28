@@ -44,19 +44,19 @@ const INITIAL_PROJECT: Project = {
   id: 'proj-default',
   name: 'CloudForge Workstation',
   description: 'AI Generated Cloud Application & Repl Workspace',
-  language: 'ar',
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-  isRTL: true,
+      language: 'en',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      isRTL: false,
   files: [
     {
       path: 'index.html',
       content: `<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CloudForge Engine - منصة التطوير السحابية الذكية</title>
+  <title>CloudForge Engine - AI Cloud Development Workspace</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

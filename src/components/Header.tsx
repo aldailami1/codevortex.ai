@@ -188,15 +188,15 @@ export const Header: React.FC<HeaderProps> = ({
 
           <button
             onClick={() => onSelectView('landing')}
-            className="flex items-center gap-2.5 group text-left focus:outline-none"
+            className="flex min-w-0 flex-row items-center gap-2.5 whitespace-nowrap text-left focus:outline-none"
           >
             {/* Official CloudForge vector mark */}
             <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-xl shadow-lg shadow-cyan-500/20 transition-transform group-hover:scale-105">
               <img src="/favicon.svg" alt="CloudForge" className="h-full w-full object-cover" width={36} height={36} />
             </span>
             <div className="flex flex-col text-left">
-              <div className="flex items-center gap-1.5">
-                <span className="font-black text-lg sm:text-xl tracking-tight bg-gradient-to-r from-white via-slate-100 to-[#00F2FE] bg-clip-text text-transparent">
+              <div className="flex min-w-0 flex-row items-center gap-1.5 whitespace-nowrap">
+                <span className="shrink-0 whitespace-nowrap font-black text-lg sm:text-xl tracking-tight bg-gradient-to-r from-white via-slate-100 to-[#00F2FE] bg-clip-text text-transparent">
                   CloudForge
                 </span>
                 <span className="px-1.5 py-0.5 rounded-md bg-gradient-to-r from-cyan-950 to-slate-900 border border-cyan-500/40 text-[#00F2FE] text-[9px] font-extrabold font-mono tracking-wider shadow-inner">
