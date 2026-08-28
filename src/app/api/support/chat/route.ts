@@ -10,18 +10,6 @@ function createConversationId() {
   return crypto.randomUUID();
 }
 
-function fallbackReply(message: string, ar: boolean) {
-  const normalized = message.toLowerCase();
-  const faq = getRelevantFaq(message)[0];
-  if (faq) return faq.replace(/^[^:]+:\s*/, '');
-  if (ar) {
-    if (normalized.includes('خطأ') || normalized.includes('مشكلة')) return 'أفهم أن هناك مشكلة. أرسل نص الخطأ بعد إخفاء أي مفاتيح أو بيانات شخصية، واذكر الصفحة والخطوة التي ظهر فيها حتى نحدد المسار الآمن التالي.';
-    return 'أهلاً بك في CloudForge. أخبرني بما تحاول بناءه أو أين توقفت، وسأساعدك خطوة بخطوة. لا تشارك كلمات المرور أو مفاتيح API داخل المحادثة.';
-  }
-  if (normalized.includes('error') || normalized.includes('issue')) return 'I understand something is blocking you. Share the exact error with secrets and personal data redacted, plus the page and step where it appeared, and we will identify the safest next step.';
-  return 'Welcome to CloudForge. Tell me what you are building or where you are stuck, and I will guide you step by step. Please do not share passwords or API keys in chat.';
-}
-
 function getServerSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -59,41 +47,45 @@ export async function POST(request: Request) {
     const ar = language === 'ar' || isArText(message);
     if (!message) return jsonError(ar ? 'اكتب رسالتك أولاً' : 'Please write a message first', 400);
 
+    const openaiKey = process.env.OPENAI_API_KEY;
     const requestedConversationId = typeof body.conversationId === 'string' && UUID_PATTERN.test(body.conversationId) ? body.conversationId : '';
     const conversationId = requestedConversationId || createConversationId();
     const persistedConversation = await ensureConversation(conversationId, ar ? 'ar' : 'en');
     const history = await loadHistory(conversationId);
-    await persistMessage(conversationId, 'user', message, { language: ar ? 'ar' : 'en', source: 'web_widget' });
+    const persistedUserMessage = await persistMessage(conversationId, 'user', message, { language: ar ? 'ar' : 'en', source: 'web_widget' });
 
-    let reply = '';
-    const openaiKey = process.env.OPENAI_API_KEY;
-    if (openaiKey) {
-      try {
-        const relevantFaq = getRelevantFaq(message);
-        const context = relevantFaq.length ? `${CLOUDFORGE_SUPPORT_CONTEXT}\n\nRelevant CloudForge knowledge:\n${relevantFaq.join('\n')}` : CLOUDFORGE_SUPPORT_CONTEXT;
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${openaiKey}` },
-          body: JSON.stringify({
-            model: process.env.OPENAI_SUPPORT_MODEL || 'gpt-4o-mini',
-            temperature: 0.35,
-            max_tokens: 500,
-            messages: [{ role: 'system', content: `${context}\n\nReply in ${ar ? 'Arabic' : 'English'}.` }, ...history, { role: 'user', content: message }],
-          }),
-        });
-        if (response.ok) {
-          const data = await response.json();
-          const candidate = data?.choices?.[0]?.message?.content;
-          if (typeof candidate === 'string') reply = candidate.trim();
-        }
-      } catch {
-        reply = '';
-      }
+    if (!openaiKey) {
+      return jsonError(ar ? 'خدمة الذكاء الاصطناعي غير مهيأة حالياً.' : 'AI support is not configured for this environment.', 503, { code: 'AI_PROVIDER_NOT_CONFIGURED', conversationId, persisted: persistedConversation && persistedUserMessage });
     }
 
-    reply = reply || fallbackReply(message, ar);
-    const persistedAssistant = await persistMessage(conversationId, 'assistant', reply, { provider: openaiKey ? 'openai_or_fallback' : 'deterministic_fallback' });
-    return json({ reply, conversationId, persisted: persistedConversation && persistedAssistant, provider: openaiKey ? 'ai_or_fallback' : 'deterministic' });
+    const relevantFaq = getRelevantFaq(message);
+    const context = relevantFaq.length ? `${CLOUDFORGE_SUPPORT_CONTEXT}\n\nRelevant CloudForge knowledge:\n${relevantFaq.join('\n')}` : CLOUDFORGE_SUPPORT_CONTEXT;
+    let response: Response;
+    try {
+      response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${openaiKey}` },
+        body: JSON.stringify({
+          model: process.env.OPENAI_SUPPORT_MODEL || 'gpt-4o-mini',
+          temperature: 0.35,
+          max_tokens: 500,
+          messages: [{ role: 'system', content: `${context}\n\nReply in ${ar ? 'Arabic' : 'English'}.` }, ...history, { role: 'user', content: message }],
+        }),
+      });
+    } catch {
+      return jsonError(ar ? 'تعذر الوصول إلى مزود الذكاء الاصطناعي.' : 'The AI provider could not be reached.', 502, { code: 'AI_PROVIDER_UNREACHABLE', conversationId, persisted: persistedConversation && persistedUserMessage });
+    }
+
+    if (!response.ok) {
+      return jsonError(ar ? 'رفض مزود الذكاء الاصطناعي الطلب.' : 'The AI provider rejected the request.', 502, { code: 'AI_PROVIDER_ERROR', conversationId, persisted: persistedConversation && persistedUserMessage });
+    }
+
+    const data = await response.json();
+    const reply = data?.choices?.[0]?.message?.content;
+    if (typeof reply !== 'string' || !reply.trim()) return jsonError(ar ? 'لم يعد مزود الذكاء الاصطناعي برد صالح.' : 'The AI provider returned no usable response.', 502, { code: 'AI_EMPTY_RESPONSE', conversationId });
+
+    const persistedAssistant = await persistMessage(conversationId, 'assistant', reply.trim(), { provider: 'openai', model: process.env.OPENAI_SUPPORT_MODEL || 'gpt-4o-mini' });
+    return json({ reply: reply.trim(), conversationId, persisted: persistedConversation && persistedAssistant, provider: 'openai' });
   } catch {
     return jsonError('Chat failed', 500);
   }

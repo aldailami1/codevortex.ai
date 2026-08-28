@@ -47,7 +47,7 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
     setIsTyping(true);
 
     try {
-      const res = await fetch('/api/support/chat', {
+      const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -60,10 +60,11 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
         }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (typeof data.conversationId === 'string') setConversationId(data.conversationId);
       setIsTyping(false);
 
+      if (!res.ok) throw new Error(typeof data?.error === 'string' ? data.error : 'AI support request failed');
       if (data.reply) {
         setMessages((prev) => [
           ...prev,
@@ -80,8 +81,8 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
       console.warn('Support chat request failed:', err);
       setIsTyping(false);
       const fallbackText = isAr
-        ? 'يسعدني مساعدتك في CloudForge. يبدو أن مزوّد الرد الآلي غير متاح للحظة، لكن يمكنني إرشادك هنا: اذكر هدفك أو رسالة الخطأ وسنحدد الخطوة التالية معاً.'
-        : 'I am happy to help with CloudForge. The automated responder is briefly unavailable, but we can still work through it here: share your goal or exact error and we will find the next step together.';
+        ? 'لم يصل رد من محرك الذكاء الاصطناعي. لم يتم إنشاء إجابة وهمية؛ يرجى المحاولة مجدداً بعد تهيئة مزود AI.'
+        : 'The AI engine did not return a response. No simulated answer was generated; please try again after configuring the AI provider.';
 
       setMessages((prev) => [
         ...prev,
@@ -95,7 +96,8 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
   };
 
   return (
-    <div className={`fixed bottom-4 sm:bottom-6 ${isAr ? 'left-4 sm:left-6' : 'right-4 sm:right-6'} z-50 font-sans`}>
+    <div className={`pointer-events-none fixed inset-x-0 bottom-4 z-50 px-4 font-sans sm:bottom-6 sm:px-6 ${isAr ? 'sm:left-0' : 'sm:right-0'}`}>
+      <div className="pointer-events-auto flex justify-end">
       {/* Floating Circular Trigger Button */}
       {!isOpen && (
         <button
@@ -110,7 +112,7 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
 
       {/* Floating Live Chat Widget Popup */}
       {isOpen && (
-        <div className="w-[min(92vw,410px)] h-[min(70vh,560px)] bg-slate-900/95 backdrop-blur-2xl border border-slate-800 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5">
+        <div className="h-[min(70dvh,560px)] max-h-[calc(100dvh-2rem)] w-full max-w-[410px] overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/95 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-5">
           {/* Widget Header */}
           <div className="p-4 bg-gradient-to-r from-slate-950 via-slate-900 to-cyan-950 border-b border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -183,7 +185,7 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
               onChange={(e) => setInputVal(e.target.value)}
               dir="auto"
               placeholder={isAr ? 'اكتب رسالتك أو استفسارك هنا...' : 'Type your question...'}
-              className="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500/50"
+              className="min-w-0 flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500/50"
             />
             <button
               type="submit"
@@ -195,6 +197,7 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
           </form>
         </div>
       )}
+      </div>
     </div>
   );
 };

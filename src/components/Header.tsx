@@ -190,15 +190,10 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => onSelectView('landing')}
             className="flex items-center gap-2.5 group text-left focus:outline-none"
           >
-            {/* Neon Logo Icon */}
-            <div className="relative w-9 h-9 rounded-xl bg-gradient-to-tr from-[#00F2FE] via-blue-600 to-[#7928CA] p-0.5 shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-all">
-              <div className="w-full h-full bg-[#0B0F19] rounded-[10px] flex items-center justify-center overflow-hidden">
-                <svg className="w-5 h-5 text-[#00F2FE] animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-                  <circle cx="12" cy="12" r="3" fill="#00F2FE" />
-                </svg>
-              </div>
-            </div>
+            {/* Official CloudForge vector mark */}
+            <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-xl shadow-lg shadow-cyan-500/20 transition-transform group-hover:scale-105">
+              <img src="/favicon.svg" alt="CloudForge" className="h-full w-full object-cover" width={36} height={36} />
+            </span>
             <div className="flex flex-col text-left">
               <div className="flex items-center gap-1.5">
                 <span className="font-black text-lg sm:text-xl tracking-tight bg-gradient-to-r from-white via-slate-100 to-[#00F2FE] bg-clip-text text-transparent">

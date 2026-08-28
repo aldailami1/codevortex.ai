@@ -200,7 +200,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[500px] bg-gradient-to-b from-cyan-500/10 via-purple-600/10 to-transparent blur-3xl pointer-events-none -z-10" />
 
       {/* Hero Section */}
-      <section className="pt-12 pb-20 px-4 max-w-6xl mx-auto text-center space-y-8 relative">
+      <section className="relative mx-auto w-full max-w-7xl overflow-hidden px-4 py-12 text-center sm:px-6 md:py-20 lg:px-8 lg:py-24">
         {/* Central Official Platform Brand Banner */}
         <div className="flex flex-col items-center justify-center space-y-3 pt-2">
           {/* Glowing Neon Emblem */}
@@ -244,13 +244,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
 
         {/* Floating Tech Pill */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/90 border border-cyan-500/30 text-cyan-400 text-xs font-black shadow-lg shadow-cyan-500/10 animate-bounce">
+        <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-cyan-500/30 bg-slate-900/90 px-4 py-2 text-xs font-black text-cyan-400 shadow-lg shadow-cyan-500/10 animate-bounce">
           <Sparkles className="w-4 h-4 text-[#00F2FE]" />
           <span>{t('heroPill')}</span>
         </div>
 
         {/* Hero Headline */}
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[1.15] max-w-5xl mx-auto text-white">
+        <h1 className="mx-auto max-w-full break-words text-balance text-[clamp(2rem,8vw,4.5rem)] font-black leading-[1.08] tracking-tight text-white">
           {t('heroTitle')}
         </h1>
 
@@ -262,18 +262,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         {/* Main Clean AI Prompt Box */}
         <div className="max-w-3xl mx-auto bg-slate-900/90 border border-slate-800 rounded-3xl p-3 sm:p-4 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl relative group hover:border-cyan-500/50 transition-all">
           <form onSubmit={handleQuickSubmit} className="space-y-0">
-            <div className="flex items-center gap-3 bg-slate-950 p-3 rounded-2xl border border-slate-800">
+            <div className="flex min-w-0 flex-col gap-3 rounded-2xl border border-slate-800 bg-slate-950 p-3 sm:flex-row sm:items-center">
               <Bot className="w-6 h-6 text-[#00F2FE] shrink-0" />
               <input
                 type="text"
                 value={promptInput}
                 onChange={(e) => setPromptInput(e.target.value)}
                 placeholder={t('heroInputPlaceholder')}
-                className="flex-1 bg-transparent text-slate-100 placeholder-slate-500 text-sm sm:text-base focus:outline-none font-medium"
+                className="min-w-0 w-full flex-1 bg-transparent text-slate-100 placeholder-slate-500 text-sm sm:text-base focus:outline-none font-medium"
               />
               <button
                 type="submit"
-                className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#00F2FE] via-blue-600 to-[#7928CA] text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-cyan-500/25 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 shrink-0"
+                className="flex w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#00F2FE] via-blue-600 to-[#7928CA] px-6 py-3.5 text-xs font-black text-slate-950 shadow-lg shadow-cyan-500/25 transition-all hover:scale-105 active:scale-95 sm:w-auto sm:text-sm"
               >
                 <Rocket className="w-4 h-4 fill-current text-slate-950" />
                 <span>{t('generateAppBtn')}</span>
