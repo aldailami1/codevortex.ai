@@ -1,127 +1,135 @@
-<div align="center">
+# CloudForge
 
-# ⚡ CloudForge
+**Enterprise Cloud Engineering, AI Automation, and Learning Platform**
 
-**AI-Native Cloud Building & Automation Engine**
+CloudForge is an AI-native cloud workstation for designing, building, securing, learning, and deploying modern digital products. The platform combines a visual no-code/low-code builder, isolated Supabase database workflows, guarded deployment preparation, an AI monetization workspace, and CloudForge International Engineering Academy.
 
-Next.js 15 (App Router) · React 19 · Tailwind CSS v4 · Supabase (PostgreSQL + RLS + Realtime + Edge Functions) · Vercel / Netlify · GitHub Actions
+## Company profile
 
-</div>
+CloudForge helps engineering teams, independent builders, agencies, and learners move from an idea to a governed cloud implementation. The product is designed around transparent provider boundaries: the UI can prepare workspaces, schemas, campaigns, deployments, support actions, and learning credentials, while production execution remains controlled by authenticated providers, signed webhooks, role-based access controls, and explicit approvals.
 
----
+## Platform capabilities
 
-## ✨ Overview
+| Module | Scope |
+|---|---|
+| Visual builder | Prompt-assisted full-stack generation, a responsive workstation, preview workflows, export, and low-code project operations. |
+| Cloud data | Supabase PostgreSQL schemas, RLS-aware access design, project workspaces, audit events, and isolated backend preparation. |
+| Deployment | Vercel/Netlify deployment preparation, domain and SSL workflow states, build logs, and approval-aware actions. |
+| Monetization | Campaign drafts, ad-engine products, campaign balance concepts, and provider-safe billing flows. External ad publication requires configured provider credentials and approval. |
+| Academy | Three engineering paths, lessons, quizzes, static code labs, progress tracking, skill badges, certificate previews, and public credential verification. |
+| Customer service | Floating AI support widget, contextual knowledge, conversation memory, message logs, ticket workflow, and a full departmental support portal. |
 
-CloudForge is an all-in-one AI cloud workstation:
+## Architecture overview
 
-- 🤖 **Generate** full-stack apps from a single prompt (OpenAI / Anthropic / Gemini, with an offline deterministic fallback so it *never* fails)
-- 👁️ **Preview** live in the browser (port 3000, hot-reload, interactive terminal)
-- 🧱 **Design** Supabase schemas with RLS in the Schema Builder
-- 🚀 **Deploy** with one click to Vercel / Netlify (live build logs)
-- 🛒 **Marketplace** of ready-made templates, imported in one click
-- 🎓 **Academy** with courses, quizzes and verified certificates
-- **Control Center** for guarded cyber-shield readiness, visual backend operations, campaign drafts, and approval-aware deployment flows
-- 🌍 **14 languages** — all copy hardcoded and bundled at build time (no external translation files, no empty keys)
+CloudForge uses Next.js 15 with the App Router, React 19, TypeScript, and Tailwind CSS v4. The browser renders a mobile-first shell and loads heavy interactive surfaces on demand. Server routes validate input, keep provider secrets outside the browser, and return explicit provider or configuration states rather than simulated production success.
 
-## 🗂 Project Structure
-
+```text
+Browser UI
+  ├── App shell, responsive Header/Sidebar/Footer
+  ├── Visual Builder, Marketplace, Control Center, Academy
+  ├── Floating Support Widget and Departmental Support Portal
+  └── Certificate preview and public verification page
+        │
+        ├── Next.js App Router API routes
+        │     ├── AI generation and support context orchestration
+        │     ├── Ticket creation and support message persistence
+        │     ├── Billing and provider-safe checkout
+        │     └── Certificate registry verification
+        │
+        ├── Supabase PostgreSQL
+        │     ├── Profiles, workspaces, projects, deployments
+        │     ├── Support conversations and message memory
+        │     ├── Tickets, ticket messages, webhook idempotency
+        │     └── RLS policies, indexes, triggers, audit logs
+        │
+        └── External providers
+              ├── OpenAI-compatible support and generation provider
+              ├── Stripe Checkout and wallet support
+              ├── Vercel/Netlify deployment providers
+              └── Optional ad, email, and webhook providers
 ```
-.
-├── src/
-│   ├── app/                 # Next.js App Router (layout, page, api/*, robots, sitemap)
-│   ├── components/          # Self-contained UI components (App shell, Control Center, Landing, Workspace…)
-│   ├── lib/
-│   │   ├── translations.ts  # ★ ALL UI copy, 14 languages, hardcoded static objects
-│   │   ├── i18n.ts          # Language metadata + makeT resolver
-│   │   ├── formatter.ts     # Dependency-free code formatter
-│   │   ├── supabase.ts      # SSR-safe Supabase clients (graceful env fallback)
-│   │   └── utils.ts         # SSR-safe storage + legacy cache migration
-│   ├── types/               # Shared domain types (index.ts, academy.ts)
-│   └── data/                # Marketplace templates + Academy courses (embedded)
-├── supabase/
-│   ├── migrations/          # 0001–0004: enums, tables, RBAC+RLS, indexes/realtime
-│   └── functions/           # ai-completion, stripe-webhook, crypto-webhook, webhook-dispatcher
-├── .github/workflows/       # ci.yml · deploy-vercel.yml · deploy-netlify.yml
-├── docs/ENGINEERING_PLAN.md # Full bilingual engineering blueprint (5 axes)
-└── tests/                   # Vitest + Testing Library
+
+## Repository structure
+
+```text
+src/app/                         Next.js App Router pages and API routes
+src/components/                 UI modules and responsive application surfaces
+src/data/                       Marketplace catalog and Academy curriculum
+src/lib/supportContext.ts       CloudForge support system context and FAQ routing
+src/lib/supabase.ts              SSR-safe Supabase browser/server clients
+src/types/                      Shared product, academy, certificate, and support types
+supabase/migrations/             Ordered executable database migrations
+supabase/schema.sql              Single executable schema bundle, migrations 0001–0005
+supabase/functions/              Provider webhook and edge-function integrations
+tests/                           Vitest and Testing Library coverage
+.env.example                     Safe environment contract with no credentials
 ```
 
-## 🚀 Getting Started
+## Customer service AI engine
 
-**Prerequisites:** Node.js ≥ 20
+The support engine is implemented in `src/app/api/support/chat/route.ts`. It combines the CloudForge product context, a deterministic FAQ layer, recent conversation history, and an optional OpenAI-compatible model. Each request is capped at 4,000 characters. The assistant replies in the user’s language, avoids requesting secrets, and never claims that it charged a card, changed an account, opened a ticket, or deployed a project unless an API confirms that action.
+
+When the server has `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`, conversations and messages are persisted in `support_conversations` and `support_messages`. The service role is used only on the server. Without those variables, the product returns a clear deterministic fallback and reports that persistence is unavailable; it does not pretend that memory was saved.
+
+The full dashboard is provided by `DepartmentalSupportPortal`. Ticket persistence is governed by authenticated Supabase policies and can be connected to email, Slack, CRM, or human escalation workers through signed webhook handlers. Webhook event IDs are stored for idempotency.
+
+## Academy and digital certification
+
+CloudForge International Engineering Academy offers:
+
+1. **Full-Stack AI Cloud Architecture**
+2. **Supabase & Database Engineering**
+3. **Agentic AI & Automation Workflows**
+
+Each path includes guided lessons, visual theory briefings, video slots, quizzes, an intentionally bounded static code sandbox, automatic evaluation, XP, progress percentage, completed learning hours, and skill badges. Learner code is not executed as arbitrary server-side code. Official academic records require authenticated server storage and a separately governed assessment runner.
+
+The certificate engine renders the `CERTIFICATE OF PROFICIENCY & COMPLETION` layout with CloudForge branding, a professional title, certificate ID, score, date, gold seal, signatures, QR verification link, print/PDF export, LinkedIn sharing, X sharing, and link copying. Public verification is available at `/verify/[certificateId]` and uses `/api/verify/[certificateId]`.
+
+A certificate is considered officially valid only when the protected `certificates` registry is configured. The public route returns explicit `registry_unavailable`, `not_found`, or `revoked` states when the registry cannot verify a record. A local preview is never presented as an official credential.
+
+## Database and security
+
+Run `supabase/schema.sql` for the complete ordered schema bundle, or apply the files in `supabase/migrations/` in numerical order. The schema includes core CloudForge entities, role-aware RLS, support conversations, message memory, tickets, ticket messages, webhook idempotency, indexes, triggers, and audit structures.
+
+The production database must use RLS on every user-owned table. Service-role credentials belong only in server-side environment variables. Do not place API keys, payment secrets, passwords, or private tokens in the browser, repository, support messages, or logs. Rotate any credential that has been exposed.
+
+## Local development
+
+**Prerequisites:** Node.js 20 or newer and a Supabase project for persistence-enabled development.
 
 ```bash
 npm install
-cp .env.example .env.local   # optional — the app runs with zero env vars
-npm run dev                  # http://localhost:3000
+cp .env.example .env.local
+npm run dev
 ```
 
-### Verification commands
+The local application runs at `http://localhost:3000`. It can render the frontend without provider credentials, but production capabilities remain disabled until the relevant environment variables and database policies are configured.
+
+## Verification commands
 
 ```bash
-npm run typecheck   # TypeScript, zero errors
-npm test            # Vitest suite
-npm run build       # production build (same as Vercel)
+npm run typecheck
+npm test
+npm run build
 ```
 
-## ☁️ Deploy to Vercel
+The repository’s CI workflow runs the same typecheck, test, and production build stages for pushes and pull requests. Run all three commands before promoting a release.
 
-1. Push this repo to GitHub.
-2. In Vercel: **New Project → Import** the repo — the framework is auto-detected (Next.js).
-3. Build command: `npm run build` — Output: `Next.js` (no changes needed).
-4. Optional env vars (see `.env.example`): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `OPENAI_API_KEY`, `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_SENTRY_DSN`…
-5. **First deploy after the brand migration:** Vercel → Project → Settings → Builds → **Clear Build Cache** → Redeploy. The app also migrates legacy `codevortex_*` localStorage keys automatically.
+## Vercel deployment
 
-### Deploy to Netlify
+Import the repository into Vercel as a Next.js project and use `npm run build` as the build command. Add the required variables from `.env.example` in the Vercel project environment, separating Preview and Production values. At minimum, production persistence requires Supabase URL, Supabase anon key, and the server-only Supabase service-role key. AI support requires `OPENAI_API_KEY`; Stripe requires its secret, webhook secret, and configured server-side price IDs.
 
-Netlify auto-detects Next.js via `@netlify/plugin-nextjs` (install once from the Netlify UI, or via `netlify.toml`). Same env variables apply.
+Apply `supabase/schema.sql` to the target Supabase project before enabling conversation memory, ticket persistence, certificate verification, or any production workflow that depends on those tables. Configure signed webhook endpoints and idempotency before accepting provider events. Keep `ALLOW_SANDBOX_CHECKOUT=false` in every production environment.
 
-## 🔐 Supabase Setup
+## Operational boundaries
 
-1. Create a project at [supabase.com](https://supabase.com).
-2. SQL Editor → run `supabase/migrations/0001…0004` in order (or `supabase db push` with the CLI).
-3. Deploy Edge Functions (`supabase/functions/README.md`).
-4. Set the env vars + function secrets.
+CloudForge is designed to be honest about integrations. It does not silently patch external systems, replace a production WAF/CDN, publish advertising campaigns without approval, or enable hidden revenue sharing. Production activation requires provider credentials, signed webhooks, rate limits, audit logs, RLS policies, monitoring, and explicit account configuration.
 
-## 🧪 CI/CD
+## License
 
-- `ci.yml` runs typecheck + tests + build on every push/PR.
-- `deploy-vercel.yml` / `deploy-netlify.yml` deploy production on push to `main`.
-- Secrets live in **GitHub Secrets** — never commit real keys.
-
-## 🛡️ CloudForge safety boundary
-
-The Control Center is intentionally honest about integration state. It can prepare security policies, schema operations, campaign drafts, and approval-aware deployment flows, but it does not claim to replace a production WAF/CDN, silently patch external systems, publish advertising campaigns without approval, or enable hidden revenue sharing. Production activation requires provider credentials stored outside the repository, signed webhooks, RLS policies, rate limits, audit logs, and explicit account configuration.
-
-## 📄 Documentation
-
-- [Engineering Blueprint (الخطة الهندسية)](docs/ENGINEERING_PLAN.md) — architecture, DB schema, RBAC, CI/CD, UI/UX, AI, payments, automation, security, scaling.
-
-## 📄 License
-
-Private / proprietary. © 2026 CloudForge.
+Private and proprietary. Copyright 2026 CloudForge.
 
 
-## ⚡ Global performance and navigation upgrade
+### Support persistence and operations
 
-The initial shell now renders directly without a black loading gate. Heavy modules are loaded on demand through `next/dynamic`, including the Monaco workspace, live preview, Academy, Marketplace, deployment modals, and command palette. Export dependencies are also loaded only when a user requests a ZIP export. The primary Header exposes concise desktop links, while the full navigation is available through a responsive, collapsible sidebar.
-
-## 🛍️ Marketplace and plans
-
-The Marketplace catalog is defined in `src/data/marketplaceCatalog.ts` and includes 20+ starter items across Websites, Cloud & SaaS, E-Commerce, Apps & Services, and Schemas & APIs. Each item supports search, category filtering, live preview, workspace installation, and deployment preparation. Pricing includes Free, Pro at $20/month, Enterprise custom, and a separate Ad-Engine with Starter ($10), Growth ($25), and Scale ($50+) workflow-credit packs.
-
-Checkout is provider-safe: production Stripe sessions require server-side price IDs such as `STRIPE_PRICE_PRO_MONTHLY` and `STRIPE_PRICE_AD_STARTER`. Sandbox success is disabled by default and can only be enabled explicitly for local development with `ALLOW_SANDBOX_CHECKOUT=true`. Apple Pay is presented through Stripe wallet support; PayPal and Binance Pay remain explicit provider adapters until their server credentials and signed webhooks are configured.
-
-
-## 🎓 CloudForge Academy Learning Center
-
-The Academy now presents three engineering paths: **Full-Stack AI Cloud Architecture**, **Supabase & Database Engineering**, and **Agentic AI & Automation Workflows**. Each path includes lesson navigation, video or visual theory briefing, a safe deterministic code sandbox, quiz support, progress percentage, completed hours, XP, and skill badges. The sandbox never executes untrusted learner code on the server; it performs bounded static checks before allowing lesson completion.
-
-Learner state is persisted locally under the versioned `cloudforge_user_progress_v2` key. Production-grade grading, video hosting, identity-linked transcripts, and certificate verification should be connected to authenticated server storage before being used as an official academic record.
-
-
-## 🏅 Verified Digital Certificate Engine
-
-Academy graduates can preview a branded **CERTIFICATE OF PROFICIENCY & COMPLETION** with CloudForge International Engineering Academy branding, student identity, professional title, certificate ID, score, issue date, gold seal, signatures, and a QR code targeting `/verify/{certificateId}`. The certificate action bar supports browser print-to-PDF, LinkedIn sharing, X sharing, and copying the public verification link.
-
-The public route `/verify/[certificateId]` uses `/api/verify/[certificateId]` and accepts both new `CF-*` IDs and legacy `CVX-ACADEMY-*` IDs. The API returns a valid record only when `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and a protected `certificates` table are configured. Without those production settings it explicitly reports `registry_unavailable`; it never presents a local preview as an officially verified credential.
+The executable schema bundle now includes `support_conversations`, `support_messages`, `support_ticket_messages`, and `support_webhook_events` in addition to the existing ticket tables. These structures provide conversation memory, role-scoped message history, ticket collaboration, and provider-event idempotency. The chat and ticket routes use the server-only service role when configured and return explicit persistence status when the database is unavailable.

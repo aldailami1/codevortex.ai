@@ -24,6 +24,7 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
   ]);
   const [inputVal, setInputVal] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [conversationId, setConversationId] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -55,10 +56,12 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
           sender_name: 'AI Chat Visitor',
           sender_email: '',
           thinking_mode: false,
+          conversationId,
         }),
       });
 
       const data = await res.json();
+      if (typeof data.conversationId === 'string') setConversationId(data.conversationId);
       setIsTyping(false);
 
       if (data.reply) {
