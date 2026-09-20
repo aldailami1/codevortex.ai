@@ -361,7 +361,7 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen overflow-x-hidden bg-[#0B0F19] text-slate-100 flex flex-col font-sans ${language === 'ar' ? 'dir-rtl' : 'dir-ltr'}`}>
+    <div dir={language === 'ar' ? 'rtl' : 'ltr'} lang={language} className="min-h-screen overflow-x-hidden bg-[#0B0F19] text-slate-100 flex flex-col font-sans">
       <Header
         currentProject={currentProject}
         onUpdateProjectName={handleUpdateProjectName}

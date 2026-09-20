@@ -27,6 +27,22 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
   const [conversationId, setConversationId] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const getFriendlyError = (code?: string) => {
+    if (code === 'AI_PROVIDER_NOT_CONFIGURED') {
+      return isAr
+        ? 'خدمة الدعم الذكي قيد الإعداد حالياً. يمكنك ترك رسالتك وسنساعدك قريباً.'
+        : 'AI support is being configured for this workspace. Please leave your question and try again shortly.';
+    }
+    if (code === 'AI_PROVIDER_UNREACHABLE') {
+      return isAr
+        ? 'تعذر الوصول إلى خدمة الدعم الآن. يرجى المحاولة مرة أخرى بعد قليل.'
+        : 'AI support is temporarily unreachable. Please try again in a moment.';
+    }
+    return isAr
+      ? 'تعذر إكمال طلب الدعم الآن. يرجى المحاولة مرة أخرى.'
+      : 'We could not complete that support request. Please try again.';
+  };
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, [messages, isTyping]);
@@ -64,7 +80,10 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
       if (typeof data.conversationId === 'string') setConversationId(data.conversationId);
       setIsTyping(false);
 
-      if (!res.ok) throw new Error(typeof data?.error === 'string' ? data.error : 'AI support request failed');
+      if (!res.ok) {
+        const code = typeof data?.details?.code === 'string' ? data.details.code : undefined;
+        throw new Error(getFriendlyError(code));
+      }
       if (data.reply) {
         setMessages((prev) => [
           ...prev,
@@ -75,14 +94,11 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
           },
         ]);
       } else {
-        throw new Error('No reply from backend');
+        throw new Error(getFriendlyError());
       }
     } catch (err) {
-      console.warn('Support chat request failed:', err);
       setIsTyping(false);
-      const fallbackText = isAr
-        ? 'لم يصل رد من محرك الذكاء الاصطناعي. لم يتم إنشاء إجابة وهمية؛ يرجى المحاولة مجدداً بعد تهيئة مزود AI.'
-        : 'The AI engine did not return a response. No simulated answer was generated; please try again after configuring the AI provider.';
+      const fallbackText = err instanceof Error ? err.message : getFriendlyError();
 
       setMessages((prev) => [
         ...prev,
@@ -112,7 +128,7 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
 
       {/* Floating Live Chat Widget Popup */}
       {isOpen && (
-        <div className="h-[min(70dvh,560px)] max-h-[calc(100dvh-2rem)] w-full max-w-[410px] overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/95 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-5">
+        <div className="flex h-[min(70dvh,560px)] max-h-[calc(100dvh-2rem)] w-[min(410px,calc(100vw-2rem))] flex-col overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/95 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-5">
           {/* Widget Header */}
           <div className="p-4 bg-gradient-to-r from-slate-950 via-slate-900 to-cyan-950 border-b border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -140,7 +156,7 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
           </div>
 
           {/* Messages Container */}
-          <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-950/90 font-sans text-xs">
+          <div className="min-h-0 flex-1 overflow-y-auto p-4 space-y-3 bg-slate-950/90 font-sans text-xs">
             {messages.map((m, idx) => (
                 <div
                   key={idx}
@@ -201,4 +217,3 @@ export const FloatingSupportWidget: React.FC<FloatingSupportWidgetProps> = ({
     </div>
   );
 };
-

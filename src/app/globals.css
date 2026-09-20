@@ -176,9 +176,23 @@ h4,
 p,
 button,
 a,
-label,
-span {
-  overflow-wrap: anywhere;
+label {
+  overflow-wrap: break-word;
+}
+
+/* Brand marks and compact UI labels are atomic units on narrow screens. */
+.cf-brand,
+.cf-nowrap {
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+/* Long prose can wrap without deforming words or creating horizontal scroll. */
+.cf-prose {
+  overflow-wrap: break-word;
+  word-break: normal;
+  text-wrap: pretty;
 }
 
 .cf-shell {

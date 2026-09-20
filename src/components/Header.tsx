@@ -171,7 +171,7 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <>
       {/* 1. Clutter-free 3-Item Header */}
-      <header className="bg-[#0B0F19]/65 backdrop-blur-2xl border-b border-white/10 px-4 sm:px-6 py-3 flex items-center justify-between gap-4 sticky top-0 z-40 shadow-2xl font-sans">
+      <header className="bg-[#0B0F19]/65 backdrop-blur-2xl border-b border-white/10 px-3 sm:px-6 py-3 flex min-w-0 items-center justify-between gap-2 sm:gap-4 sticky top-0 z-40 shadow-2xl font-sans">
         
         {/* Right Side (Platform Logo & Version Badge) */}
         <div className="flex items-center gap-3">
@@ -188,15 +188,15 @@ export const Header: React.FC<HeaderProps> = ({
 
           <button
             onClick={() => onSelectView('landing')}
-            className="flex min-w-0 flex-row items-center gap-2.5 whitespace-nowrap text-left focus:outline-none"
+            className="cf-brand flex min-w-0 shrink items-center gap-2.5 text-left focus:outline-none"
           >
             {/* Official CloudForge vector mark */}
             <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-xl shadow-lg shadow-cyan-500/20 transition-transform group-hover:scale-105">
               <img src="/favicon.svg" alt="CloudForge" className="h-full w-full object-cover" width={36} height={36} />
             </span>
             <div className="flex flex-col text-left">
-              <div className="flex min-w-0 flex-row items-center gap-1.5 whitespace-nowrap">
-                <span className="shrink-0 whitespace-nowrap font-black text-lg sm:text-xl tracking-tight bg-gradient-to-r from-white via-slate-100 to-[#00F2FE] bg-clip-text text-transparent">
+              <div className="cf-brand flex min-w-0 items-center gap-1.5">
+                <span className="cf-brand shrink-0 font-black text-lg sm:text-xl tracking-tight bg-gradient-to-r from-white via-slate-100 to-[#00F2FE] bg-clip-text text-transparent">
                   CloudForge
                 </span>
                 <span className="px-1.5 py-0.5 rounded-md bg-gradient-to-r from-cyan-950 to-slate-900 border border-cyan-500/40 text-[#00F2FE] text-[9px] font-extrabold font-mono tracking-wider shadow-inner">
@@ -234,7 +234,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Item 1: Quick Search / Command Palette */}
           <button
             onClick={onOpenCommandPalette}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white text-xs transition-all shadow-inner group"
+            className="hidden items-center gap-2 rounded-xl bg-slate-900/90 p-2.5 sm:flex sm:px-3 sm:py-2 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white text-xs transition-all shadow-inner group"
             title={`${t('quickSearch')} (Ctrl+K)`}
           >
             <Search className="w-4 h-4 text-[#00F2FE] group-hover:scale-110 transition-transform" />
@@ -264,12 +264,12 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => setIsLoginModalOpen(true)}
               className="group relative p-[1.5px] rounded-full bg-gradient-to-r from-cyan-400 via-blue-600 to-purple-600 hover:from-cyan-300 hover:to-purple-500 shadow-[0_0_20px_rgba(0,242,254,0.3)] hover:shadow-[0_0_30px_rgba(121,40,202,0.5)] transition-all hover:scale-102 active:scale-98 shrink-0"
             >
-              <div className="px-3.5 py-1.5 rounded-full bg-[#0B0F19]/90 hover:bg-[#0B0F19]/60 backdrop-blur-md flex items-center gap-2.5 transition-all">
+              <div className="flex items-center gap-2 rounded-full bg-[#0B0F19]/90 px-2 py-1.5 backdrop-blur-md transition-all hover:bg-[#0B0F19]/60 sm:gap-2.5 sm:px-3.5">
                 <div className="w-6 h-6 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 shrink-0">
                   <User className="w-3.5 h-3.5" />
                 </div>
 
-                <div className="flex flex-col text-left leading-tight">
+                <div className="hidden flex-col text-left leading-tight sm:flex">
                   <span className="font-extrabold text-xs text-white group-hover:text-cyan-200 transition-colors">
                     {t('login')}
                   </span>
@@ -289,7 +289,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="relative">
             <button
               onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
-              className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-slate-200 text-xs transition-all shadow-md font-bold"
+              className="hidden items-center gap-1.5 rounded-xl bg-slate-900/90 px-2.5 py-2 hover:bg-slate-800 border border-slate-800 text-slate-200 text-xs transition-all shadow-md font-bold sm:flex"
               title={t('changeLanguage')}
             >
               <span className="text-base leading-none">{currentLangObj.flag}</span>
