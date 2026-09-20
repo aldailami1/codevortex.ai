@@ -1,0 +1,4 @@
+{
+  "compilerOptions": { "target": "ES2022", "module": "commonjs", "declaration": true, "outDir": "dist", "strict": true, "esModuleInterop": true, "skipLibCheck": true, "baseUrl": ".", "paths": { "@cloudforge/contracts": ["../contracts/src/index.ts"] } },
+  "include": ["src/**/*.ts"]
+}

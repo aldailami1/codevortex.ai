@@ -1,0 +1,13 @@
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class HealthService {
+  status() {
+    return {
+      service: 'cloudforge-control-plane-api',
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      version: process.env.npm_package_version ?? '0.1.0',
+    };
+  }
+}

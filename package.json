@@ -2,6 +2,10 @@
   "name": "cloudforge",
   "version": "2.5.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "description": "CloudForge — AI-Native Cloud Building & Automation Engine (Next.js App Router)",
   "scripts": {
     "dev": "next dev",
